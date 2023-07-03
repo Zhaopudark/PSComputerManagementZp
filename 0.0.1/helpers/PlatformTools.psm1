@@ -8,22 +8,28 @@ function Test-AdminPermission {
         return $true
     }    
 }
-
-
-function local:Test-IfIsOnCertainPlatform{
+function Test-IfIsOnCertainPlatform{
     param(
         [ValidateSet("Windows","Wsl2")]
-        [string]$SystemName
+        [string]$SystemName,
+        [switch]$ShowInfo
     ) 
     if (($PSVersionTable.Platform -eq "Win32NT") -and ($SystemName.ToLower() -eq "windows")){
-
+        if ($ShowInfo){
+            Write-Host "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+        }
         return $true
     
     } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "wsl2")){
+        if ($ShowInfo){
+            Write-Host "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+        }
         return $true
         
     } else {
-        Write-Host "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
+        if ($ShowInfo){
+            Write-Host "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
+        }
         return $false
     }
     

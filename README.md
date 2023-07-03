@@ -106,7 +106,65 @@ Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Li
 
 #### On WSL2
 
-#TODO
+Just set env level proxy. But first, installation of PowerShell and this module is also need on Wsl2.
+
+- Install PowerShell on WSL2, see the [official tutorials (install PowerShell on Ubuntu)](https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.3#installation-via-package-repository) as:
+
+  ```bash
+  # Update the list of packages
+  sudo apt-get update
+  # Install pre-requisite packages.
+  sudo apt-get install -y wget apt-transport-https software-properties-common
+  # Download the Microsoft repository GPG keys
+  wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+  # Register the Microsoft repository GPG keys
+  sudo dpkg -i packages-microsoft-prod.deb
+  # Delete the the Microsoft repository GPG keys file
+  rm packages-microsoft-prod.deb
+  # Update the list of packages after we added packages.microsoft.com
+  sudo apt-get update
+  # Install PowerShell
+  sudo apt-get install -y powershell
+  # Start PowerShell
+  pwsh
+  ```
+
+- Install this module on Wsl2's PowerShell:
+
+  ```powershell
+  # if in bash
+  git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
+  cd PSComputerManagementZp
+  pwsh -f ./install.ps1
+  ```
+
+- Set env level proxy. Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of gateway and then set env  proxy by as 'gateway:7890':
+
+  ```powershell
+  # if has call pwsh from bash
+  Import-Module PSComputerManagementZp -Force -Scope local
+  Set-EnvProxyIPV4ForShellProcess -ServerIP $(Get-GatewayIPV4) -PortNumber 7890
+  Remove-Module PSComputerManagementZp
+  ```
+
+- Checking as:
+
+  ```powershell
+  Get-ChildItem -Path "Env:*proxy*"
+  ```
+  
+  And the results can be as:
+  
+  ![image-20230704021135547](./README.assets/image-20230704021135547.png)
+
+- If want to remove these env proxy, you can do as:
+
+  ```powershell
+  # if has call pwsh from bash
+  Import-Module PSComputerManagementZp -Force -Scope local
+  Remove-EnvProxyIPV4ForShellProcess
+  Remove-Module PSComputerManagementZp
+  ```
 
 ### Remove the settings for system proxy
 

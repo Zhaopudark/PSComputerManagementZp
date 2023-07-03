@@ -1,9 +1,17 @@
 function Get-GatewayIPV4{
     [CmdletBinding()]
     param()    
-    # get Gateway IP, see https://blog.csdn.net/YOLO3/article/details/81117952
-    $wmi = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'true'"
-    return $wmi.DefaultIPGateway
+    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+        # get Gateway IP, see https://blog.csdn.net/YOLO3/article/details/81117952
+        $wmi = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'true'"
+        return $wmi.DefaultIPGateway
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+        $gateway_ip = $(cat /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
+        return $gateway_ip
+    }else{
+        Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        exit -1
+    }
 }
 function Get-LocalHostIPV4{
     [CmdletBinding()]

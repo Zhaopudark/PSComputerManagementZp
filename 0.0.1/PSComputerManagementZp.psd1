@@ -80,7 +80,8 @@ FunctionsToExport = @(
     'Merge-EnvPathFromLocalMachineToCurrentUser',
     'Add-EnvPathToCurrentProcess',
     'Remove-EnvPathByPattern',
-    'Remove-EnvPathByTargetPath'
+    'Remove-EnvPathByTargetPath',
+    'Test-IfIsOnCertainPlatform'
 )
 # FunctionsToExport = '*'
 
