@@ -1,4 +1,14 @@
 function Get-GatewayIPV4{
+<#
+.DESCRIPTION
+    Get the gateway IP address(IPV4) of the current system.
+.INPUTS
+    None
+.OUTPUTS
+    System.String
+.NOTES
+    It only support IPV4.
+#> 
     [CmdletBinding()]
     param()    
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
@@ -14,6 +24,16 @@ function Get-GatewayIPV4{
     }
 }
 function Get-LocalHostIPV4{
+<#
+.DESCRIPTION
+    Get the localhost IP address(IPV4) of the current system.
+.INPUTS
+    None
+.OUTPUTS
+    System.String
+.NOTES
+    It only support IPV4.
+#> 
     [CmdletBinding()]
     param()    
     $localhostIPv4 = [System.Net.Dns]::GetHostAddresses("localhost") | Where-Object { $_.AddressFamily -eq 'InterNetwork' }
@@ -39,7 +59,7 @@ function Set-SystemProxyIPV4ForCurrentUser{
 .PARAMETER ServerIP
     The server IP address for proxy.
 
-.PARAMETER Port
+.PARAMETER PortNumber
     The port number for proxy.
 
 .EXAMPLE
@@ -86,6 +106,10 @@ function Remove-SystemProxyIPV4ForCurrentUser{
 <#
 .DESCRIPTION
     Revokes all opeartions in function `Set-SystemProxyIPV4ForCurrentUser`
+.INPUTS
+    None
+.OUTPUTS
+    None
 #>    
     param()    
     # 指定注册表项
@@ -105,7 +129,23 @@ function Remove-SystemProxyIPV4ForCurrentUser{
     $proxyInfo = Get-ItemProperty -Path $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
     $proxyInfo
 }
-function Set-EnvProxyIPV4ForShellProcess{   
+function Set-EnvProxyIPV4ForShellProcess{  
+<#
+.DESCRIPTION
+    Set environment variables as `ServerIP:PortNumber` for the current shell process.
+    It does not influence system proxy.
+    It only support IPV4.
+
+.PARAMETER ServerIP
+    The server IP address for proxy.
+
+.PARAMETER PortNumber
+    The port number for proxy.
+
+.EXAMPLE
+    Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890.
+
+#> 
     param(
         [Parameter(Mandatory)]
         [string]$ServerIP,
@@ -118,7 +158,15 @@ function Set-EnvProxyIPV4ForShellProcess{
     [Environment]::SetEnvironmentVariable('ftp_proxy',"http://${ServerIP}:${PortNumber}")
     [Environment]::SetEnvironmentVariable('socks_proxy',"socks5://${ServerIP}:${PortNumber}")  
 }
-function Remove-EnvProxyIPV4ForShellProcess{   
+function Remove-EnvProxyIPV4ForShellProcess{ 
+<#
+.DESCRIPTION
+    Revokes all opeartions in function `Set-EnvProxyIPV4ForShellProcess`
+.INPUTS
+    None
+.OUTPUTS
+    None
+#>  
     param()  
     [Environment]::SetEnvironmentVariable('http_proxy','')
     [Environment]::SetEnvironmentVariable('https_proxy','')

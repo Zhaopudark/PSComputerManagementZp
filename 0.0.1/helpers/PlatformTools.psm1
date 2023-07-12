@@ -9,6 +9,17 @@ function Test-AdminPermission {
     }    
 }
 function Test-IfIsOnCertainPlatform{
+<#
+.DESCRIPTION
+    Test if the current platform is compatible with the systemName.
+    It only support Windows and Wsl2.
+    If $ShowInfo is given, it will show the result.
+.EXAMPLE
+    Test-IfIsOnCertainPlatform -SystemName 'Windows' -ShowInfo
+    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -ShowInfo
+.OUTPUTS
+    $true if compatible, otherwise $false.
+#>
     param(
         [ValidateSet("Windows","Wsl2")]
         [string]$SystemName,

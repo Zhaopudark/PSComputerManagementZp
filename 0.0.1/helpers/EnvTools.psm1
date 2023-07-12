@@ -106,7 +106,6 @@ function local:Format-EnvPath{
     Format all paths of `$Env:Path in $Level Level:
         1. Remove the invalid (non-existent or empty or duplicated) items.
         2. Format the content of all items by `Format-Path` function.
-    
 #>
     param(
         [Parameter(Mandatory)]
@@ -138,7 +137,21 @@ function local:Format-EnvPath{
     Write-EnvToolsHost "Formating $Level level `$Env:Path, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
 }
 
-function Merge-EnvPathFromLocalMachineToCurrentUser{
+function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
+<#
+.SYNOPSIS
+    Merge redundant items form Machine Level $Env:Path to User Level $Env:Path.
+
+.DESCRIPTION
+    Sometimes, we may find some redundant items that both 
+    in Machine Level $Env:Path and User Level $Env:Path.
+    This may because we have installed some software in different privileges.
+
+    This function will help us to merge the redundant items from Machine Level $Env:Path to User Level $Env:Path.
+    The operation will symplify the `$Env:Path`.
+.NOTES
+    Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
+#>
     Import-Module "${PSScriptRoot}.\PlatformTools.psm1" -Scope local
     if(-not(Test-AdminPermission)){
         throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
@@ -163,6 +176,13 @@ function Merge-EnvPathFromLocalMachineToCurrentUser{
 
 }
 function Add-EnvPathToCurrentProcess{
+<#
+.DESCRIPTION
+    Add the `Path` to the `$Env:Path` in `Process` level.
+    Format the `Process` level `$Env:Path` by the function `Format-EnvPath` at the same time.
+.EXAMPLE
+    Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
+#>
     param(
         [Parameter(Mandatory)]
         [string]$Path
@@ -190,6 +210,13 @@ function Add-EnvPathToCurrentProcess{
 
 
 function local:Remove-EnvPathByPattern{
+<#
+.DESCRIPTION
+    Remove the paths that match the pattern in `$Env:Path` in the specified level.
+.EXAMPLE
+    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:Path`.
+    Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
+#>
     param(
         [Parameter(Mandatory)]
         [string]$Pattern,
@@ -215,7 +242,14 @@ function local:Remove-EnvPathByPattern{
     [Environment]::SetEnvironmentVariable('Path',$out_buf -join ';',$Level)
     Write-EnvToolsHost "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:Path."
 }
-function local:Remove-EnvPathByTarget{
+function local:Remove-EnvPathByTargetPath{
+<#
+.DESCRIPTION
+    Remove the target path in `$Env:Path` in the specified level.
+.EXAMPLE
+    Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
+    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:Path`.
+#>
     param(
         [Parameter(Mandatory)]
         [string]$TargetPath,
