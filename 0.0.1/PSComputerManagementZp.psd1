@@ -77,7 +77,7 @@ FunctionsToExport = @(
     'Remove-SystemProxyIPV4ForCurrentUser',
     'Set-EnvProxyIPV4ForShellProcess',
     'Remove-EnvProxyIPV4ForShellProcess',
-    'Merge-EnvPathFromLocalMachineToCurrentUser',
+    'Merge-RedundantEnvPathFromLocalMachineToCurrentUser',
     'Add-EnvPathToCurrentProcess',
     'Remove-EnvPathByPattern',
     'Remove-EnvPathByTargetPath',
