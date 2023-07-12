@@ -1,3 +1,9 @@
+# Navigation
+
+- [Home](README.md)
+- [AIPs](APIs.md)
+- [Samples](Samples.md) 
+
 # Backgrounds
 
 I'm a researcher on Machine Learning, especially Deep Learning. In addition, I also do some software development. 
@@ -45,10 +51,11 @@ For all reachable functions, see [AIPs](APIs.md). The following are some useful 
 - `Remove-SystemProxyIPV4ForCurrentUser`
 - `Set-EnvProxyIPV4ForShellProcess`
 - `Remove-EnvProxyIPV4ForShellProcess`
-- `Merge-EnvPathFromLocalMachineToCurrentUser`
+- `Merge-RedundantEnvPathFromLocalMachineToCurrentUser`
 - `Add-EnvPathToCurrentProcess`
 - `Remove-EnvPathByPattern`
 - `Remove-EnvPathByTargetPath`
+
 
 # Risks
 
@@ -83,4 +90,4 @@ $script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./README.assets/image-20230703160155455-1688741987841-6.png" alt="image-20230703160155455" style="zoom:67%;" />
+<img src="./README.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
