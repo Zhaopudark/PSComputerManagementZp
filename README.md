@@ -55,7 +55,6 @@ For all reachable functions, see [AIPs](APIs.md). The following are some useful 
 - `Add-EnvPathToCurrentProcess`
 - `Remove-EnvPathByPattern`
 - `Remove-EnvPathByTargetPath`
-- `Test-IfIsOnCertainPlatform`
 
 # Risks
 
