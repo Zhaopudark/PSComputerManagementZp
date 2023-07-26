@@ -30,7 +30,7 @@ function local:Test-EnvPathLevelArg{
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
     }elseif ($Level -eq 'Machine'){
-        Import-Module "${PSScriptRoot}.\PlatformTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         if(-not(Test-AdminPermission)){
             throw [System.UnauthorizedAccessException]::new("You must run this function as administrator when arg `$Level is $Level.")
         }
@@ -118,7 +118,7 @@ function local:Format-EnvPath{
     foreach ($item in $env_paths)
     {
         if (Test-EnvPathExists -Level $Level -Path $item){
-            Import-Module "${PSScriptRoot}.\PathTools.psm1" -Scope local
+            Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
             $item = Format-Path -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
                 $out_buf += $item
@@ -152,7 +152,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 .NOTES
     Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
 #>
-    Import-Module "${PSScriptRoot}.\PlatformTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
     if(-not(Test-AdminPermission)){
         throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
     }
@@ -192,7 +192,7 @@ function Add-EnvPathToCurrentProcess{
     # User Machine Process[Default]
     $env_paths = @([Environment]::GetEnvironmentVariable('Path') -Split ';') 
     if (Test-EnvPathExists -Level 'Process' -Path $Path){
-        Import-Module "${PSScriptRoot}.\PathTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $Path = Format-Path -Path $Path
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
             Write-EnvToolsLogs -Level 'Process' -Type 'Add' -Path $Path
@@ -209,7 +209,7 @@ function Add-EnvPathToCurrentProcess{
 }
 
 
-function local:Remove-EnvPathByPattern{
+function Remove-EnvPathByPattern{
 <#
 .DESCRIPTION
     Remove the paths that match the pattern in `$Env:Path` in the specified level.
@@ -242,7 +242,7 @@ function local:Remove-EnvPathByPattern{
     [Environment]::SetEnvironmentVariable('Path',$out_buf -join ';',$Level)
     Write-EnvToolsHost "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:Path."
 }
-function local:Remove-EnvPathByTargetPath{
+function Remove-EnvPathByTargetPath{
 <#
 .DESCRIPTION
     Remove the target path in `$Env:Path` in the specified level.
@@ -262,7 +262,7 @@ function local:Remove-EnvPathByTargetPath{
     $out_buf = @()
     $counter = 0
     if (Test-EnvPathExists -Level $Level -Path $TargetPath){
-        Import-Module "${PSScriptRoot}.\PathTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $TargetPath = Format-Path -Path $TargetPath
         foreach ($item in $env_paths)
         {

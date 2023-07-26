@@ -32,7 +32,7 @@ This customized PowerShell Module, `PSComputerManagementZp`, derives from my sce
 
 # How to install?
 
-Make sure your PowerShell version is 5.0 or latter.
+Make sure your PowerShell version is 7.0 or latter.
 
 ```powershell
 git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
@@ -68,7 +68,7 @@ After installation of this module, you can realize many PC management operations
 
 Generally, the prerequisites are:
 
-- Make sure your PowerShell version is 5.0 or latter.
+- Make sure your PowerShell version is 7.0 or latter.
 - Some cases need `Administrator` privilege.
 
 The following is an example with this module:

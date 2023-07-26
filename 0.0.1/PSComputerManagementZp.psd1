@@ -33,7 +33,7 @@ Copyright = '(c) Pu Zhao. All rights reserved.'
 # Description = ''
 
 # Minimum version of the PowerShell engine required by this module
-PowerShellVersion = '5.0'
+PowerShellVersion = '7.0'
 
 # Name of the PowerShell host required by this module
 PowerShellHostName = 'ConsoleHost'
@@ -81,7 +81,11 @@ FunctionsToExport = @(
     'Add-EnvPathToCurrentProcess',
     'Remove-EnvPathByPattern',
     'Remove-EnvPathByTargetPath',
-    'Test-IfIsOnCertainPlatform'
+    'Test-IfIsOnCertainPlatform',
+    'Set-DirSymbolicLinkWithSync',
+    'Set-FileSymbolicLinkWithSync',
+    'Set-DirJunctionWithSync',
+    'Set-FileHardLinkWithSync'
 )
 # FunctionsToExport = '*'
 

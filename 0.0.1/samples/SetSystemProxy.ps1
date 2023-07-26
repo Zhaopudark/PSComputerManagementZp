@@ -1,4 +1,4 @@
-#Requires -Version 5.0
+#Requires -Version 7.0
 #Requires -RunAsAdministrator
 param (
     [Parameter(Mandatory)]
@@ -70,7 +70,3 @@ catch {
     Write-Host "Set system proxy failed."
     exit -1
 } 
-
-
-
-

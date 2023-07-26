@@ -50,7 +50,7 @@ function Register-PS1ToScheduledTask{
     }
     $actions = @()
     $actions += New-ScheduledTaskAction `
-                -Execute "${Env:WinDir}\System32\WindowsPowerShell\v1.0\powershell.exe" `
+                -Execute "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" `
                 -Argument "-WindowStyle Hidden -File `"${ScriptPath}`" ${ScriptArgs}"
     Register-ScheduledTask -TaskName $TaskName -Trigger $triggers -Action $actions -RunLevel Highest -Force
 }
