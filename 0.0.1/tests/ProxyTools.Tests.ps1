@@ -4,7 +4,7 @@ BeforeAll {
     $process_env_all_proxy_backup = [Environment]::GetEnvironmentVariable('all_proxy')
     $process_env_ftp_proxy_backup = [Environment]::GetEnvironmentVariable('ftp_proxy')
     $process_env_socks_proxy_backup = [Environment]::GetEnvironmentVariable('socks_proxy')
-    Import-Module PSComputerManagementZp -Force
+    Import-Module "${PSScriptRoot}\..\PSComputerManagementZp.psm1" -Force
 }
 
 Describe 'Test ProxyTools' {

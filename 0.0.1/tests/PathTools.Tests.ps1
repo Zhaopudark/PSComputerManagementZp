@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module PSComputerManagementZp -Force
+    Import-Module "${PSScriptRoot}\..\PSComputerManagementZp.psm1" -Force
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force

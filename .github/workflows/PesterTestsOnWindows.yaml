@@ -12,10 +12,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Perform Pester tests from files
+    - name: Perform Pester tests from EnvTools.Tests.ps1
       shell: pwsh
       run: |
-        # Invoke-Pester Unit.Tests.ps1 -Passthru
         Invoke-Pester -Path '0.0.1/tests/EnvTools.Tests.ps1' -Passthru
+    - name: Perform Pester tests from PathTools.Tests.ps1
+      shell: pwsh
+      run: |
         Invoke-Pester -Path '0.0.1/tests/PathTools.Tests.ps1' -Passthru
+    - name: Perform Pester tests from ProxyTools.Tests.ps1
+      shell: pwsh
+      run: |
         Invoke-Pester -Path '0.0.1/tests/ProxyTools.Tests.ps1' -Passthru
