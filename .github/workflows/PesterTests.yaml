@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Setup PowerShell
-      uses: powershell/powershell@v1
+      uses: powershell/powershell
 
     - name: Run Pester Tests
       run: |
