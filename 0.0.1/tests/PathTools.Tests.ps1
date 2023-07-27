@@ -16,7 +16,16 @@ Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on a exiting dir' {
             $path = Format-Path "${test_path}\tEsT_diR"
-            $path | Should -BeExactly "${test_path}\test_dir\"
+            if (Test-IfIsOnCertainPlatform -Platform 'Windows') {
+                $path | Should -BeExactly "${test_path}\test_dir"
+            }elseif (Test-IfIsOnCertainPlatform -Platform 'Linux') {
+                $path | Should -BeExactly "${test_path}/tEsT_diR"
+            }elseif (Test-IfIsOnCertainPlatform -Platform 'WSL2') {
+                $path | Should -BeExactly "${test_path}/tEsT_diR"
+            }else{
+                Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+                exit -1
+            }
         }
         It 'Test on a exiting file' {
             # Format-Path will not influence `file`'s name.
