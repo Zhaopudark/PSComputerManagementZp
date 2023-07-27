@@ -7,6 +7,10 @@ if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
 
 }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
     $module_install_path = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
+
+}elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+    $module_install_path = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
+
 }else{
     Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
     exit -1

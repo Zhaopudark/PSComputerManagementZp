@@ -1,0 +1,19 @@
+name: Pester Tests
+
+on:
+  push:
+    branches:
+      - main  # 替换为你的主分支名称
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # 这里选择运行在 Windows 环境，可以根据需要选择其他环境
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: install module 
+      shell: pwsh
+      run: | 
+        ./install.ps1
+        Import-Module PSComputerManagementZp

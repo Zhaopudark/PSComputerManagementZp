@@ -17,11 +17,12 @@ function Test-IfIsOnCertainPlatform{
 .EXAMPLE
     Test-IfIsOnCertainPlatform -SystemName 'Windows' -ShowInfo
     Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -ShowInfo
+    Test-IfIsOnCertainPlatform -SystemName 'Linux' -ShowInfo
 .OUTPUTS
     $true if compatible, otherwise $false.
 #>
     param(
-        [ValidateSet("Windows","Wsl2")]
+        [ValidateSet("Windows","Wsl2","Linux")]
         [string]$SystemName,
         [switch]$ShowInfo
     ) 
@@ -36,7 +37,13 @@ function Test-IfIsOnCertainPlatform{
             Write-Host "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
         return $true
-        
+
+    } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "Linux")){
+        if ($ShowInfo){
+            Write-Host "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+        }
+        return $true    
+
     } else {
         if ($ShowInfo){
             Write-Host "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
