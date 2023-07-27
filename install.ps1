@@ -1,4 +1,4 @@
-$version = Get-ChildItem -Directory $PSScriptRoot | Where-Object { $_.Name -match '^/d' } | Select-Object -ExpandProperty Name
+$version = Get-ChildItem -Directory $PSScriptRoot | Where-Object { $_.Name -match '^\d' } | Select-Object -ExpandProperty Name
 
 Import-Module "./$version/helpers/PlatformTools.psm1" -Force -Scope Local
 
