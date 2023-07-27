@@ -29,7 +29,7 @@ function local:Test-EnvPathLevelArg{
     )
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
-    }elseif ($Level -eq 'Machine'){
+    }elseif (($Level -eq 'Machine') -and (Test-IfIsOnCertainPlatform -SystemName 'Windows')){
         Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         if(-not(Test-AdminPermission)){
             throw [System.UnauthorizedAccessException]::new("You must run this function as administrator when arg `$Level is $Level.")
