@@ -111,12 +111,10 @@ function Get-EnvPathAsSplit{
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
     
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
-        Write-Host "In the current platform, $($PSVersionTable.Platform), only the 'Process' level of `$Env:PATH is supported."
-        return @([Environment]::GetEnvironmentVariable('PATH','Process') -Split ':')
+        return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
     
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
-        Write-Host "In the current platform, $($PSVersionTable.Platform), only the 'Process' level of `$Env:PATH is supported."
-        return @([Environment]::GetEnvironmentVariable('PATH','Process') -Split ':')
+        return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
     
     }else{
         Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
@@ -135,12 +133,10 @@ function Set-EnvPathBySplit{
         [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
     
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
-        Write-Host "In the current platform, $($PSVersionTable.Platform), only the 'Process' level of `$Env:PATH is supported."
-        [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':','Process')
+        [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
     
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
-        Write-Host "In the current platform, $($PSVersionTable.Platform), only the 'Process' level of `$Env:PATH is supported."
-        [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':','Process')
+        [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
     
     }else{
         Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
