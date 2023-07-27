@@ -38,7 +38,7 @@ function Test-IfIsOnCertainPlatform{
         }
         return $true
 
-    } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "Linux")){
+    } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "linux")){
         if ($ShowInfo){
             Write-Host "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
