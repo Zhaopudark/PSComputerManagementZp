@@ -15,5 +15,5 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
-        Copy-Item .\..\PSComputerManagementZp C:\Users\runneradmin\Documents\PowerShell\Modules\ -Recurse -Force  
+        ./install.ps1
         Import-Module PSComputerManagementZp
