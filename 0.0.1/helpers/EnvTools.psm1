@@ -123,7 +123,6 @@ function Get-EnvPathAsSplit{
 }
 function Set-EnvPathBySplit{
     param(
-        [Parameter(Mandatory)]
         [string[]]$Paths,
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]
