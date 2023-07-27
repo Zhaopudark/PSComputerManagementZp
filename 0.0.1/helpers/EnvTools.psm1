@@ -38,6 +38,10 @@ function local:Test-EnvPathLevelArg{
             return $true
         }
     }else{
+        if (((Test-IfIsOnCertainPlatform -SystemName 'Wsl2') -or (Test-IfIsOnCertainPlatform -SystemName 'Linux'))`
+            -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
+            Write-Host "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+        }
         return $true
     }
 }
@@ -111,6 +115,7 @@ function Get-EnvPathAsSplit{
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
     
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
     
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
