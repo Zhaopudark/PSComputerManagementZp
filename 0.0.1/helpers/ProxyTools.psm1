@@ -15,6 +15,9 @@ function Get-GatewayIPV4{
         # get Gateway IP, see https://blog.csdn.net/YOLO3/article/details/81117952
         $wmi = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'true'"
         return $wmi.DefaultIPGateway
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+        $gateway_ip = $(cat /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
+        return $gateway_ip
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
         $gateway_ip = $(cat /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip

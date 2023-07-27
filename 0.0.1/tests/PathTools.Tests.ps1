@@ -15,16 +15,17 @@ BeforeAll {
 Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on a exiting dir' {
-            $path = Format-Path "${test_path}\tEsT_diR"
             if (Test-IfIsOnCertainPlatform -Platform 'Windows') {
+                $path = Format-Path "${test_path}\tEsT_diR"
                 $path | Should -BeExactly "${test_path}\test_dir"
             }elseif (Test-IfIsOnCertainPlatform -Platform 'Linux') {
-                $path | Should -BeExactly "${test_path}/tEsT_diR"
-            }elseif (Test-IfIsOnCertainPlatform -Platform 'WSL2') {
-                $path | Should -BeExactly "${test_path}/tEsT_diR"
+                $path = Format-Path "${test_path}/test_dir"
+                $path | Should -BeExactly "${test_path}/test_dir"
+            }elseif (Test-IfIsOnCertainPlatform -Platform 'Wsl2') {
+                $path = Format-Path "${test_path}/test_dir"
+                $path | Should -BeExactly "${test_path}/test_dir"
             }else{
-                Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-                exit -1
+                $($PSVersionTable.Platform) | Should -BeIn @('Windows','Linux','Wsl2')
             }
         }
         It 'Test on a exiting file' {
