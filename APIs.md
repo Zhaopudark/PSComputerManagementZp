@@ -176,7 +176,7 @@
     Add the `Path` to the `$Env:PATH` in `Process` level.
     Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
 .EXAMPLE
-    Add-EnvPathToCurrentProcess -Path 'C:/Program Files/Git/cmd'
+    Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
 #>
 ```
 
@@ -199,8 +199,8 @@
 .DESCRIPTION
     Remove the target path in `$Env:PATH` in the specified level.
 .EXAMPLE
-    Remove-EnvPathByTargetPath -TargetPath 'C:/Program Files/Git/cmd' -Level 'Process'
-    # It will remove the path 'C:/Program Files/Git/cmd' in the Process level `$Env:PATH`.
+    Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
+    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
 #>
 ```
 

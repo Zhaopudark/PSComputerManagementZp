@@ -75,7 +75,7 @@ The following is an example with this module:
 
 ## Set system proxy IPV4 by `Localhost` with `PortNumber`
 
-**Fundamental**: Modify `Current User` level registry items  `HKCU:/Software/Microsoft/Windows/CurrentVersion/Internet Settings` to set and unset system level proxy.
+**Fundamental**: Modify `Current User` level registry items  `HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings` to set and unset system level proxy.
 
 Please run PowerShell with `Administrator` privilege. 
 
@@ -83,7 +83,7 @@ Supposing the port number is `7890`, the following commands will automatically d
 
 ```powershell
 $module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)/samples/SetSystemProxy.ps1"
+$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
 & $script_path -ServerType 'localhost' -PortNumber 7890
 ```
 

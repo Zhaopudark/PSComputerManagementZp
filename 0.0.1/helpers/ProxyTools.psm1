@@ -85,7 +85,7 @@ function Set-SystemProxyIPV4ForCurrentUser{
     $proxyAddress = "${ServerIP}:${PortNumber}"
 
     # 指定注册表项
-    $regKey = 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Internet Settings'
+    $regKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'
 
     # 设置系统代理(修改当前用户的注册表项, 即当前用户级别)
     Set-ItemProperty -Path $regKey -Name 'ProxyServer' -Value $proxyAddress
@@ -113,7 +113,7 @@ function Remove-SystemProxyIPV4ForCurrentUser{
 #>    
     param()    
     # 指定注册表项
-    $regKey = 'HKCU:/Software/Microsoft/Windows/CurrentVersion/Internet Settings'
+    $regKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'
 
     Set-ItemProperty -Path $regKey -Name 'ProxyServer' -Value ''
     # Remove-ItemProperty -Path $regKey -Name 'ProxyServer'

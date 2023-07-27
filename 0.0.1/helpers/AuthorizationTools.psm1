@@ -32,15 +32,15 @@ function local:Reset-PathAttributes{
 
     We only specify the following 8 path types with standard attriibuts:
         Directory:
-            X:/                             Hidden, System, Directory
-            X:/System Volume Information/   Hidden, System, Directory
-            X:/$Recycle.Bin/                Hidden, System, Directory
-            X:/*some_symbolic_link_dir/     Directory, ReparsePoint
-            X:/*some_junction/              Directory, ReparsePoint
+            X:\                             Hidden, System, Directory
+            X:\System Volume Information\   Hidden, System, Directory
+            X:\$Recycle.Bin\                Hidden, System, Directory
+            X:\*some_symbolic_link_dir\     Directory, ReparsePoint
+            X:\*some_junction\              Directory, ReparsePoint
         File:
-            X:/*desktop.ini                 Hidden, System, Archive
-            X:/*some_symbolic_link_file     Archive, ReparsePoint
-            X:/*some_hardlink               Archive
+            X:\*desktop.ini                 Hidden, System, Archive
+            X:\*some_symbolic_link_file     Archive, ReparsePoint
+            X:\*some_hardlink               Archive
     If $Path is recognized with one of the above path types, its attriibuts will be reset.
     Other directories' attriibuts will not be reset.
     Other files' attriibuts will not be reset.
@@ -55,28 +55,28 @@ function local:Reset-PathAttributes{
 
     Here are the above specified 8 path types with corresponding `$some_attributes`:
         Directory:
-            X:/                             Normal
-            X:/System Volume Information/   Hidden, System
-            X:/$Recycle.Bin/                Hidden, System
-            X:/*some_symbolic_link_dir/     Normal
-            X:/*some_junction/              Normal
+            X:\                             Normal
+            X:\System Volume Information\   Hidden, System
+            X:\$Recycle.Bin\                Hidden, System
+            X:\*some_symbolic_link_dir\     Normal
+            X:\*some_junction\              Normal
         File:
-            X:/*desktop.ini                 Hidden, System, Archive
-            X:/*some_symbolic_link_file     Archive
-            X:/*some_hardlink               Archive
+            X:\*desktop.ini                 Hidden, System, Archive
+            X:\*some_symbolic_link_file     Archive
+            X:\*some_hardlink               Archive
     
     How to do? Check if a Directory or File, then deal with it with specifical rules:
         If is a Directory?
-            If is `X:/System Volume Information/` or `X:/$Recycle.Bin/`?
+            If is `X:\System Volume Information\` or `X:\$Recycle.Bin\`?
                 set Attributes with $some_Attributes="Hidden, System"
-            ElseIf is `X:/` or `X:/*some_symbolic_link_dir/` or `X:/*some_junction/`:
+            ElseIf is `X:\` or `X:\*some_symbolic_link_dir\` or `X:\*some_junction\`:
                 set Attributes with $some_Attributes="Normal"
             Else:
                 set nothing, modify nothing, do not reset the attributes
         Else, consider as a File：
-            If is `X:/*desktop.ini`?
+            If is `X:\*desktop.ini`?
                 set Attributes with $some_Attributes="Hidden, System, Archive"
-            ElseIf is `X:/*some_symbolic_link_file` or `X:/*some_hardlink`:
+            ElseIf is `X:\*some_symbolic_link_file` or `X:\*some_hardlink`:
                 set Attributes with $some_Attributes="Archive"
             Else:
                 set nothing, modify nothing, do not reset the attributes
@@ -104,8 +104,8 @@ function local:Reset-PathAttributes{
         $Path = Format-Path $Path
         Assert-FileSystemAuthorized $Path
         if ([bool]($Attributes -band [IO.FileAttributes]::Directory)){
-            if (($Path -eq (Format-Path "${Qualifier}/System Volume Information")) -or 
-                ($Path -eq (Format-Path "${Qualifier}/`$Recycle.Bin"))){
+            if (($Path -eq (Format-Path "${Qualifier}\System Volume Information")) -or 
+                ($Path -eq (Format-Path "${Qualifier}\`$Recycle.Bin"))){
                 Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System" 
             }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and 
                      ($Linktype -in @('SymbolicLink','Junction'))){
@@ -143,30 +143,30 @@ function local:Get-PathType{
     Some paths have a hierarchical relationship and can belong to both types as follows, and we return only  the first type recognized in the following order.
     Here are these types and example:  
         Directory:  
-            NonSystemDisk[NTFS/ReFS/FAT32]/Root                          X:/     
-            Home/Root                                   $global:Home/                            
-            NonSystemDisk[NTFS/ReFS/FAT32]/System Volume Information     X:/System Volume Information        
-            NonSystemDisk[NTFS/ReFS/FAT32]/$Recycle.Bin                  X:/$Recycle.Bin                    
-            Home/Directory                              $global:Home/*some_nomrmal_dir/
-            Home/SymbolicLinkDirectory                  $global:Home/*some_symbolic_link_dir/
-            Home/Junction                               $global:Home/*some_junction/
-            NonSystemDisk[NTFS/ReFS/FAT32]/Directory                     X:/*some_nomrmal_dir/
-            NonSystemDisk[NTFS/ReFS/FAT32]/SymbolicLinkDirectory         X:/*some_symbolic_link_dir/
-            NonSystemDisk[NTFS/ReFS/FAT32]/Junction                      X:/*some_junction/
+            NonSystemDisk[NTFS/ReFS/FAT32]\Root                          X:\     
+            Home\Root                                   $global:Home\                            
+            NonSystemDisk[NTFS/ReFS/FAT32]\System Volume Information     X:\System Volume Information        
+            NonSystemDisk[NTFS/ReFS/FAT32]\$Recycle.Bin                  X:\$Recycle.Bin                    
+            Home\Directory                              $global:Home\*some_nomrmal_dir\
+            Home\SymbolicLinkDirectory                  $global:Home\*some_symbolic_link_dir\
+            Home\Junction                               $global:Home\*some_junction\
+            NonSystemDisk[NTFS/ReFS/FAT32]\Directory                     X:\*some_nomrmal_dir\
+            NonSystemDisk[NTFS/ReFS/FAT32]\SymbolicLinkDirectory         X:\*some_symbolic_link_dir\
+            NonSystemDisk[NTFS/ReFS/FAT32]\Junction                      X:\*some_junction\
         File:
-            Home/desktop.ini                            $global:Home/*desktop.ini
-            Home/SymbolicLinkFile                       $global:Home/*some_symbolic_link_file
-            Home/File                                   $global:Home/*some_normal_file or InHome/*some_sparse_file 
-            Home/HardLink                               $global:Home/*some_hardlink
-            NonSystemDisk[NTFS/ReFS/FAT32]/desktop.ini                   X:/*desktop.ini
-            NonSystemDisk[NTFS/ReFS/FAT32]/SymbolicLinkFile              X:/*some_symbolic_link_file
-            NonSystemDisk[NTFS/ReFS/FAT32]/File                          X:/*some_normal_file or X:/*some_sparse_file 
-            NonSystemDisk[NTFS/ReFS/FAT32]/HardLink                      X:/*some_hardlink
-        Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:/` is in one of NTFS/ReFS/FAT32 file system.
+            Home\desktop.ini                            $global:Home\*desktop.ini
+            Home\SymbolicLinkFile                       $global:Home\*some_symbolic_link_file
+            Home\File                                   $global:Home\*some_normal_file or InHome\*some_sparse_file 
+            Home\HardLink                               $global:Home\*some_hardlink
+            NonSystemDisk[NTFS/ReFS/FAT32]\desktop.ini                   X:\*desktop.ini
+            NonSystemDisk[NTFS/ReFS/FAT32]\SymbolicLinkFile              X:\*some_symbolic_link_file
+            NonSystemDisk[NTFS/ReFS/FAT32]\File                          X:\*some_normal_file or X:\*some_sparse_file 
+            NonSystemDisk[NTFS/ReFS/FAT32]\HardLink                      X:\*some_hardlink
+        Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system.
         When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`.
         Here `Home` means be or in `$global:Home` directory.
 
-    We use `(Get-Volume (Get-Qualifier $Path).TrimEnd(":/\")).FileSystemType` to check file system type.
+    We use `(Get-Volume (Get-Qualifier $Path).TrimEnd(":\")).FileSystemType` to check file system type.
     We use both `(Get-Item "$Path").Linktype` and `(Get-Item $Path).Attributes -band [IO.FileAttributes]::$some_Attributes` to implement type determination.
         Refer to https://cloud.tencent.com/developer/ask/sof/112542
         What is `-band` ? See https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.2#arithmetic-operators
@@ -181,17 +181,17 @@ function local:Get-PathType{
         if (Test-IsInInHome $Path){
             $header = "Home"
         }
-        elseif ((Get-Volume (Get-Qualifier $Path).TrimEnd(":/\")).FileSystemType -eq "NTFS"){
+        elseif ((Get-Volume (Get-Qualifier $Path).TrimEnd(":\")).FileSystemType -eq "NTFS"){
             $header = "NonSystemDisk[NTFS]"
         }
-        elseif ((Get-Volume (Get-Qualifier $Path).TrimEnd(":/\")).FileSystemType -eq "ReFS"){
+        elseif ((Get-Volume (Get-Qualifier $Path).TrimEnd(":\")).FileSystemType -eq "ReFS"){
             $header = "NonSystemDisk[ReFS]"
         }
-        elseif((Get-Volume (Get-Qualifier $Path).TrimEnd(":/\")).FileSystemType -eq "FAT32"){
+        elseif((Get-Volume (Get-Qualifier $Path).TrimEnd(":\")).FileSystemType -eq "FAT32"){
             $header = "NonSystemDisk[FAT32]"
         }
         else {
-            throw "`$Path: $Path $("`n`t")is not in home or has unsupported $("`n`t") file system type: $((Get-Volume (Get-Qualifier $Path).TrimEnd(":/\")).FileSystemType)."
+            throw "`$Path: $Path $("`n`t")is not in home or has unsupported $("`n`t") file system type: $((Get-Volume (Get-Qualifier $Path).TrimEnd(":\")).FileSystemType)."
         }
     
         $Qualifier = Get-Qualifier $Path
@@ -200,42 +200,42 @@ function local:Get-PathType{
 
         if ([bool]($Attributes -band [IO.FileAttributes]::Directory)){
             if (($Path -eq $Qualifier) -or ($Path -eq (Format-Path $global:Home))){
-                return  "$header/Root"
+                return  "$header\Root"
             }
-            elseif($Path -eq (Format-Path "${Qualifier}/System Volume Information")){
-                return  "$header/System Volume Information"
+            elseif($Path -eq (Format-Path "${Qualifier}\System Volume Information")){
+                return  "$header\System Volume Information"
             }
-            elseif($Path -eq (Format-Path "${Qualifier}/`$Recycle.Bin")){
-                return "$header/`$Recycle.Bin"
+            elseif($Path -eq (Format-Path "${Qualifier}\`$Recycle.Bin")){
+                return "$header\`$Recycle.Bin"
             }
-            elseif((Get-DriveWithFirstDir $Path) -eq (Format-Path "${Qualifier}/System Volume Information")){
+            elseif((Get-DriveWithFirstDir $Path) -eq (Format-Path "${Qualifier}\System Volume Information")){
                 throw "`$Path: $Path $("`n`t")has unsupported type $("`n`t")with `$Linktype:$Linktype and `$Attributes:$Attributes."
             }
-            elseif((Get-DriveWithFirstDir $Path) -eq (Format-Path "${Qualifier}/`$Recycle.Bin")){
+            elseif((Get-DriveWithFirstDir $Path) -eq (Format-Path "${Qualifier}\`$Recycle.Bin")){
                 throw "`$Path: $Path $("`n`t")has unsupported type $("`n`t")with `$Linktype:$Linktype and `$Attributes:$Attributes."
             }
             elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and ($Linktype -eq "SymbolicLink")) {
-                return "$header/SymbolicLinkDirectory"
+                return "$header\SymbolicLinkDirectory"
             }
             elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and ($Linktype -eq "Junction")) {
-                return "$header/Junction"
+                return "$header\Junction"
             }
             else{
-                return "$header/Directory"
+                return "$header\Directory"
             }
         }
         elseif([bool]($Attributes -band [IO.FileAttributes]::Archive)){
             if ((Split-Path $Path -Leaf) -eq "desktop.ini"){
-                return "$header/desktop.ini"
+                return "$header\desktop.ini"
             }
             elseif ($Linktype -eq "HardLink"){
-                return "$header/HardLink"
+                return "$header\HardLink"
             }
             elseif ($Linktype -eq "SymbolicLink"){
-                return "$header/SymbolicLinkFile"
+                return "$header\SymbolicLinkFile"
             }
             else{
-                return "$header/File"
+                return "$header\File"
             }
         }
         else{
@@ -266,8 +266,8 @@ function local:Set-OriginalAcl{
                 https://learn.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.filesystemaccessrule.-ctor?view=net-6.0#system-security-accesscontrol-filesystemaccessrule-ctor(system-security-principal-identityreference-system-security-accesscontrol-filesystemrights-system-security-accesscontrol-accesscontroltype)
                 https://learn.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.filesystemaccessrule.-ctor?view=net-6.0#system-security-accesscontrol-filesystemaccessrule-ctor(system-security-principal-identityreference-system-security-accesscontrol-filesystemrights-system-security-accesscontrol-inheritanceflags-system-security-accesscontrol-propagationflags-system-security-accesscontrol-accesscontroltype)
                 https://theitbros.com/get-acl-and-set-acl-cmdlets/
-            $temp_acl.SetOwner((new-object System.Security.Principal.NTAccount("BUILTIN/Administrators"))) 
-            $temp_acl.SetGroup((new-object System.Security.Principal.NTAccount("NT AUTHORITY/SYSTEM"))) 
+            $temp_acl.SetOwner((new-object System.Security.Principal.NTAccount("BUILTIN\Administrators"))) 
+            $temp_acl.SetGroup((new-object System.Security.Principal.NTAccount("NT AUTHORITY\SYSTEM"))) 
             $temp_acl.RemoveAccessRule(
                 (New-Object System.Security.AccessControl.FileSystemAccessRule(
                     $identity,$fileSystemRights,$InheritanceFlags,$PropagationFlags,$type)))
@@ -284,12 +284,12 @@ function local:Set-OriginalAcl{
             O:owner_sid  
                 A SID string that identifies the object's owner. 
                 What is `SID string`? See https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-strings.
-                    AU means SDDL_AUTHENTICATED_USERS, i.e. `NT AUTHORITY/Authenticated Users`
-                    SY means SDDL_LOCAL_SYSTEM, i.e. `NT AUTHORITY/SYSTEM`
-                    BA means SDDL_BUILTIN_ADMINISTRATORS,i.e. `BUILTIN/Administrators`
-                    BU means SDDL_BUILTIN_USERS, i.e. `BUILTIN/Users`
+                    AU means SDDL_AUTHENTICATED_USERS, i.e. `NT AUTHORITY\Authenticated Users`
+                    SY means SDDL_LOCAL_SYSTEM, i.e. `NT AUTHORITY\SYSTEM`
+                    BA means SDDL_BUILTIN_ADMINISTRATORS,i.e. `BUILTIN\Administrators`
+                    BU means SDDL_BUILTIN_USERS, i.e. `BUILTIN\Users`
                     or 
-                        (Get-LocalUser -Name ([Environment]::UserName)).SID.Value, i.e. `[Environment]::MachineName+"/"+[Environment]::UserName`
+                        (Get-LocalUser -Name ([Environment]::UserName)).SID.Value, i.e. `[Environment]::MachineName+"\"+[Environment]::UserName`
             G:group_sid
                 A SID string that identifies the object's primary group.
                 The same definition as owner_sid.
@@ -331,34 +331,34 @@ function local:Set-OriginalAcl{
 
    
     The supported $PathType and corresponding ACL(SDDL) mappings are:
-        | `NonSystemDisk[NTFS]/Root`                      | `O:SYG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;;FA;;;SY)(A;OICIIO;GA;;;SY)(A;OICIIO;GA;;;BA)(A;;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
-        | `NonSystemDisk[ReFS]/Root`                      | `O:BAG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
-        | `Home/Root`                                     | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;FA;;;${UserSid})` |
-        | `NonSystemDisk[NTFS]/System Volume Information` | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)`                              |
-        | `NonSystemDisk[NTFS]/$Recycle.Bin`              | `O:${UserSid}G:${UserSid}D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1201ad;;;BU)` |
-        | `NonSystemDisk[ReFS]/System Volume Information` | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)`                              |
-        | `NonSystemDisk[ReFS]/$Recycle.Bin`              | `O:${UserSid}G:${UserSid}D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1201ad;;;BU)` |
-        | `Home/Directory`                                | `O:${UserSid}G:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})` |
-        | `Home/SymbolicLinkDirectory`                    | `O:BAG:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})` |
-        | `Home/Junction`                                 | `O:${UserSid}G:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})` |
-        | `NonSystemDisk[NTFS]/Directory`                 | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
-        | `NonSystemDisk[NTFS]/SymbolicLinkDirectory`     | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
-        | `NonSystemDisk[NTFS]/Junction`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
-        | `NonSystemDisk[ReFS]/Directory`                 | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
-        | `NonSystemDisk[ReFS]/SymbolicLinkDirectory`     | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
-        | `NonSystemDisk[ReFS]/Junction`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
-        | `Home/desktop.ini`                              | `O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
-        | `Home/SymbolicLinkFile`                         | `O:BAG:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
-        | `Home/File`                                     | `O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
-        | `Home/HardLink`                                 | `O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
-        | `NonSystemDisk[NTFS]/desktop.ini`               | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[NTFS]/SymbolicLinkFile`          | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[NTFS]/File`                      | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[NTFS]/HardLink`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[ReFS]/desktop.ini`               | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[ReFS]/SymbolicLinkFile`          | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[ReFS]/File`                      | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-        | `NonSystemDisk[ReFS]/HardLink`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[NTFS]\Root`                      | `O:SYG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;;FA;;;SY)(A;OICIIO;GA;;;SY)(A;OICIIO;GA;;;BA)(A;;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
+        | `NonSystemDisk[ReFS]\Root`                      | `O:BAG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
+        | `Home\Root`                                     | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;FA;;;${UserSid})` |
+        | `NonSystemDisk[NTFS]\System Volume Information` | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)`                              |
+        | `NonSystemDisk[NTFS]\$Recycle.Bin`              | `O:${UserSid}G:${UserSid}D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1201ad;;;BU)` |
+        | `NonSystemDisk[ReFS]\System Volume Information` | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)`                              |
+        | `NonSystemDisk[ReFS]\$Recycle.Bin`              | `O:${UserSid}G:${UserSid}D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1201ad;;;BU)` |
+        | `Home\Directory`                                | `O:${UserSid}G:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})` |
+        | `Home\SymbolicLinkDirectory`                    | `O:BAG:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})` |
+        | `Home\Junction`                                 | `O:${UserSid}G:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})` |
+        | `NonSystemDisk[NTFS]\Directory`                 | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
+        | `NonSystemDisk[NTFS]\SymbolicLinkDirectory`     | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
+        | `NonSystemDisk[NTFS]\Junction`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
+        | `NonSystemDisk[ReFS]\Directory`                 | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
+        | `NonSystemDisk[ReFS]\SymbolicLinkDirectory`     | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
+        | `NonSystemDisk[ReFS]\Junction`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)` |
+        | `Home\desktop.ini`                              | `O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
+        | `Home\SymbolicLinkFile`                         | `O:BAG:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
+        | `Home\File`                                     | `O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
+        | `Home\HardLink`                                 | `O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})` |
+        | `NonSystemDisk[NTFS]\desktop.ini`               | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[NTFS]\SymbolicLinkFile`          | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[NTFS]\File`                      | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[NTFS]\HardLink`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[ReFS]\desktop.ini`               | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[ReFS]\SymbolicLinkFile`          | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[ReFS]\File`                      | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+        | `NonSystemDisk[ReFS]\HardLink`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
     where, `$UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value`.
 
     All `SDDLs`s are from a origin installed native system, so we can ensure it is in the original/correct/target state.
@@ -373,115 +373,115 @@ function local:Set-OriginalAcl{
         $PathType = Get-PathType $Path 
         $UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value
         switch ($PathType) { 
-            "NonSystemDisk[NTFS]/Root"{
+            "NonSystemDisk[NTFS]\Root"{
                 $Sddl = "O:SYG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;;FA;;;SY)(A;OICIIO;GA;;;SY)(A;OICIIO;GA;;;BA)(A;;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/Root"{
+            "NonSystemDisk[ReFS]\Root"{
                 $Sddl = "O:BAG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)"
                 break
             }
-            "Home/Root"{
+            "Home\Root"{
                 $Sddl = "O:BAG:SYD:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;FA;;;${UserSid})"
                 break
             }
-            "NonSystemDisk[NTFS]/System Volume Information"{
+            "NonSystemDisk[NTFS]\System Volume Information"{
                 $Sddl = "O:BAG:SYD:PAI(A;OICI;FA;;;SY)"                          
                 break
             }
-            "NonSystemDisk[NTFS]/`$Recycle.Bin"{
+            "NonSystemDisk[NTFS]\`$Recycle.Bin"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1201ad;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/System Volume Information"{
+            "NonSystemDisk[ReFS]\System Volume Information"{
                 $Sddl = "O:BAG:SYD:PAI(A;OICI;FA;;;SY)"                             
                 break
             }
-            "NonSystemDisk[ReFS]/`$Recycle.Bin"{
+            "NonSystemDisk[ReFS]\`$Recycle.Bin"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1201ad;;;BU)"
                 break
             }
-            "Home/Directory"{
+            "Home\Directory"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})"
                 break
             }
-            "Home/SymbolicLinkDirectory"{
+            "Home\SymbolicLinkDirectory"{
                 $Sddl = "O:BAG:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})"
                 break
             }
-            "Home/Junction"{
+            "Home\Junction"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;OICIID;FA;;;SY)(A;OICIID;FA;;;BA)(A;OICIID;FA;;;${UserSid})"
                 break
             }
-            "NonSystemDisk[NTFS]/Directory"{
+            "NonSystemDisk[NTFS]\Directory"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)"
                 break
             }
-            "NonSystemDisk[NTFS]/SymbolicLinkDirectory"{
+            "NonSystemDisk[NTFS]\SymbolicLinkDirectory"{
                 $Sddl = "O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)"
                 break
             }
-            "NonSystemDisk[NTFS]/Junction"{
+            "NonSystemDisk[NTFS]\Junction"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;ID;FA;;;BA)(A;OICIIOID;GA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/Directory"{
+            "NonSystemDisk[ReFS]\Directory"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/SymbolicLinkDirectory"{
+            "NonSystemDisk[ReFS]\SymbolicLinkDirectory"{
                 $Sddl = "O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/Junction"{
+            "NonSystemDisk[ReFS]\Junction"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;OICIIOID;SDGXGWGR;;;AU)(A;ID;FA;;;SY)(A;OICIIOID;GA;;;SY)(A;OICIID;FA;;;BA)(A;ID;0x1200a9;;;BU)(A;OICIIOID;GXGR;;;BU)"
                 break
             }
-            "Home/desktop.ini"{
+            "Home\desktop.ini"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})"
                 break
             }
-            "Home/SymbolicLinkFile"{
+            "Home\SymbolicLinkFile"{
                 $Sddl = "O:BAG:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})"
                 break
             }
-            "Home/File"{
+            "Home\File"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})"
                 break
             }
-            "Home/HardLink"{
+            "Home\HardLink"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;FA;;;${UserSid})"
                 break
             }
-            "NonSystemDisk[NTFS]/desktop.ini"{
+            "NonSystemDisk[NTFS]\desktop.ini"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[NTFS]/SymbolicLinkFile"{
+            "NonSystemDisk[NTFS]\SymbolicLinkFile"{
                 $Sddl = "O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[NTFS]/File"{
+            "NonSystemDisk[NTFS]\File"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[NTFS]/HardLink"{
+            "NonSystemDisk[NTFS]\HardLink"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/desktop.ini"{
+            "NonSystemDisk[ReFS]\desktop.ini"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/SymbolicLinkFile"{
+            "NonSystemDisk[ReFS]\SymbolicLinkFile"{
                 $Sddl = "O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/File"{
+            "NonSystemDisk[ReFS]\File"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)"
                 break
             }
-            "NonSystemDisk[ReFS]/HardLink"{
+            "NonSystemDisk[ReFS]\HardLink"{
                 $Sddl = "O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;U)"
                 break
             }                   
@@ -508,10 +508,10 @@ function local:Set-OriginalAcl{
         }  
         if (($Recurse) -and 
             ($PathType -notin @(
-                "NonSystemDisk[NTFS]/System Volume Information",
-                "NonSystemDisk[NTFS]/`$Recycle.Bin",
-                "NonSystemDisk[ReFS]/System Volume Information",
-                "NonSystemDisk[ReFS]/`$Recycle.Bin"))){
+                "NonSystemDisk[NTFS]\System Volume Information",
+                "NonSystemDisk[NTFS]\`$Recycle.Bin",
+                "NonSystemDisk[ReFS]\System Volume Information",
+                "NonSystemDisk[ReFS]\`$Recycle.Bin"))){
             # Recurse bypass: files, symbolic link directories, junctions, System Volume Information, `$Recycle.Bin
             $Paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint
             # The progress bar is refer to Chat-Gpt

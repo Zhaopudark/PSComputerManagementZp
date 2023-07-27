@@ -6,15 +6,15 @@ function Format-Path{
     2. Resolved to a full path.
     3. Drive letter will be capitalized.
     4. Maintain original case in a case-sensitive way, even though windows is not case-sensitive.
-    5. Directory paths will be appended with '/'.
+    5. Directory paths will be appended with `\`.
 
 .Example
-    Format-Path -Path 'c:/uSeRs'
-    -> C:/Users/
+    Format-Path -Path 'c:\uSeRs'
+    -> C:\Users\
 
 .Example
-    Format-Path -Path 'c:/uSeRs/test.txt'
-    -> C:/Users/test.txt
+    Format-Path -Path 'c:\uSeRs\test.txt'
+    -> C:\Users\test.txt
     
 .COMPONENT
     Resolve-Path $some_path
@@ -26,7 +26,7 @@ function Format-Path{
     To support wildcard characters, we use `Resolve-Path` to realize
         points `1,2,3` in the above description.
     To realize point `4`, we use `Get-Item` to get path-object's `FullName`.
-    To realize point `5`, we use `Get-Item` to get path-object's `PSIsContainer` and use `join-Path $item ''` to append `/` to a directory path.
+    To realize point `5`, we use `Get-Item` to get path-object's `PSIsContainer` and use `join-Path $item ''` to append `\` to a directory path.
 
 .INPUTS
     String or string with wildcard characters to represent (a) exited path(s).
@@ -131,6 +131,6 @@ function local:Get-DriveWithFirstDir{
     )
     $splited_paths = (Format-Path $Path) -split '\\'
     if ($splited_paths.Count -gt 1) { $max_index = 1 } else { $max_index = 0 }
-    return Format-Path ($splited_paths[0..$max_index] -join '//')
+    return Format-Path ($splited_paths[0..$max_index] -join '\\')
 }
 
