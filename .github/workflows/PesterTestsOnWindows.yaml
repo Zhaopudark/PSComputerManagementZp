@@ -12,6 +12,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: install module 
+      shell: pwsh
+      run: | 
+        Copy-Item .\..\PSComputerManagementZp C:\Users\runneradmin\Documents\PowerShell\Modules\ -Recurse -Force  
     - name: Perform Pester tests from EnvTools.Tests.ps1
       shell: pwsh
       run: |

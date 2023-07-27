@@ -7,6 +7,11 @@ jobs:
     steps:
     - name: Check out repository code
       uses: actions/checkout@v3
+
+    - name: install module 
+      shell: pwsh
+      run: | 
+        Copy-Item ./../PSComputerManagementZp /home/runner/.local/share/powershell/Modules/ -Recurse -Force  
     # - name: Perform a Pester test from the command-line
     #   shell: pwsh
     #   run: Test-Path resultsfile.log | Should -Be $true
