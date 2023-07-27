@@ -1,4 +1,4 @@
-name: Pester Tests
+name: Install on Linux
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest  # 这里选择运行在 Windows 环境，可以根据需要选择其他环境
+    runs-on: ubuntu-latest  # 这里选择运行在 Windows 环境，可以根据需要选择其他环境
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
