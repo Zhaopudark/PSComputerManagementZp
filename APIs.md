@@ -37,7 +37,7 @@
 .DESCRIPTION
     Set system proxy as `ServerIP:PortNumber` for the current user.
     It does not influence environment variables, such as
-        $Env:HTTP_PROXY, $Env:HTTPS_PROXY, $Env:FTP_PROXY, $Env:SOCKS_PROXY etc.
+        $Env:http_proxy, $Env:https_proxy, $Env:ftp_proxy, $Env:socks_proxy etc.
     It is not for all users (not on `local machine` level).
     Automatically add bypass list.
     It only support IPV4.
@@ -154,15 +154,15 @@
 ```powershell
 <#
 .SYNOPSIS
-    Merge redundant items form Machine Level $Env:Path to User Level $Env:Path.
+    Merge redundant items form Machine Level $Env:PATH to User Level $Env:PATH.
 
 .DESCRIPTION
     Sometimes, we may find some redundant items that both 
-    in Machine Level $Env:Path and User Level $Env:Path.
+    in Machine Level $Env:PATH and User Level $Env:PATH.
     This may because we have installed some software in different privileges.
 
-    This function will help us to merge the redundant items from Machine Level $Env:Path to User Level $Env:Path.
-    The operation will symplify the `$Env:Path`.
+    This function will help us to merge the redundant items from Machine Level $Env:PATH to User Level $Env:PATH.
+    The operation will symplify the `$Env:PATH`.
 .NOTES
     Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
 #>
@@ -173,8 +173,8 @@
 ```powershell
 <#
 .DESCRIPTION
-    Add the `Path` to the `$Env:Path` in `Process` level.
-    Format the `Process` level `$Env:Path` by the function `Format-EnvPath` at the same time.
+    Add the `Path` to the `$Env:PATH` in `Process` level.
+    Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
 .EXAMPLE
     Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
 #>
@@ -185,9 +185,9 @@
 ```powershell
 <#
 .DESCRIPTION
-    Remove the paths that match the pattern in `$Env:Path` in the specified level.
+    Remove the paths that match the pattern in `$Env:PATH` in the specified level.
 .EXAMPLE
-    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:Path`.
+    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:PATH`.
     Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
 #>
 ```
@@ -197,10 +197,10 @@
 ```powershell
 <#
 .DESCRIPTION
-    Remove the target path in `$Env:Path` in the specified level.
+    Remove the target path in `$Env:PATH` in the specified level.
 .EXAMPLE
     Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
-    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:Path`.
+    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
 #>
 ```
 

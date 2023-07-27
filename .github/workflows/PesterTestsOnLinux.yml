@@ -1,4 +1,4 @@
-name: Test PowerShell on Linux
+name: Pester Tests On Linux
 
 on:
   push:

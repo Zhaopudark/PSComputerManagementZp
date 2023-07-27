@@ -17,7 +17,7 @@ function local:Write-EnvToolsLogs{
         [string]$Type,
         [string]$Path='' # $null will be converted to empty string
     )
-    Write-EnvToolsHost "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:Path."
+    Write-EnvToolsHost "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
     if($Level -in @('User','Machine')){
         Write-EnvToolsHost "See the log file at $log_file_path for more details."
         $message | Out-File -FilePath $log_file_path -Append
@@ -60,13 +60,13 @@ function local:Test-EnvPathExists{
         [string]$Path
     )
     if ($Path -eq $null){
-        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:Path is `$null."
+        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is `$null."
         return $false
     }elseif ($Path -eq '') {
-        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:Path is empty."
+        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is empty."
         return $false
     }elseif (-not (Test-Path -Path $Path)){
-        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:Path is not exiting."
+        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is not exiting."
         return $false
     }else{
         return $true
@@ -93,7 +93,7 @@ function local:Test-EnvPathNotDuplicated{
             [string[]]$Container
         )
         if ($Path -in $Container){
-            Write-EnvToolsHost "The $Path in in '$Level' level `$Env:Path is duplicated."
+            Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is duplicated."
             return $false
         }else{
             return $true
@@ -103,7 +103,7 @@ function local:Test-EnvPathNotDuplicated{
 function local:Format-EnvPath{
 <#
 .DESCRIPTION
-    Format all paths of `$Env:Path in $Level Level:
+    Format all paths of `$Env:PATH in $Level Level:
         1. Remove the invalid (non-existent or empty or duplicated) items.
         2. Format the content of all items by `Format-Path` function.
 #>
@@ -112,7 +112,7 @@ function local:Format-EnvPath{
         [ValidateScript({Test-EnvPathLevelArg $_})]
         [string]$Level
     )
-    $env_paths = @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
+    $env_paths = @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ';')
     $out_buf = @()
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $env_paths)
@@ -133,22 +133,22 @@ function local:Format-EnvPath{
         }
         
     }
-    [Environment]::SetEnvironmentVariable('Path',$out_buf -join ';',$Level)
-    Write-EnvToolsHost "Formating $Level level `$Env:Path, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
+    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';',$Level)
+    Write-EnvToolsHost "Formating $Level level `$Env:PATH, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
 }
 
 function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 <#
 .SYNOPSIS
-    Merge redundant items form Machine Level $Env:Path to User Level $Env:Path.
+    Merge redundant items form Machine Level $Env:PATH to User Level $Env:PATH.
 
 .DESCRIPTION
     Sometimes, we may find some redundant items that both 
-    in Machine Level $Env:Path and User Level $Env:Path.
+    in Machine Level $Env:PATH and User Level $Env:PATH.
     This may because we have installed some software in different privileges.
 
-    This function will help us to merge the redundant items from Machine Level $Env:Path to User Level $Env:Path.
-    The operation will symplify the `$Env:Path`.
+    This function will help us to merge the redundant items from Machine Level $Env:PATH to User Level $Env:PATH.
+    The operation will symplify the `$Env:PATH`.
 .NOTES
     Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
 #>
@@ -156,8 +156,8 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
     if(-not(Test-AdminPermission)){
         throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
     }
-    $user_env_paths = @([Environment]::GetEnvironmentVariable('Path','User') -Split ';')
-    $machine_env_paths = @([Environment]::GetEnvironmentVariable('Path','Machine') -Split ';')
+    $user_env_paths = @([Environment]::GetEnvironmentVariable('PATH','User') -Split ';')
+    $machine_env_paths = @([Environment]::GetEnvironmentVariable('PATH','Machine') -Split ';')
     $out_buf = @()
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $machine_env_paths)
@@ -171,15 +171,15 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
             $counter += 1
         }
     }
-    [Environment]::SetEnvironmentVariable('Path',$out_buf -join ';','Machine')
-    Write-EnvToolsHost "$counter duplicated items between Machine level and User level `$Env:Path have been found. And, they have been merged into User level `$Env:Path"
+    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';','Machine')
+    Write-EnvToolsHost "$counter duplicated items between Machine level and User level `$Env:PATH have been found. And, they have been merged into User level `$Env:PATH"
 
 }
 function Add-EnvPathToCurrentProcess{
 <#
 .DESCRIPTION
-    Add the `Path` to the `$Env:Path` in `Process` level.
-    Format the `Process` level `$Env:Path` by the function `Format-EnvPath` at the same time.
+    Add the `Path` to the `$Env:PATH` in `Process` level.
+    Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
 .EXAMPLE
     Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
 #>
@@ -190,15 +190,15 @@ function Add-EnvPathToCurrentProcess{
     Format-EnvPath -Level 'Process'
 
     # User Machine Process[Default]
-    $env_paths = @([Environment]::GetEnvironmentVariable('Path') -Split ';') 
+    $env_paths = @([Environment]::GetEnvironmentVariable('PATH') -Split ';') 
     if (Test-EnvPathExists -Level 'Process' -Path $Path){
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $Path = Format-Path -Path $Path
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
             Write-EnvToolsLogs -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
-            [Environment]::SetEnvironmentVariable('Path',$env_paths -join ';','Process')
-            Write-EnvToolsHost "The path '$Path' has been added into Process level `$Env:Path."
+            [Environment]::SetEnvironmentVariable('PATH',$env_paths -join ';','Process')
+            Write-EnvToolsHost "The path '$Path' has been added into Process level `$Env:PATH."
         }
         else{
             Write-EnvToolsLogs -Level 'Process' -Type 'Maintain' -Path $Path
@@ -212,9 +212,9 @@ function Add-EnvPathToCurrentProcess{
 function Remove-EnvPathByPattern{
 <#
 .DESCRIPTION
-    Remove the paths that match the pattern in `$Env:Path` in the specified level.
+    Remove the paths that match the pattern in `$Env:PATH` in the specified level.
 .EXAMPLE
-    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:Path`.
+    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:PATH`.
     Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
 #>
     param(
@@ -226,7 +226,7 @@ function Remove-EnvPathByPattern{
     )
    
     Format-EnvPath -Level $Level
-    $env_paths = @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
+    $env_paths = @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ';')
     $out_buf = @()
     $counter = 0
     foreach ($item in $env_paths)
@@ -239,16 +239,16 @@ function Remove-EnvPathByPattern{
             $counter += 1
         }
     }
-    [Environment]::SetEnvironmentVariable('Path',$out_buf -join ';',$Level)
-    Write-EnvToolsHost "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:Path."
+    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';',$Level)
+    Write-EnvToolsHost "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:PATH."
 }
 function Remove-EnvPathByTargetPath{
 <#
 .DESCRIPTION
-    Remove the target path in `$Env:Path` in the specified level.
+    Remove the target path in `$Env:PATH` in the specified level.
 .EXAMPLE
     Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
-    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:Path`.
+    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
 #>
     param(
         [Parameter(Mandatory)]
@@ -258,7 +258,7 @@ function Remove-EnvPathByTargetPath{
         [string]$Level
     )
     Format-EnvPath -Level $Level
-    $env_paths = @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
+    $env_paths = @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ';')
     $out_buf = @()
     $counter = 0
     if (Test-EnvPathExists -Level $Level -Path $TargetPath){
@@ -277,6 +277,6 @@ function Remove-EnvPathByTargetPath{
     }else{
         Write-EnvToolsLogs -Level $Level -Type 'Not Remove' -Path $TargetPath
     }   
-    [Environment]::SetEnvironmentVariable('Path',$out_buf -join ';',$Level)
-    Write-EnvToolsHost "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:Path."
+    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';',$Level)
+    Write-EnvToolsHost "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:PATH."
 }

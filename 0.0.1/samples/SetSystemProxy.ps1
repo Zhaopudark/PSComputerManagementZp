@@ -16,7 +16,7 @@ param (
 .DESCRIPTION
     Set system proxy as `ServerIP:PortNumber` for the current user.
     It does not influence environment variables, such as
-        $Env:HTTP_PROXY, $Env:HTTPS_PROXY, $Env:FTP_PROXY, $Env:SOCKS_PROXY etc.
+        $Env:http_proxy, $Env:https_proxy, $Env:ftp_proxy, $Env:socks_proxy etc.
     It is not for all users (not on `local machine` level).
     Automatically add bypass list.
     It only support IPV4.
