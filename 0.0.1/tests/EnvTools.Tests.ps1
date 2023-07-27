@@ -1,8 +1,11 @@
 BeforeAll {
-    $user_env_paths_backup = @([Environment]::GetEnvironmentVariable('PATH','User') -Split ';')
-    $machine_env_paths_backup = @([Environment]::GetEnvironmentVariable('PATH','Machine') -Split ';')
-    $process_env_paths_backup = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
+    Import-Module "${PSScriptRoot}\..\helpers\EnvTools.psm1" -Scope local
+    $user_env_paths_backup = Get-EnvPathAsSplit -Level 'User'
+    $machine_env_paths_backup = Get-EnvPathAsSplit -Level 'Machine'
+    $process_env_paths_backup = Get-EnvPathAsSplit -Level 'Process'
+
     Import-Module PSComputerManagementZp -Force
+
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
@@ -15,16 +18,16 @@ Describe 'Test EnvTools' {
     Context 'Symplify non-process level Env:PATH' {
         It 'Test Merge-RedundantEnvPathFromLocalMachineToCurrentUser' {
             Merge-RedundantEnvPathFromLocalMachineToCurrentUser
-            $user_env_paths = @([Environment]::GetEnvironmentVariable('PATH','User') -Split ';')
+            $user_env_paths = Get-EnvPathAsSplit -Level 'User'
             $user_env_paths += $test_path
-            $machine_env_paths = @([Environment]::GetEnvironmentVariable('PATH','Machine') -Split ';')
+            $machine_env_paths = Get-EnvPathAsSplit -Level 'Machine'
             $machine_env_paths += $test_path
-            [Environment]::SetEnvironmentVariable('PATH', ($user_env_paths -Join ';'), 'User')
-            [Environment]::SetEnvironmentVariable('PATH', ($machine_env_paths -Join ';'), 'Machine')
+            Set-EnvPathBySplit -Level 'User' -Path $user_env_paths
+            Set-EnvPathBySplit -Level 'Machine' -Path $machine_env_paths
             Merge-RedundantEnvPathFromLocalMachineToCurrentUser
-            $user_env_paths2 = @([Environment]::GetEnvironmentVariable('PATH','User') -Split ';')
-            $machine_env_paths2 = @([Environment]::GetEnvironmentVariable('PATH','Machine') -Split ';')
-            
+            $user_env_paths2 = Get-EnvPathAsSplit -Level 'User'
+            $machine_env_paths2 = Get-EnvPathAsSplit -Level 'Machine'
+     
             $user_env_paths2 | Should -Contain $test_path
             $user_env_paths2.count | Should -Be $user_env_paths.count
             $machine_env_paths2 | Should -Not -Contain $test_path
@@ -33,10 +36,9 @@ Describe 'Test EnvTools' {
     }
     Context 'Add items into process level Env:PATH' {
         It 'Test Add-EnvPathToCurrentProcess' {
-            $process_env_paths1 = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
+            $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Add-EnvPathToCurrentProcess -Path $test_path
-            $process_env_paths2 = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
-            
+            $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'W
             $process_env_paths1 | Should -Not -Contain $test_path
             $process_env_paths2 | Should -Contain $test_path
            
@@ -46,9 +48,9 @@ Describe 'Test EnvTools' {
     Context 'Remove items from process level Env:PATH' {
         It 'Test Remove-EnvPathByPattern'{
             Add-EnvPathToCurrentProcess -Path $test_path
-            $process_env_paths1 = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
+            $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Remove-EnvPathByPattern -Pattern $guid -Level 'Process'
-            $process_env_paths2 = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
+            $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
             
             $process_env_paths1 | Should -Contain $test_path
             $process_env_paths2 | Should -Not -Contain $test_path
@@ -56,9 +58,9 @@ Describe 'Test EnvTools' {
         }
         It 'Test Remove-EnvPathByTargetPath'{
             Add-EnvPathToCurrentProcess -Path $test_path
-            $process_env_paths1 = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
+            $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Remove-EnvPathByTargetPath -TargetPath $test_path -Level 'Process'
-            $process_env_paths2 = @([Environment]::GetEnvironmentVariable('PATH') -Split ';')
+            $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
             
             $process_env_paths1 | Should -Contain $test_path
             $process_env_paths2 | Should -Not -Contain $test_path
@@ -70,7 +72,7 @@ Describe 'Test EnvTools' {
 AfterAll {
     Remove-Item -Path $test_path -Force -Recurse
     Remove-Module PSComputerManagementZp -Force
-    [Environment]::SetEnvironmentVariable('PATH', ($user_env_paths_backup -Join ';'), 'User')
-    [Environment]::SetEnvironmentVariable('PATH', ($machine_env_paths_backup -Join ';'), 'Machine')
-    [Environment]::SetEnvironmentVariable('PATH', ($process_env_paths_backup -Join ';'))
+    Set-EnvPathBySplit -Level 'User' -Path $user_env_paths_backup
+    Set-EnvPathBySplit -Level 'Machine' -Path $machine_env_paths_backup
+    Set-EnvPathBySplit -Level 'Process' -Path $process_env_paths_backup
 }

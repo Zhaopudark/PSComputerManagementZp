@@ -100,6 +100,50 @@ function local:Test-EnvPathNotDuplicated{
         }
     }
 
+function Get-EnvPathAsSplit{
+    param(
+        [Parameter(Mandatory)]
+        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [string]$Level
+    )
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+        return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
+    
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+        return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
+    
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+        return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
+    
+    }else{
+        Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        exit -1
+    }    
+}
+function Set-EnvPathBySplit{
+    param(
+        [Parameter(Mandatory)]
+        [string[]]$Paths,
+        [Parameter(Mandatory)]
+        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [string]$Level
+    )
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+        [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
+    
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+        [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
+    
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+        [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
+    
+    }else{
+        Write-Host "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        exit -1
+    }    
+}
 function local:Format-EnvPath{
 <#
 .DESCRIPTION
@@ -112,7 +156,7 @@ function local:Format-EnvPath{
         [ValidateScript({Test-EnvPathLevelArg $_})]
         [string]$Level
     )
-    $env_paths = @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ';')
+    $env_paths = Get-EnvPathAsSplit -Level $Level
     $out_buf = @()
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $env_paths)
@@ -133,7 +177,7 @@ function local:Format-EnvPath{
         }
         
     }
-    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';',$Level)
+    Set-EnvPathBySplit -Paths $out_buf -Level $Level
     Write-EnvToolsHost "Formating $Level level `$Env:PATH, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
 }
 
@@ -156,8 +200,8 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
     if(-not(Test-AdminPermission)){
         throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
     }
-    $user_env_paths = @([Environment]::GetEnvironmentVariable('PATH','User') -Split ';')
-    $machine_env_paths = @([Environment]::GetEnvironmentVariable('PATH','Machine') -Split ';')
+    $user_env_paths = Get-EnvPathAsSplit -Level 'User'
+    $machine_env_paths = Get-EnvPathAsSplit -Level 'Machine'
     $out_buf = @()
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $machine_env_paths)
@@ -171,7 +215,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
             $counter += 1
         }
     }
-    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';','Machine')
+    Set-EnvPathBySplit -Paths $out_buf -Level 'Machine'
     Write-EnvToolsHost "$counter duplicated items between Machine level and User level `$Env:PATH have been found. And, they have been merged into User level `$Env:PATH"
 
 }
@@ -190,14 +234,15 @@ function Add-EnvPathToCurrentProcess{
     Format-EnvPath -Level 'Process'
 
     # User Machine Process[Default]
-    $env_paths = @([Environment]::GetEnvironmentVariable('PATH') -Split ';') 
+    $env_paths = Get-EnvPathAsSplit -Level 'Process'
+
     if (Test-EnvPathExists -Level 'Process' -Path $Path){
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $Path = Format-Path -Path $Path
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
             Write-EnvToolsLogs -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
-            [Environment]::SetEnvironmentVariable('PATH',$env_paths -join ';','Process')
+            Set-EnvPathBySplit -Paths $env_paths -Level 'Process'
             Write-EnvToolsHost "The path '$Path' has been added into Process level `$Env:PATH."
         }
         else{
@@ -226,7 +271,7 @@ function Remove-EnvPathByPattern{
     )
    
     Format-EnvPath -Level $Level
-    $env_paths = @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ';')
+    $env_paths = Get-EnvPathAsSplit -Level $Level
     $out_buf = @()
     $counter = 0
     foreach ($item in $env_paths)
@@ -239,7 +284,7 @@ function Remove-EnvPathByPattern{
             $counter += 1
         }
     }
-    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';',$Level)
+    Set-EnvPathBySplit -Paths $out_buf -Level $Level
     Write-EnvToolsHost "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:PATH."
 }
 function Remove-EnvPathByTargetPath{
@@ -258,7 +303,7 @@ function Remove-EnvPathByTargetPath{
         [string]$Level
     )
     Format-EnvPath -Level $Level
-    $env_paths = @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ';')
+    $env_paths = Get-EnvPathAsSplit -Level $Level
     $out_buf = @()
     $counter = 0
     if (Test-EnvPathExists -Level $Level -Path $TargetPath){
@@ -277,6 +322,6 @@ function Remove-EnvPathByTargetPath{
     }else{
         Write-EnvToolsLogs -Level $Level -Type 'Not Remove' -Path $TargetPath
     }   
-    [Environment]::SetEnvironmentVariable('PATH',$out_buf -join ';',$Level)
+    Set-EnvPathBySplit -Paths $out_buf -Level $Level
     Write-EnvToolsHost "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:PATH."
 }
