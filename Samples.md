@@ -4,7 +4,7 @@ In this page, there are some maybe useful samples or usages with the module `PSC
 
 # About Windows or WSL2 System Proxy
 
-**Fundamental**: Modify `Current User` level registry items  `HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings` to set and unset system level proxy.
+**Fundamental**: Modify `Current User` level registry items  `HKCU:/Software/Microsoft/Windows/CurrentVersion/Internet Settings` to set and unset system level proxy.
 
 ## Set system proxy IPV4 by `Localhost` with `PortNumber`
 
@@ -14,7 +14,7 @@ Supposing the port number is `7890`, the following commands will automatically d
 
 ```powershell
 $module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
+$script_path = "$($module.Path | Split-Path -Parent)/samples/SetSystemProxy.ps1"
 & $script_path -ServerType 'localhost' -PortNumber 7890
 ```
 
@@ -41,7 +41,7 @@ Supposing the port number is `7890`, the following commands will automatically d
 
 ```powershell
 $module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
+$script_path = "$($module.Path | Split-Path -Parent)/samples/SetSystemProxy.ps1"
 & $script_path -ServerType 'gateway' -PortNumber 7890
 ```
 
@@ -54,7 +54,7 @@ Optional: To inject this script `SetSystemProxy.ps1` into the the `virtual Windo
 ```powershell
 Set-ExecutionPolicy RemoteSigned
 $module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
+$script_path = "$($module.Path | Split-Path -Parent)/samples/SetSystemProxy.ps1"
 
 Stop-ScheduledTask -TaskName "SetProxy"
 Import-Module PSComputerManagementZp -Scope Local -Force
@@ -137,7 +137,7 @@ Supposing  you have run the above commands to set system proxy, you can do the f
 
 ```powershell
 $module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\RemoveSystemProxy.ps1"
+$script_path = "$($module.Path | Split-Path -Parent)/samples/RemoveSystemProxy.ps1"
 & $script_path
 ```
 

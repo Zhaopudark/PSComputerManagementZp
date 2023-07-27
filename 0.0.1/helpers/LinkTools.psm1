@@ -4,7 +4,7 @@ function local:Merge-DirectoryWithBackup{
     Backup $Source to a path based on $Backuppath
     Backup $Destination to a path based on $Backuppath
     Then, merge items from $Source to $Destination
-    Make logs in ${Home}\Merge-DirectoryWithBackup.log
+    Make logs in ${Home}/Merge-DirectoryWithBackup.log
 #>
     param(
         [Parameter(Mandatory)]
@@ -15,7 +15,7 @@ function local:Merge-DirectoryWithBackup{
         [string]$Backuppath
     )
     try{
-        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
         Assert-IsDirectory $Source
         Assert-IsDirectory $Destination
         Assert-IsDirectory $Backuppath
@@ -24,9 +24,9 @@ function local:Merge-DirectoryWithBackup{
         $backup_source = "$Backuppath/$guid-$source_name"
         $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
         $backup_destination = "$Backuppath/$guid-$destination_name"
-        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-DirectoryWithBackup.log"
-        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-DirectoryWithBackup.log"
-        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-DirectoryWithBackup.log"
+        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"${Home}/Merge-DirectoryWithBackup.log"
+        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"${Home}/Merge-DirectoryWithBackup.log"
+        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"${Home}/Merge-DirectoryWithBackup.log"
     }
     catch
     {
@@ -39,7 +39,7 @@ function local:Move-FileWithBackup{
     Backup $Source to a path based on $Backuppath
     Backup $Destination to a path based on $Backuppath
     Then, move $Source to $Destination
-    Make logs in ${Home}\Move-FileWithBackup.log
+    Make logs in ${Home}/Move-FileWithBackup.log
 #>
     param(
         [Parameter(Mandatory)]
@@ -50,7 +50,7 @@ function local:Move-FileWithBackup{
         [string]$Backuppath
     )
     try{
-        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
         Assert-IsFile $Source
         Assert-IsFile $Destination
         Assert-IsDirectory $Backuppath
@@ -59,9 +59,9 @@ function local:Move-FileWithBackup{
         $backup_source = "$Backuppath/$guid-$source_name"
         $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
         $backup_destination = "$Backuppath/$guid-$destination_name"
-        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"${Home}\Move-FileWithBackup.log"
-        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Move-FileWithBackup.log"
-        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Move-FileWithBackup.log"
+        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"${Home}/Move-FileWithBackup.log"
+        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"${Home}/Move-FileWithBackup.log"
+        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"${Home}/Move-FileWithBackup.log"
     }
     catch
     {
@@ -95,7 +95,7 @@ function local:Merge-BeforeSetDirLink{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
     if (Test-Path $Target1){
         if (Test-ReparsePoint $Target1){
             if (Test-Path $Target2){
@@ -125,7 +125,7 @@ function local:Merge-BeforeSetDirLink{
             }else{
                 # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
                 Write-Host "Robocopy $Target1 $Target2"
-                Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-BeforeSetDirLink.log"
+                Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"${Home}/Merge-BeforeSetDirLink.log"
                 Write-Host "Remove-Item $Target1 -Force"
                 Remove-Item $Target1 -Force
             }
@@ -173,7 +173,7 @@ function local:Move-BeforeSetFileLink{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
     if (Test-Path $Target1){
         if (Test-ReparsePoint $Target1){
             if (Test-Path $Target2){
@@ -203,7 +203,7 @@ function local:Move-BeforeSetFileLink{
             }else{
                 # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
                 Write-Host "Robocopy $Target1 $Target2"
-                Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
+                Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}/Move-BeforeSetFileLink.log"
                 Write-Host "Remove-Item $Target1 -Force"
                 Remove-Item $Target1 -Force
             }

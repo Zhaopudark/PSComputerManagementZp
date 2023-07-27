@@ -1,13 +1,13 @@
 BeforeAll {
     Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
-    $test_path = "${Home}\$guid"
+    $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
-    Import-Module "${PSScriptRoot}\..\helpers\PathTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/../helpers/PathTools.psm1" -Scope local
     # $test_path = Format-Path $test_path
 
-    $test_dir = "${test_path}\test_dir"
-    $test_file = "${test_path}\test.txt"
+    $test_dir = "${test_path}/test_dir"
+    $test_file = "${test_path}/test.txt"
     New-Item -Path $test_dir -ItemType Directory -Force
     New-Item -Path $test_file -ItemType File -Force   
 }
@@ -15,15 +15,15 @@ BeforeAll {
 Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on a exiting dir' {
-            $path = Format-Path "${test_path}\tEsT_diR"
-            $path | Should -BeExactly "${test_path}\test_dir\"
+            $path = Format-Path "${test_path}/tEsT_diR"
+            $path | Should -BeExactly "${test_path}/test_dir/"
         }
         It 'Test on a exiting file' {
             # Format-Path will not influence `file`'s name.
             # It will maintain the case in `file`'s name.
-            # $path = Format-Path "${test_path}\tESt.tXt"
+            # $path = Format-Path "${test_path}/tESt.tXt"
             # Write-Host Resolve-Path $path
-            # $path | Should -BeExactly "${test_path}\test.txt"
+            # $path | Should -BeExactly "${test_path}/test.txt"
         }
     }
 

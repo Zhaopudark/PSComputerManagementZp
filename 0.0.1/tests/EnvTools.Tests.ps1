@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module "${PSScriptRoot}\..\helpers\EnvTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/../helpers/EnvTools.psm1" -Scope local
     $user_env_paths_backup = Get-EnvPathAsSplit -Level 'User'
     $machine_env_paths_backup = Get-EnvPathAsSplit -Level 'Machine'
     $process_env_paths_backup = Get-EnvPathAsSplit -Level 'Process'
@@ -7,9 +7,9 @@ BeforeAll {
     Import-Module PSComputerManagementZp -Force
 
     $guid = [guid]::NewGuid()
-    $test_path = "${Home}\$guid"
+    $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
-    Import-Module "${PSScriptRoot}\..\helpers\PathTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/../helpers/PathTools.psm1" -Scope local
     $test_path = Format-Path $test_path
     
 }

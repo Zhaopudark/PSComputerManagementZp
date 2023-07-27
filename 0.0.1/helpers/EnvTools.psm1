@@ -1,4 +1,4 @@
-$local:log_file_path = "${Home}\PowerShellLogs.txt"
+$local:log_file_path = "${Home}/PowerShellLogs.txt"
 function local:Write-EnvToolsHost{
     param(
         [Parameter(Mandatory)]
@@ -30,7 +30,7 @@ function local:Test-EnvPathLevelArg{
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
     }elseif ($Level -eq 'Machine'){
-        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}/PlatformTools.psm1" -Scope local
         if(-not(Test-AdminPermission)){
             throw [System.UnauthorizedAccessException]::new("You must run this function as administrator when arg `$Level is $Level.")
         }
@@ -106,7 +106,7 @@ function Get-EnvPathAsSplit{
         [ValidateScript({Test-EnvPathLevelArg $_})]
         [string]$Level
     )
-    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/PlatformTools.psm1" -Scope local
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
     
@@ -128,7 +128,7 @@ function Set-EnvPathBySplit{
         [ValidateScript({Test-EnvPathLevelArg $_})]
         [string]$Level
     )
-    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/PlatformTools.psm1" -Scope local
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
         [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
     
@@ -161,7 +161,7 @@ function local:Format-EnvPath{
     foreach ($item in $env_paths)
     {
         if (Test-EnvPathExists -Level $Level -Path $item){
-            Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+            Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
             $item = Format-Path -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
                 $out_buf += $item
@@ -195,7 +195,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 .NOTES
     Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
 #>
-    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}/PlatformTools.psm1" -Scope local
     if(-not(Test-AdminPermission)){
         throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
     }
@@ -224,7 +224,7 @@ function Add-EnvPathToCurrentProcess{
     Add the `Path` to the `$Env:PATH` in `Process` level.
     Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
 .EXAMPLE
-    Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
+    Add-EnvPathToCurrentProcess -Path 'C:/Program Files/Git/cmd'
 #>
     param(
         [Parameter(Mandatory)]
@@ -236,7 +236,7 @@ function Add-EnvPathToCurrentProcess{
     $env_paths = Get-EnvPathAsSplit -Level 'Process'
 
     if (Test-EnvPathExists -Level 'Process' -Path $Path){
-        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
         $Path = Format-Path -Path $Path
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
             Write-EnvToolsLogs -Level 'Process' -Type 'Add' -Path $Path
@@ -291,8 +291,8 @@ function Remove-EnvPathByTargetPath{
 .DESCRIPTION
     Remove the target path in `$Env:PATH` in the specified level.
 .EXAMPLE
-    Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
-    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
+    Remove-EnvPathByTargetPath -TargetPath 'C:/Program Files/Git/cmd' -Level 'Process'
+    # It will remove the path 'C:/Program Files/Git/cmd' in the Process level `$Env:PATH`.
 #>
     param(
         [Parameter(Mandatory)]
@@ -306,7 +306,7 @@ function Remove-EnvPathByTargetPath{
     $out_buf = @()
     $counter = 0
     if (Test-EnvPathExists -Level $Level -Path $TargetPath){
-        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        Import-Module "${PSScriptRoot}/PathTools.psm1" -Scope local
         $TargetPath = Format-Path -Path $TargetPath
         foreach ($item in $env_paths)
         {
