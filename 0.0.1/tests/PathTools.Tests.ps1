@@ -15,13 +15,13 @@ BeforeAll {
 Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on a exiting dir' {
-            if (Test-IfIsOnCertainPlatform -Platform 'Windows') {
+            if (Test-IfIsOnCertainPlatform -SystemName 'Windows') {
                 $path = Format-Path "${test_path}\tEsT_diR"
                 $path | Should -BeExactly "${test_path}\test_dir"
-            }elseif (Test-IfIsOnCertainPlatform -Platform 'Linux') {
+            }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux') {
                 $path = Format-Path "${test_path}/test_dir"
                 $path | Should -BeExactly "${test_path}/test_dir"
-            }elseif (Test-IfIsOnCertainPlatform -Platform 'Wsl2') {
+            }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2') {
                 $path = Format-Path "${test_path}/test_dir"
                 $path | Should -BeExactly "${test_path}/test_dir"
             }else{
