@@ -8,6 +8,10 @@ function Test-AdminPermission {
         return $true
     }    
 }
+function local:Test-IsWSL2{
+    $output = bash -c "cat /proc/version 2>&1"
+    return $output.Contains("WSL2")
+}
 function Test-IfIsOnCertainPlatform{
 <#
 .DESCRIPTION
@@ -32,7 +36,7 @@ function Test-IfIsOnCertainPlatform{
         }
         return $true
     
-    } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "wsl2")){
+    } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
         if ($ShowInfo){
             Write-Host "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
