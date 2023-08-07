@@ -213,10 +213,10 @@
 .DESCRIPTION
     Test if the current platform is compatible with the systemName.
     It only support Windows and Wsl2.
-    If $ShowInfo is given, it will show the result.
+    If $Verbose is given, it will show the verbose result.
 .EXAMPLE
-    Test-IfIsOnCertainPlatform -SystemName 'Windows' -ShowInfo
-    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -ShowInfo
+    Test-IfIsOnCertainPlatform -SystemName 'Windows' 
+    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -Verbose
 .OUTPUTS
     $true if compatible, otherwise $false.
 #>

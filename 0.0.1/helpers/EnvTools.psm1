@@ -5,7 +5,7 @@ function local:Write-EnvToolsHost{
         [string]$Message
     )
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    Write-Host "[$time_stamp] --- $Message"
+    Write-Output "[$time_stamp] --- $Message"
 }
 function local:Write-EnvToolsLog{
     param(
@@ -18,9 +18,9 @@ function local:Write-EnvToolsLog{
         [string]$Path='' # $null will be converted to empty string
     )
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
-    Write-EnvToolsHost $message
+    Write-Output $message
     if($Level -in @('User','Machine')){
-        Write-EnvToolsHost "See the log file at $log_file_path for more details."
+        Write-Output "See the log file at $log_file_path for more details."
         $message | Out-File -FilePath $log_file_path -Append
     }
 }
@@ -41,7 +41,7 @@ function local:Test-EnvPathLevelArg{
     }else{
         if (((Test-IfIsOnCertainPlatform -SystemName 'Wsl2') -or (Test-IfIsOnCertainPlatform -SystemName 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
-            Write-Host  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+            Write-Warning  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
         return $true
     }
@@ -65,13 +65,13 @@ function local:Test-EnvPathExist{
         [string]$Path
     )
     if ($Path -eq $null){
-        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is `$null."
+        Write-Debug "The $Path in in '$Level' level `$Env:PATH is `$null."
         return $false
     }elseif ($Path -eq '') {
-        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is empty."
+        Write-Debug "The $Path in in '$Level' level `$Env:PATH is empty."
         return $false
     }elseif (-not (Test-Path -Path $Path)){
-        Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is not exiting."
+        Write-Debug "The $Path in in '$Level' level `$Env:PATH is not exiting."
         return $false
     }else{
         return $true
@@ -98,7 +98,7 @@ function local:Test-EnvPathNotDuplicated{
             [string[]]$Container
         )
         if ($Path -in $Container){
-            Write-EnvToolsHost "The $Path in in '$Level' level `$Env:PATH is duplicated."
+            Write-Debug "The $Path in in '$Level' level `$Env:PATH is duplicated."
             return $false
         }else{
             return $true
@@ -123,7 +123,7 @@ function Get-EnvPathAsSplit{
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
     }else{
-        Write-Host  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Error  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -145,7 +145,7 @@ function Set-EnvPathBySplit{
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
     }else{
-        Write-Host  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Error  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }

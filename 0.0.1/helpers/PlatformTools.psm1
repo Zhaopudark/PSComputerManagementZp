@@ -17,41 +17,30 @@ function Test-IfIsOnCertainPlatform{
 .DESCRIPTION
     Test if the current platform is compatible with the systemName.
     It only support Windows and Wsl2.
-    If $ShowInfo is given, it will show the result.
+    If $Verbose is given, it will show the result.
 .EXAMPLE
-    Test-IfIsOnCertainPlatform -SystemName 'Windows' -ShowInfo
-    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -ShowInfo
-    Test-IfIsOnCertainPlatform -SystemName 'Linux' -ShowInfo
+    Test-IfIsOnCertainPlatform -SystemName 'Windows' -Verbose
+    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -Verbose
+    Test-IfIsOnCertainPlatform -SystemName 'Linux' -Verbose
 .OUTPUTS
     $true if compatible, otherwise $false.
 #>
+    [CmdletBinding()]
     param(
         [ValidateSet("Windows","Wsl2","Linux")]
-        [string]$SystemName,
-        [switch]$ShowInfo
+        [string]$SystemName
     )
     if (($PSVersionTable.Platform -eq "Win32NT") -and ($SystemName.ToLower() -eq "windows")){
-        if ($ShowInfo){
-            Write-Host  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
-        }
+        Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
-
     } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
-        if ($ShowInfo){
-            Write-Host  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
-        }
+        Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
-
     } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "linux")){
-        if ($ShowInfo){
-            Write-Host  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
-        }
+        Write-Verbose  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
-
     } else {
-        if ($ShowInfo){
-            Write-Host  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
-        }
+        Write-Verbose  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
         return $false
     }
 }
