@@ -1,7 +1,7 @@
 
 function Format-Path{
     param ()
-    Write-Host "Format-Path func2"
+    Write-Output "Format-Path func2"
 }
 
 

@@ -104,7 +104,7 @@ function local:Merge-BeforeSetDirLink{
                     throw "Cannot merge $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
                 }else{
                     # dir-ReparsePoint        | dir-non-ReparsePoint  | del $Target1
-                    Write-Host "Remove-Item $Target1 -Force"
+                    Write-Output "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
@@ -119,14 +119,14 @@ function local:Merge-BeforeSetDirLink{
                 }else{
                     #dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
                     Merge-DirectoryWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                    Write-Host "Remove-Item $Target1 -Force"
+                    Write-Output "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
                 # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
-                Write-Host "Robocopy $Target1 $Target2"
+                Write-Output "Robocopy $Target1 $Target2"
                 Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-BeforeSetDirLink.log"
-                Write-Host "Remove-Item $Target1 -Force"
+                Write-Output "Remove-Item $Target1 -Force"
                 Remove-Item $Target1 -Force
             }
         }
@@ -137,11 +137,11 @@ function local:Merge-BeforeSetDirLink{
                 throw "Cannot merge $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
             }else{
                 # non-existent            | dir-non-ReparsePoint  | pass(do nothing)
-                Write-Host "Do nothing."
+                Write-Output "Do nothing."
             }
         }else{
             # non-existent            | non-existent          | New-item $Target2 -Itemtype Directory
-            Write-Host "New-Item $Target2 -ItemType Directory"
+            Write-Output "New-Item $Target2 -ItemType Directory"
             New-Item $Target2 -ItemType Directory
         }
     }
@@ -182,7 +182,7 @@ function local:Move-BeforeSetFileLink{
                     throw "Cannot move $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
                 }else{
                     # file-ReparsePoint       | file-non-ReparsePoint | del $Target1
-                    Write-Host "Remove-Item $Target1 -Force"
+                    Write-Output "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
@@ -197,14 +197,14 @@ function local:Move-BeforeSetFileLink{
                 }else{
                     # file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
                     Move-FileWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                    Write-Host "Remove-Item $Target1 -Force"
+                    Write-Output "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
                 # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
-                Write-Host "Robocopy $Target1 $Target2"
+                Write-Output "Robocopy $Target1 $Target2"
                 Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
-                Write-Host "Remove-Item $Target1 -Force"
+                Write-Output "Remove-Item $Target1 -Force"
                 Remove-Item $Target1 -Force
             }
         }
@@ -215,11 +215,11 @@ function local:Move-BeforeSetFileLink{
                 throw "Cannot move $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
             }else{
                 # non-existent            | file-non-ReparsePoint | pass(do nothing)
-                Write-Host "Do nothing."
+                Write-Output "Do nothing."
             }
         }else{
             # non-existent            | non-existent          | New-item $Target2 -ItemType File
-            Write-Host "New-Item $Target2 -ItemType File"
+            Write-Output "New-Item $Target2 -ItemType File"
             New-Item $Target2 -ItemType File
         }
     }

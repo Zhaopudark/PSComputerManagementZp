@@ -1,6 +1,6 @@
 The PowerShell module `PSComputerManagementZp` can help users to realize many common management operations easily on Windows PCs. 
 
-In this page, there are some maybe useful samples or usages with the module `PSComputerManagementZp`.
+In this page, there are some perhaps useful samples or usages with the module `PSComputerManagementZp`.
 
 # About Windows or WSL2 System Proxy
 

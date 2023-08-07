@@ -45,7 +45,7 @@ function local:Reset-PathAttributes{
     Other directories' attriibuts will not be reset.
     Other files' attriibuts will not be reset.
 
-    Many (Maybe All) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
+    Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
         ReadOnly, Hidden, System, Directory, Archive, Device, 
         Normal, Temporary, SparseFile, ReparsePoint, Compressed, 
         Offline, NotContentIndexed, Encrypted, IntegrityStream, NoScrubData.
