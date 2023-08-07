@@ -17,10 +17,10 @@ function local:Write-EnvToolsLog{
         [string]$Type,
         [string]$Path='' # $null will be converted to empty string
     )
-    Write-EnvToolsHost "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
+    $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
+    Write-EnvToolsHost $message
     if($Level -in @('User','Machine')){
-        $message = "See the log file at $log_file_path for more details."
-        Write-EnvToolsHost $message
+        Write-EnvToolsHost "See the log file at $log_file_path for more details."
         $message | Out-File -FilePath $log_file_path -Append
     }
 }
