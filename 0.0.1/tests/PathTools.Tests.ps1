@@ -33,7 +33,7 @@ Describe 'Test PathTools' {
             # Format-Path will not influence `file`'s name.
             # It will maintain the case in `file`'s name.
             # $path = Format-Path "${test_path}\tESt.tXt"
-            # Write-Output  Resolve-Path $path
+            # Write-Host  Resolve-Path $path
             # $path | Should -BeExactly "${test_path}\test.txt"
         }
     }

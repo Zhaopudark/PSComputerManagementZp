@@ -6,7 +6,6 @@ function local:Write-EnvToolsHost{
     )
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     Write-Host "[$time_stamp] --- $Message"
-    Write-Output "[$time_stamp] --- $Message"
 }
 function local:Write-EnvToolsLog{
     param(
@@ -42,7 +41,7 @@ function local:Test-EnvPathLevelArg{
     }else{
         if (((Test-IfIsOnCertainPlatform -SystemName 'Wsl2') -or (Test-IfIsOnCertainPlatform -SystemName 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
-            Write-Output  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+            Write-Host  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
         return $true
     }
@@ -124,7 +123,7 @@ function Get-EnvPathAsSplit{
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
     }else{
-        Write-Output  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Host  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -146,7 +145,7 @@ function Set-EnvPathBySplit{
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
     }else{
-        Write-Output  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Host  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -169,8 +168,6 @@ function local:Format-EnvPath{
     {
         if (Test-EnvPathExist -Level $Level -Path $item){
             Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
-            Write-Host $item
-            Write-Host "$(Test-EnvPathExist -Level $Level -Path $item)"
             $item = Format-Path -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
                 $out_buf += $item
