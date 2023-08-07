@@ -36,10 +36,7 @@ Describe 'Test EnvTools' {
     }
     Context 'Add items into process level Env:PATH' {
         It 'Test Add-EnvPathToCurrentProcess' {
-            ls env:
-            Write-Host $test_path
-            Write-Host $test_path
-            Write-Host $test_path
+            Write-Host $(ls env:)
             $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Add-EnvPathToCurrentProcess -Path $test_path
             $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
