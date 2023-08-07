@@ -5,7 +5,7 @@ function local:Write-EnvToolsHost{
         [string]$Message
     )
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    Write-Output "[$time_stamp] --- $Message"
+    # Write-Output "[$time_stamp] --- $Message"
 }
 function local:Write-EnvToolsLog{
     param(
