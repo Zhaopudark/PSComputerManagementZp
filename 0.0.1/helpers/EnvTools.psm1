@@ -5,7 +5,7 @@ function local:Write-EnvToolsHost{
         [string]$Message
     )
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    Write-Host "[$time_stamp] --- $Message"
+    Write-Output "[$time_stamp] --- $Message"
 }
 function local:Write-EnvToolsLog{
     param(
@@ -19,7 +19,8 @@ function local:Write-EnvToolsLog{
     )
     Write-EnvToolsHost "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
     if($Level -in @('User','Machine')){
-        Write-EnvToolsHost "See the log file at $log_file_path for more details."
+        $message = "See the log file at $log_file_path for more details."
+        Write-EnvToolsHost $message
         $message | Out-File -FilePath $log_file_path -Append
     }
 }
