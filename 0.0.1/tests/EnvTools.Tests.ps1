@@ -36,6 +36,7 @@ Describe 'Test EnvTools' {
     }
     Context 'Add items into process level Env:PATH' {
         It 'Test Add-EnvPathToCurrentProcess' {
+            ls env:
             Write-Host $test_path
             Write-Host $test_path
             Write-Host $test_path
