@@ -11,7 +11,7 @@ BeforeAll {
     New-Item -Path $test_path -ItemType Directory -Force
     Import-Module "${PSScriptRoot}\..\helpers\PathTools.psm1" -Scope local
     $test_path = Format-Path $test_path
-    
+
 }
 
 Describe 'Test EnvTools' {
@@ -27,7 +27,7 @@ Describe 'Test EnvTools' {
             Merge-RedundantEnvPathFromLocalMachineToCurrentUser
             $user_env_paths2 = Get-EnvPathAsSplit -Level 'User'
             $machine_env_paths2 = Get-EnvPathAsSplit -Level 'Machine'
-    
+
             $user_env_paths2 | Should -Contain $test_path
             $user_env_paths2.count | Should -Be $user_env_paths.count
             $machine_env_paths2 | Should -Not -Contain $test_path
@@ -41,7 +41,7 @@ Describe 'Test EnvTools' {
             $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
             $process_env_paths1 | Should -Not -Contain $test_path
             $process_env_paths2 | Should -Contain $test_path
-           
+
         }
 
     }
@@ -51,7 +51,7 @@ Describe 'Test EnvTools' {
             $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Remove-EnvPathByPattern -Pattern $guid -Level 'Process'
             $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
-            
+
             $process_env_paths1 | Should -Contain $test_path
             $process_env_paths2 | Should -Not -Contain $test_path
 
@@ -61,7 +61,7 @@ Describe 'Test EnvTools' {
             $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Remove-EnvPathByTargetPath -TargetPath $test_path -Level 'Process'
             $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
-            
+
             $process_env_paths1 | Should -Contain $test_path
             $process_env_paths2 | Should -Not -Contain $test_path
         }

@@ -71,10 +71,10 @@ function local:Move-FileWithBackup{
 function local:Merge-BeforeSetDirLink{
 <#
 .DESCRIPTION
-    Before setting a directory link (Symbolic Link or Junction) 
+    Before setting a directory link (Symbolic Link or Junction)
     from $Target2 to $Target1, this function should be used to
     merge the content in $Target1 to $Target2.
-    
+
     Merge form $Target1 to $Target2 by the following rules:
         $Target1----------------| $Target2--------------| Opeartion
         non-existent            | non-existent          | New-item $Target2 -Itemtype Directory
@@ -149,10 +149,10 @@ function local:Merge-BeforeSetDirLink{
 function local:Move-BeforeSetFileLink{
 <#
 .DESCRIPTION
-    Before setting a file link (Symbolic Link or HardLink) 
+    Before setting a file link (Symbolic Link or HardLink)
     from $Target2 to $Target1, this function should be used to
     move the file $Target1 to $Target2.
-    
+
     Move the file $Target1 to $Target2 by the following rules:
         $Target1----------------| $Target2--------------| Opeartion
         non-existent            | non-existent          | New-item $Target2 -Itemtype File
@@ -229,7 +229,7 @@ function Set-DirSymbolicLinkWithSync{
 <#
 .DESCRIPTION
     Set a directory symbolic link from $Path to $Source.
-    Then, we will get a result as $Path->$Target, 
+    Then, we will get a result as $Path->$Target,
     which means $Path is a symbolic link to $Target.
 #>
     param(
@@ -242,7 +242,7 @@ function Set-DirSymbolicLinkWithSync{
     )
     try{
         Merge-BeforeSetDirLink $Path $Target $Backuppath
-        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop 
+        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
     catch
@@ -254,7 +254,7 @@ function Set-FileSymbolicLinkWithSync{
 <#
 .DESCRIPTION
     Set a file symbolic link from $Path to $Source.
-    Then, we will get a result as $Path->$Target, 
+    Then, we will get a result as $Path->$Target,
     which means $Path is a symbolic link to $Target.
 #>
     param(
@@ -267,7 +267,7 @@ function Set-FileSymbolicLinkWithSync{
     )
     try{
         Move-BeforeSetFileLink $Path $Target $Backuppath
-        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop 
+        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
     catch
@@ -280,7 +280,7 @@ function Set-DirJunctionWithSync{
 <#
 .DESCRIPTION
     Set a directory junction from $Path to $Source.
-    Then, we will get a result as $Path->$Target, 
+    Then, we will get a result as $Path->$Target,
     which means $Path is a junction to $Target.
 #>
     param(
@@ -293,7 +293,7 @@ function Set-DirJunctionWithSync{
     )
     try{
         Merge-BeforeSetDirLink $Path $Target $Backuppath
-        $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop 
+        $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
     catch
@@ -306,7 +306,7 @@ function Set-FileHardLinkWithSync{
 <#
 .DESCRIPTION
     Set a file hard link from $Path to $Source.
-    Then, we will get a result as $Path->$Target, 
+    Then, we will get a result as $Path->$Target,
     which means $Path is a hard link to $Target.
 #>
     param(
@@ -319,7 +319,7 @@ function Set-FileHardLinkWithSync{
     )
     try{
         Move-BeforeSetFileLink $Path $Target $Backuppath
-        $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop 
+        $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
     catch

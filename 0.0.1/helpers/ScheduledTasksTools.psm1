@@ -4,7 +4,7 @@ function Register-PS1ToScheduledTask{
     Register a PS1 file to a scheduled task.
 
 .DESCRIPTION
-    It is a wrapper of Register-ScheduledTask, registering an action of 
+    It is a wrapper of Register-ScheduledTask, registering an action of
     running a PS1 file to a scheduled task at the trigger of Logon or Startup.
     It is forced to run with highest privilege and hidden window style.
 
@@ -39,7 +39,7 @@ function Register-PS1ToScheduledTask{
         [string]$ScriptArgs,
         [switch]$AtLogon,
         [switch]$AtStartup
-    ) 
+    )
 
     $triggers = @()
     if($AtLogon){

@@ -14,7 +14,7 @@ Describe 'Test ProxyTools' {
         [Environment]::GetEnvironmentVariable('https_proxy') | Should -Be 'http://127.1.2.3:4567'
         [Environment]::GetEnvironmentVariable('all_proxy') | Should -Be 'http://127.1.2.3:4567'
         [Environment]::GetEnvironmentVariable('ftp_proxy') | Should -Be 'http://127.1.2.3:4567'
-        [Environment]::GetEnvironmentVariable('socks_proxy') | Should -Be 'socks5://127.1.2.3:4567' 
+        [Environment]::GetEnvironmentVariable('socks_proxy') | Should -Be 'socks5://127.1.2.3:4567'
     }
     It 'Test Remove-EnvProxyIPV4ForShellProcess' {
         Remove-EnvProxyIPV4ForShellProcess

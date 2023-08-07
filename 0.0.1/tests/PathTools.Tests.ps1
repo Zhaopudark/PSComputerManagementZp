@@ -9,7 +9,7 @@ BeforeAll {
     $test_dir = "${test_path}\test_dir"
     $test_file = "${test_path}\test.txt"
     New-Item -Path $test_dir -ItemType Directory -Force
-    New-Item -Path $test_file -ItemType File -Force   
+    New-Item -Path $test_file -ItemType File -Force
 }
 
 Describe 'Test PathTools' {

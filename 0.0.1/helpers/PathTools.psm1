@@ -1,4 +1,4 @@
-function Format-Path{
+﻿function Format-Path{
 <#
 .DESCRIPTION
     Format exited windows path(s) to standard format:
@@ -15,7 +15,7 @@ function Format-Path{
 .Example
     Format-Path -Path 'c:\uSeRs\test.txt'
     -> C:\Users\test.txt
-    
+
 .COMPONENT
     Resolve-Path $some_path
     (Get-Item $some_path).FullName
@@ -30,13 +30,13 @@ function Format-Path{
 
 .INPUTS
     String or string with wildcard characters to represent (a) exited path(s).
-    
+
 .OUTPUTS
     String or String[]
 #>  param(
         [string]$Path
     )
-    $resolvedPath = Resolve-Path -Path $Path 
+    $resolvedPath = Resolve-Path -Path $Path
     $output = @()
     foreach ($item in $resolvedPath){
         $item = Get-Item -LiteralPath $item
@@ -44,7 +44,7 @@ function Format-Path{
             $output += (join-Path $item '')
         }
         else{
-            $output += $item.FullName   
+            $output += $item.FullName
         }
     }
     return $output
@@ -57,18 +57,18 @@ function Test-ReparsePoint{
 #>
     param(
         [string]$Path
-    ) 
+    )
     return [bool]((Get-Item -Path $Path).Attributes -band [System.IO.FileAttributes]::ReparsePoint)
 }
 function Assert-IsDirectory{
     param(
         [string]$Path
-    )    
+    )
     # 判断路径是否存在且是一个目录
     if (Test-Path -Path $Path -PathType Container) {
         # 判断路径是否是软链接或交接点
         if (-not (Test-ReparsePoint $Path)) {
-            return 
+            return
         }
         else {
             throw "The `Path` $Path should be an existed directory and should not be a `ReparsePoint`(SymbolicLink or Junction)!"
@@ -81,7 +81,7 @@ function Assert-IsDirectory{
 function Assert-IsFile{
     param(
         [string]$Path
-    )   
+    )
     # 判断路径是否存在
     if (Test-Path -Path $Path) {
         # 判断路径是否指向一个文件
@@ -105,7 +105,7 @@ function local:Test-IsInSystemDisk{
     param(
         [string]$Path
     )
-    return ((Get-Qualifier $Path).ToString() -eq (Get-Qualifier $global:Home).ToString())
+    return ((Get-Qualifier $Path).ToString() -eq (Get-Qualifier $Home).ToString())
 }
 function local:Test-IsInInHome{
     param(
@@ -113,7 +113,7 @@ function local:Test-IsInInHome{
     )
     if ($Path -ne ''){
         $Path = Format-Path $Path
-        if ($Path -eq (Format-Path $global:Home)){
+        if ($Path -eq (Format-Path $Home)){
             return $true
         }
         else{

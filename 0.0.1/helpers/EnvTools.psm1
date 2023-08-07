@@ -7,7 +7,7 @@ function local:Write-EnvToolsHost{
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     Write-Output $"[$time_stamp] --- $Message"
 }
-function local:Write-EnvToolsLogs{
+function local:Write-EnvToolsLog{
     param(
         [Parameter(Mandatory)]
         [ValidateSet('User','Process','Machine')]
@@ -21,7 +21,7 @@ function local:Write-EnvToolsLogs{
     if($Level -in @('User','Machine')){
         Write-EnvToolsHost "See the log file at $log_file_path for more details."
         $message | Out-File -FilePath $log_file_path -Append
-    }   
+    }
 }
 function local:Test-EnvPathLevelArg{
     param(
@@ -45,7 +45,7 @@ function local:Test-EnvPathLevelArg{
         return $true
     }
 }
-function local:Test-EnvPathExists{
+function local:Test-EnvPathExist{
 <#
 .DESCRIPTION
     Test if the `Path` is `existing` or not `empty` or not `$null`.
@@ -84,7 +84,7 @@ function local:Test-EnvPathNotDuplicated{
     .OUTPUTS
         $true: if the `Path` is not `duplicated` in the `$Container`.
         $false: if the `Path` is `duplicated` in the `$Container`.
-    
+
     #>
         param(
             [Parameter(Mandatory)]
@@ -113,18 +113,18 @@ function Get-EnvPathAsSplit{
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
-    
+
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
 
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
-    
+
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
-    
+
     }else{
         Write-Output "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
-    }    
+    }
 }
 function Set-EnvPathBySplit{
     param(
@@ -136,17 +136,17 @@ function Set-EnvPathBySplit{
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
         [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
-    
+
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
-    
+
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
-    
+
     }else{
         Write-Output "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
-    }    
+    }
 }
 function local:Format-EnvPath{
 <#
@@ -165,21 +165,21 @@ function local:Format-EnvPath{
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $env_paths)
     {
-        if (Test-EnvPathExists -Level $Level -Path $item){
+        if (Test-EnvPathExist -Level $Level -Path $item){
             Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
             $item = Format-Path -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
                 $out_buf += $item
             }
             else{
-                Write-EnvToolsLogs -Level $Level -Type 'Remove' -Path $item
+                Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
                 $counter += 1
             }
         }else{
-            Write-EnvToolsLogs -Level $Level -Type 'Remove' -Path $item
+            Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
             $counter += 1
         }
-        
+
     }
     Set-EnvPathBySplit -Paths $out_buf -Level $Level
     Write-EnvToolsHost "Formating $Level level `$Env:PATH, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
@@ -191,7 +191,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
     Merge redundant items form Machine Level $Env:PATH to User Level $Env:PATH.
 
 .DESCRIPTION
-    Sometimes, we may find some redundant items that both 
+    Sometimes, we may find some redundant items that both
     in Machine Level $Env:PATH and User Level $Env:PATH.
     This may because we have installed some software in different privileges.
 
@@ -215,7 +215,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
             $out_buf += $item
         }
         else{
-            Write-EnvToolsLogs -Type 'Remove' -Path $item -Level 'Machine'
+            Write-EnvToolsLog -Type 'Remove' -Path $item -Level 'Machine'
             $counter += 1
         }
     }
@@ -240,20 +240,20 @@ function Add-EnvPathToCurrentProcess{
     # User Machine Process[Default]
     $env_paths = Get-EnvPathAsSplit -Level 'Process'
 
-    if (Test-EnvPathExists -Level 'Process' -Path $Path){
+    if (Test-EnvPathExist -Level 'Process' -Path $Path){
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $Path = Format-Path -Path $Path
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
-            Write-EnvToolsLogs -Level 'Process' -Type 'Add' -Path $Path
+            Write-EnvToolsLog -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
             Set-EnvPathBySplit -Paths $env_paths -Level 'Process'
             Write-EnvToolsHost "The path '$Path' has been added into Process level `$Env:PATH."
         }
         else{
-            Write-EnvToolsLogs -Level 'Process' -Type 'Maintain' -Path $Path
+            Write-EnvToolsLog -Level 'Process' -Type 'Maintain' -Path $Path
         }
     }else{
-        Write-EnvToolsLogs -Level 'Process' -Type 'Not Add' -Path $Path
+        Write-EnvToolsLog -Level 'Process' -Type 'Not Add' -Path $Path
     }
 }
 
@@ -273,7 +273,7 @@ function Remove-EnvPathByPattern{
         [ValidateScript({Test-EnvPathLevelArg $_})]
         [string]$Level
     )
-   
+
     Format-EnvPath -Level $Level
     $env_paths = Get-EnvPathAsSplit -Level $Level
     $out_buf = @()
@@ -284,7 +284,7 @@ function Remove-EnvPathByPattern{
             $out_buf += $item
         }
         else{
-            Write-EnvToolsLogs -Level $Level -Type 'Remove' -Path $item
+            Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
             $counter += 1
         }
     }
@@ -310,7 +310,7 @@ function Remove-EnvPathByTargetPath{
     $env_paths = Get-EnvPathAsSplit -Level $Level
     $out_buf = @()
     $counter = 0
-    if (Test-EnvPathExists -Level $Level -Path $TargetPath){
+    if (Test-EnvPathExist -Level $Level -Path $TargetPath){
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $TargetPath = Format-Path -Path $TargetPath
         foreach ($item in $env_paths)
@@ -319,13 +319,13 @@ function Remove-EnvPathByTargetPath{
                 $out_buf += $item
             }
             else{
-                Write-EnvToolsLogs -Level $Level -Type 'Remove' -Path $item
+                Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
                 $counter += 1
             }
         }
     }else{
-        Write-EnvToolsLogs -Level $Level -Type 'Not Remove' -Path $TargetPath
-    }   
+        Write-EnvToolsLog -Level $Level -Type 'Not Remove' -Path $TargetPath
+    }
     Set-EnvPathBySplit -Paths $out_buf -Level $Level
     Write-EnvToolsHost "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:PATH."
 }

@@ -9,7 +9,7 @@ param (
 )
 <#
 .SYNOPSIS
-    Set system proxy. 
+    Set system proxy.
     It can be used on a windows `Virtual Machine` that hosted by a `Host Machine`
     which has been proxied and enabled `proxy on LAN (Local Area Network)`.
 
@@ -23,7 +23,7 @@ param (
 
 .PARAMETER ServerType
     String in @('Gateway','LocalHost','Others')
-    If $ServerType is `Gateway` or `LocalHost`, the $ServerIP will be ignored and automatically set as 
+    If $ServerType is `Gateway` or `LocalHost`, the $ServerIP will be ignored and automatically set as
     correspointing gateway IP(IPV4) or localhost IP(IPV4).
 
 .PARAMETER PortNumber
@@ -40,7 +40,7 @@ param (
     Set-SystemProxyIPV4ForCurrentUser
 
 .NOTES
-    Make sure the module `PSComputerManagementZp` has been 
+    Make sure the module `PSComputerManagementZp` has been
         installed (can be founded in PowerShell Mudules Paths).
         Such as in $Home\Documents\WindowsPowerShell\Modules.
 .EXAMPLE
@@ -50,8 +50,8 @@ param (
     ./SetSystemProxy.ps1 -ServerType 'gateway' -PortNumber 7890
 
 #>
-try { 
-    Import-Module PSComputerManagementZp -Scope Local -Force 
+try {
+    Import-Module PSComputerManagementZp -Scope Local -Force
     if ($ServerType.ToLower() -eq 'gateway') {
         $ServerIP = Get-GatewayIPV4
     } elseif ($ServerType.ToLower() -eq 'localhost') {
@@ -69,4 +69,4 @@ catch {
     Write-Output "Exception caught: $_"
     Write-Output "Set system proxy failed."
     exit -1
-} 
+}

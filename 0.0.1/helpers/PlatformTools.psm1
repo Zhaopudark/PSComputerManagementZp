@@ -6,7 +6,7 @@ function Test-AdminPermission {
         return $false
     }else{
         return $true
-    }    
+    }
 }
 function local:Test-IsWSL2{
     $output = bash -c "cat /proc/version 2>&1"
@@ -29,13 +29,13 @@ function Test-IfIsOnCertainPlatform{
         [ValidateSet("Windows","Wsl2","Linux")]
         [string]$SystemName,
         [switch]$ShowInfo
-    ) 
+    )
     if (($PSVersionTable.Platform -eq "Win32NT") -and ($SystemName.ToLower() -eq "windows")){
         if ($ShowInfo){
             Write-Output "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
         return $true
-    
+
     } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
         if ($ShowInfo){
             Write-Output "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
@@ -46,7 +46,7 @@ function Test-IfIsOnCertainPlatform{
         if ($ShowInfo){
             Write-Output "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
-        return $true    
+        return $true
 
     } else {
         if ($ShowInfo){
@@ -54,5 +54,4 @@ function Test-IfIsOnCertainPlatform{
         }
         return $false
     }
-    
 }

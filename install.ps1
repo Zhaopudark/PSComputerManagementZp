@@ -20,8 +20,8 @@ if (!(Test-Path $module_install_path)){
 }
 
 # to omit `.git` and other hidden items, do not use `-force`
-$source_paths = Get-ChildItem $PSScriptRoot -Exclude ".*" 
+$source_paths = Get-ChildItem $PSScriptRoot -Exclude ".*"
 
-Copy-Item -Path $source_paths -Destination $module_install_path -Recurse -Force 
+Copy-Item -Path $source_paths -Destination $module_install_path -Recurse -Force
 
 Remove-Module "PlatformTools"
