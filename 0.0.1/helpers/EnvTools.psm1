@@ -5,7 +5,7 @@ function local:Write-EnvToolsHost{
         [string]$Message
     )
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    Write-Information  $"[$time_stamp] --- $Message"
+    Write-Output  $"[$time_stamp] --- $Message"
 }
 function local:Write-EnvToolsLog{
     param(
@@ -40,7 +40,7 @@ function local:Test-EnvPathLevelArg{
     }else{
         if (((Test-IfIsOnCertainPlatform -SystemName 'Wsl2') -or (Test-IfIsOnCertainPlatform -SystemName 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
-            Write-Information  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+            Write-Output  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
         return $true
     }
@@ -122,7 +122,7 @@ function Get-EnvPathAsSplit{
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
     }else{
-        Write-Information  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Output  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -144,7 +144,7 @@ function Set-EnvPathBySplit{
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
     }else{
-        Write-Information  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Output  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }

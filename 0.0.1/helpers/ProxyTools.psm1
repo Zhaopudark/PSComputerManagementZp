@@ -28,7 +28,7 @@
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip
     }else{
-        Write-Information  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Output  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
