@@ -32,25 +32,25 @@ function Test-IfIsOnCertainPlatform{
     )
     if (($PSVersionTable.Platform -eq "Win32NT") -and ($SystemName.ToLower() -eq "windows")){
         if ($ShowInfo){
-            Write-Output "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+            Write-Information  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
         return $true
 
     } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
         if ($ShowInfo){
-            Write-Output "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+            Write-Information  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
         return $true
 
     } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "linux")){
         if ($ShowInfo){
-            Write-Output "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+            Write-Information  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         }
         return $true
 
     } else {
         if ($ShowInfo){
-            Write-Output "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
+            Write-Information  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
         }
         return $false
     }
