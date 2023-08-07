@@ -169,6 +169,7 @@ function local:Format-EnvPath{
     {
         if (Test-EnvPathExist -Level $Level -Path $item){
             Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+            Write-Host $item
             Write-Host "$(Test-EnvPathExist -Level $Level -Path $item)"
             $item = Format-Path -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
