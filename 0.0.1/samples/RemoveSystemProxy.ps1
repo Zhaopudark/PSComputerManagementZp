@@ -11,7 +11,7 @@ try {
     Remove-Module PSComputerManagementZp
 }
 catch {
-    Write-Error  "Exception caught: $_"
-    Write-Error  "Remove system proxy failed."
+    Write-VerboseLog  "Exception caught: $_"
+    Write-VerboseLog  "Remove system proxy failed."
     exit -1
 }

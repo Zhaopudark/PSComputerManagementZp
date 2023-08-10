@@ -1,3 +1,4 @@
+Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function local:Merge-DirectoryWithBackup{
 <#
 .Description
@@ -30,7 +31,7 @@ function local:Merge-DirectoryWithBackup{
     }
     catch
     {
-        Write-Warning  "Exception: $PSItem"
+        Write-VerboseLog  "Exception: $PSItem"
     }
 }
 function local:Move-FileWithBackup{
@@ -65,7 +66,7 @@ function local:Move-FileWithBackup{
     }
     catch
     {
-        Write-Warning  "Exception: $PSItem"
+        Write-VerboseLog  "Exception: $PSItem"
     }
 }
 function local:Merge-BeforeSetDirLink{
@@ -104,7 +105,7 @@ function local:Merge-BeforeSetDirLink{
                     throw "Cannot merge $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
                 }else{
                     # dir-ReparsePoint        | dir-non-ReparsePoint  | del $Target1
-                    Write-Output  "Remove-Item $Target1 -Force"
+                    Write-VerboseLog  "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
@@ -119,14 +120,14 @@ function local:Merge-BeforeSetDirLink{
                 }else{
                     #dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
                     Merge-DirectoryWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                    Write-Output  "Remove-Item $Target1 -Force"
+                    Write-VerboseLog  "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
                 # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
-                Write-Output  "Robocopy $Target1 $Target2"
+                Write-VerboseLog  "Robocopy $Target1 $Target2"
                 Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-BeforeSetDirLink.log"
-                Write-Output  "Remove-Item $Target1 -Force"
+                Write-VerboseLog  "Remove-Item $Target1 -Force"
                 Remove-Item $Target1 -Force
             }
         }
@@ -137,11 +138,11 @@ function local:Merge-BeforeSetDirLink{
                 throw "Cannot merge $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
             }else{
                 # non-existent            | dir-non-ReparsePoint  | pass(do nothing)
-                Write-Output  "Do nothing."
+                Write-VerboseLog  "Do nothing."
             }
         }else{
             # non-existent            | non-existent          | New-item $Target2 -Itemtype Directory
-            Write-Output  "New-Item $Target2 -ItemType Directory"
+            Write-VerboseLog  "New-Item $Target2 -ItemType Directory"
             New-Item $Target2 -ItemType Directory
         }
     }
@@ -182,7 +183,7 @@ function local:Move-BeforeSetFileLink{
                     throw "Cannot move $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
                 }else{
                     # file-ReparsePoint       | file-non-ReparsePoint | del $Target1
-                    Write-Output  "Remove-Item $Target1 -Force"
+                    Write-VerboseLog  "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
@@ -197,14 +198,14 @@ function local:Move-BeforeSetFileLink{
                 }else{
                     # file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
                     Move-FileWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                    Write-Output  "Remove-Item $Target1 -Force"
+                    Write-VerboseLog  "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
             }else{
                 # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
-                Write-Output  "Robocopy $Target1 $Target2"
+                Write-VerboseLog  "Robocopy $Target1 $Target2"
                 Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
-                Write-Output  "Remove-Item $Target1 -Force"
+                Write-VerboseLog  "Remove-Item $Target1 -Force"
                 Remove-Item $Target1 -Force
             }
         }
@@ -215,11 +216,11 @@ function local:Move-BeforeSetFileLink{
                 throw "Cannot move $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
             }else{
                 # non-existent            | file-non-ReparsePoint | pass(do nothing)
-                Write-Output  "Do nothing."
+                Write-VerboseLog  "Do nothing."
             }
         }else{
             # non-existent            | non-existent          | New-item $Target2 -ItemType File
-            Write-Output  "New-Item $Target2 -ItemType File"
+            Write-VerboseLog  "New-Item $Target2 -ItemType File"
             New-Item $Target2 -ItemType File
         }
     }
@@ -247,7 +248,7 @@ function Set-DirSymbolicLinkWithSync{
     }
     catch
     {
-        Write-Warning  "Exception: $PSItem"
+        Write-VerboseLog  "Exception: $PSItem"
     }
 }
 function Set-FileSymbolicLinkWithSync{
@@ -272,7 +273,7 @@ function Set-FileSymbolicLinkWithSync{
     }
     catch
     {
-        Write-Warning "Exception: $PSItem"
+        Write-VerboseLog "Exception: $PSItem"
     }
 }
 
@@ -298,7 +299,7 @@ function Set-DirJunctionWithSync{
     }
     catch
     {
-        Write-Warning "Exception: $PSItem"
+        Write-VerboseLog "Exception: $PSItem"
     }
 }
 
@@ -324,6 +325,6 @@ function Set-FileHardLinkWithSync{
     }
     catch
     {
-        Write-Warning "Exception: $PSItem"
+        Write-VerboseLog "Exception: $PSItem"
     }
 }

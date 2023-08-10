@@ -1,3 +1,4 @@
+Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function Register-PS1ToScheduledTask{
 <#
 .SYNOPSIS

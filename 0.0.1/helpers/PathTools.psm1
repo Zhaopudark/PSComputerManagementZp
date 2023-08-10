@@ -1,4 +1,5 @@
-﻿function Format-Path{
+﻿Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
+function Format-Path{
 <#
 .DESCRIPTION
     Format exited windows path(s) to standard format:

@@ -12,6 +12,7 @@ function local:Test-IsWSL2{
     $output = bash -c "cat /proc/version 2>&1"
     return $output.Contains("WSL2")
 }
+Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function Test-IfIsOnCertainPlatform{
 <#
 .DESCRIPTION
@@ -31,16 +32,16 @@ function Test-IfIsOnCertainPlatform{
         [string]$SystemName
     )
     if (($PSVersionTable.Platform -eq "Win32NT") -and ($SystemName.ToLower() -eq "windows")){
-        Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+        Write-VerboseLog "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
     } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
-        Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+        Write-VerboseLog "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
     } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "linux")){
-        Write-Verbose  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
+        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
     } else {
-        Write-Verbose  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
+        Write-VerboseLog  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
         return $false
     }
 }

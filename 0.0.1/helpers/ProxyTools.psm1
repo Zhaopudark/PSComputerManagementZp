@@ -1,4 +1,5 @@
-﻿function Get-GatewayIPV4{
+﻿Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
+function Get-GatewayIPV4{
 <#
 .DESCRIPTION
     Get the gateway IP address(IPV4) of the current system.
@@ -28,7 +29,7 @@
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip
     }else{
-        Write-Error  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }

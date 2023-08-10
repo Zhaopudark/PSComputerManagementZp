@@ -131,8 +131,8 @@ function local:Reset-PathAttribute{
         }
     }
     catch{
-        Write-Warning  "Reset-PathAttribute Exception: $PSItem"
-        Write-Warning  "Operation has been skipped."
+        Write-VerboseLog  "Reset-PathAttribute Exception: $PSItem"
+        Write-VerboseLog  "Operation has been skipped."
     }
 }
 function local:Get-PathType{
@@ -243,8 +243,8 @@ function local:Get-PathType{
         }
     }
     catch{
-        Write-Warning  "Get-PathType Exception: '$PSItem'"
-        Write-Warning  "Operation has been skipped on '$Path'."
+        Write-VerboseLog  "Get-PathType Exception: '$PSItem'"
+        Write-VerboseLog  "Operation has been skipped on '$Path'."
     }
 }
 
@@ -490,18 +490,18 @@ function local:Set-OriginalAcl{
         $NewAcl = Get-Acl -LiteralPath $Path
         if ($NewAcl.Sddl -ne $Sddl){
             try{
-                Write-Output  "`$Path is:`n`t $Path"
-                Write-Output  "Current Sddl is:`n`t $($NewAcl.Sddl)"
-                Write-Output  "Target Sddl is:`n`t $($Sddl)"
+                Write-VerboseLog  "`$Path is:`n`t $Path"
+                Write-VerboseLog  "Current Sddl is:`n`t $($NewAcl.Sddl)"
+                Write-VerboseLog  "Target Sddl is:`n`t $($Sddl)"
 
                 $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
-                Write-Output  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
+                Write-VerboseLog  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
 
                 Set-Acl -LiteralPath $Path -AclObject $NewAcl -ErrorAction Stop
-                Write-Output  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
+                Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
             }
             catch [System.ArgumentException]{
-                Write-Warning  "`$Path is too long: '$Path'"
+                Write-VerboseLog  "`$Path is too long: '$Path'"
             }
         }
         if (($Recurse) -and
@@ -531,8 +531,8 @@ function local:Set-OriginalAcl{
         }
     }
     catch {
-        Write-Warning  "Set-OriginalAcl Exception: $PSItem"
-        Write-Warning  "Operation has been skipped on $Path."
+        Write-VerboseLog  "Set-OriginalAcl Exception: $PSItem"
+        Write-VerboseLog  "Operation has been skipped on $Path."
     }
 }
 
@@ -541,7 +541,7 @@ function local:Get-Sddl{
         [string]$Path
     )
     Set-Acl -Path $Path (Get-Acl $Path) # normalization
-    Write-Output  $Path
-    Write-Output  "PathType: $(Get-PathType $Path)"
-    Write-Output  (Get-Acl $Path).Sddl
+    Write-VerboseLog  $Path
+    Write-VerboseLog  "PathType: $(Get-PathType $Path)"
+    Write-VerboseLog  (Get-Acl $Path).Sddl
 }

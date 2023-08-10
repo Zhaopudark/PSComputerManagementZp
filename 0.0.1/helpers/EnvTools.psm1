@@ -1,12 +1,6 @@
-$local:log_file_path = "${Home}\PowerShellLogs.txt"
-function local:Write-EnvToolsHost{
-    param(
-        [Parameter(Mandatory)]
-        [string]$Message
-    )
-    $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-    Write-Output "[$time_stamp] --- $Message"
-}
+$local:log_file_path = "${Home}\PowerShellEnvLogs.txt"
+
+Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function local:Write-EnvToolsLog{
     param(
         [Parameter(Mandatory)]
@@ -18,10 +12,9 @@ function local:Write-EnvToolsLog{
         [string]$Path='' # $null will be converted to empty string
     )
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
-    Write-Output $message
+    Write-VerboseLog $message
     if($Level -in @('User','Machine')){
-        Write-Output "See the log file at $log_file_path for more details."
-        $message | Out-File -FilePath $log_file_path -Append
+        Write-VerboseLog "See the log file at $log_file_path for more details."
     }
 }
 function local:Test-EnvPathLevelArg{
@@ -41,7 +34,7 @@ function local:Test-EnvPathLevelArg{
     }else{
         if (((Test-IfIsOnCertainPlatform -SystemName 'Wsl2') -or (Test-IfIsOnCertainPlatform -SystemName 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
-            Write-Warning  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+            Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
         return $true
     }
@@ -65,13 +58,13 @@ function local:Test-EnvPathExist{
         [string]$Path
     )
     if ($Path -eq $null){
-        Write-Debug "The $Path in in '$Level' level `$Env:PATH is `$null."
+        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is `$null."
         return $false
     }elseif ($Path -eq '') {
-        Write-Debug "The $Path in in '$Level' level `$Env:PATH is empty."
+        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is empty."
         return $false
     }elseif (-not (Test-Path -Path $Path)){
-        Write-Debug "The $Path in in '$Level' level `$Env:PATH is not exiting."
+        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is not exiting."
         return $false
     }else{
         return $true
@@ -98,7 +91,7 @@ function local:Test-EnvPathNotDuplicated{
             [string[]]$Container
         )
         if ($Path -in $Container){
-            Write-Debug "The $Path in in '$Level' level `$Env:PATH is duplicated."
+            Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
             return $false
         }else{
             return $true
@@ -123,7 +116,7 @@ function Get-EnvPathAsSplit{
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
     }else{
-        Write-Error  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -145,7 +138,7 @@ function Set-EnvPathBySplit{
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
     }else{
-        Write-Error  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -183,7 +176,7 @@ function local:Format-EnvPath{
 
     }
     Set-EnvPathBySplit -Paths $out_buf -Level $Level
-    Write-EnvToolsHost "Formating $Level level `$Env:PATH, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
+    Write-VerboseLog "Formating $Level level `$Env:PATH, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
 }
 
 function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
@@ -221,7 +214,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
         }
     }
     Set-EnvPathBySplit -Paths $out_buf -Level 'Machine'
-    Write-EnvToolsHost "$counter duplicated items between Machine level and User level `$Env:PATH have been found. And, they have been merged into User level `$Env:PATH"
+    Write-VerboseLog "$counter duplicated items between Machine level and User level `$Env:PATH have been found. And, they have been merged into User level `$Env:PATH"
 
 }
 function Add-EnvPathToCurrentProcess{
@@ -248,7 +241,7 @@ function Add-EnvPathToCurrentProcess{
             Write-EnvToolsLog -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
             Set-EnvPathBySplit -Paths $env_paths -Level 'Process'
-            Write-EnvToolsHost "The path '$Path' has been added into Process level `$Env:PATH."
+            Write-VerboseLog "The path '$Path' has been added into Process level `$Env:PATH."
         }
         else{
             Write-EnvToolsLog -Level 'Process' -Type 'Maintain' -Path $Path
@@ -290,7 +283,7 @@ function Remove-EnvPathByPattern{
         }
     }
     Set-EnvPathBySplit -Paths $out_buf -Level $Level
-    Write-EnvToolsHost "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:PATH."
+    Write-VerboseLog "$counter paths match pattern $Pattern have been totally removed from $Level level `$Env:PATH."
 }
 function Remove-EnvPathByTargetPath{
 <#
@@ -328,5 +321,5 @@ function Remove-EnvPathByTargetPath{
         Write-EnvToolsLog -Level $Level -Type 'Not Remove' -Path $TargetPath
     }
     Set-EnvPathBySplit -Paths $out_buf -Level $Level
-    Write-EnvToolsHost "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:PATH."
+    Write-VerboseLog "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:PATH."
 }
