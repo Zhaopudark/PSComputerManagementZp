@@ -52,15 +52,35 @@ function Test-IfIsOnCertainPlatform{
     }
 }
 
+function local:Get-PlatformName{
+    [CmdletBinding()]
+    [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
+    param()
+    if ($IsWindows){
+        Write-Verbose "Windows"
+        return 'Windows'
+    } elseif ($IsLinux -and (Test-IsWSL2)){
+        Write-Verbose "Wsl2"
+        return 'Wsl2'
+    } elseif ($IsLinux -and(!(Test-IsWSL2))){
+        Write-Verbose "Linux"
+        return 'Linux'
+    } else {
+        Write-Warning  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        return $null
+    }
+}
+
 function Get-InstallPath{
     [CmdletBinding()]
     [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
     param()
-    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+    $platform = Get-PlatformName
+    if ($platform.ToLower() -eq 'windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+    }elseif ($platform.ToLower() -eq 'Wsl2'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+    }elseif ($platform.ToLower() -eq 'Linux'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
         Write-Warning "The current platform, $($PSVersionTable.Platform), has not been supported yet."
