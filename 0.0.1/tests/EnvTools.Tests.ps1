@@ -39,7 +39,7 @@ Describe 'Test EnvTools' {
             $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
             Add-EnvPathToCurrentProcess -Path $test_path
             $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
-            
+
             $process_env_paths1 | Should -Not -Contain $test_path
             $process_env_paths2 | Should -Contain $test_path
         }

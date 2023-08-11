@@ -11,10 +11,11 @@ function local:Write-EnvModificationLog{
         [string]$Path='' # $null will be converted to empty string
     )
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
-    Write-VerboseLog $message -Verbose 
+    Write-VerboseLog $message -Verbose
 }
 function local:Test-EnvPathLevelArg{
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param(
         [string]$Level
     )
@@ -46,6 +47,7 @@ function local:Test-EnvPathExist{
     $false: if the `Path` is not `existing` or is `empty` or `$null`.
 #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]
@@ -79,6 +81,7 @@ function local:Test-EnvPathNotDuplicated{
 
     #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]
@@ -99,6 +102,7 @@ function local:Test-EnvPathNotDuplicated{
 
 function Get-EnvPathAsSplit{
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]

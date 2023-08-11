@@ -1,5 +1,6 @@
 function Test-AdminPermission {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param()
     $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
@@ -31,6 +32,7 @@ function Test-IfIsOnCertainPlatform{
     $true if compatible, otherwise $false.
 #>
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param(
         [ValidateSet("Windows","Wsl2","Linux")]
         [string]$SystemName
@@ -52,6 +54,7 @@ function Test-IfIsOnCertainPlatform{
 
 function Get-InstallPath{
     [CmdletBinding()]
+    [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
     param()
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"

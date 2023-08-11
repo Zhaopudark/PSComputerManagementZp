@@ -175,6 +175,7 @@ function local:Get-PathType{
         But for specific, we use `-eq` instead of `-band`
     #>
     [CmdletBinding()]
+    [OutputType([System.String])]
     param(
         [string]$Path
     )
