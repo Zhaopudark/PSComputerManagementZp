@@ -1,4 +1,5 @@
-﻿function local:Assert-FileSystemAuthorized{
+﻿Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
+function local:Assert-FileSystemAuthorized{
     <#
     .Description
     Here we check if have the customized FileSystem Authorization.
