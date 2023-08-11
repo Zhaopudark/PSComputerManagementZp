@@ -46,7 +46,7 @@ function Test-IfIsOnCertainPlatform{
     }
 }
 
-function Get-IntsallPath{
+function Get-InstallPath{
     [CmdletBinding()]
     param()
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
