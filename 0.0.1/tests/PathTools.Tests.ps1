@@ -16,13 +16,13 @@ Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on a exiting dir' {
 
-            if (Test-IfIsOnCertainPlatform -SystemName 'Windows') {
+            if (Get-PlatformName -eq 'Windows') {
                 $path = Format-Path "${test_path}\tEsT_diR"
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir\"
-            }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux') {
+            }elseif (Get-PlatformName -eq 'Linux') {
                 $path = Format-Path "${test_path}\test_dir"
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir/"
-            }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2') {
+            }elseif (Get-PlatformName -eq 'Wsl2') {
                 $path = Format-Path "${test_path}\test_dir"
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir/"
             }else{

@@ -18,41 +18,15 @@ function local:Test-IsWSL2{
     return $output.Contains("WSL2")
 }
 
-function Test-IfIsOnCertainPlatform{
+
+function Get-PlatformName{
 <#
 .DESCRIPTION
-    Test if the current platform is compatible with the systemName.
-    It only support Windows and Wsl2.
-    If $Verbose is given, it will show the result.
-.EXAMPLE
-    Test-IfIsOnCertainPlatform -SystemName 'Windows' -Verbose
-    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -Verbose
-    Test-IfIsOnCertainPlatform -SystemName 'Linux' -Verbose
+    Get the current platform name.
+    It only support Windows, Linux or Wsl2.
 .OUTPUTS
-    $true if compatible, otherwise $false.
+    String of platform name with initial capitalized.
 #>
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [ValidateSet("Windows","Wsl2","Linux")]
-        [string]$SystemName
-    )
-    if (($PSVersionTable.Platform -eq "Win32NT") -and ($SystemName.ToLower() -eq "windows")){
-        Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
-        return $true
-    } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
-        Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
-        return $true
-    } elseif (($PSVersionTable.Platform -eq "Unix") -and(!(Test-IsWSL2)) -and ($SystemName.ToLower() -eq "linux")){
-        Write-Verbose  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
-        return $true
-    } else {
-        Write-Warning  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
-        return $false
-    }
-}
-
-function local:Get-PlatformName{
     [CmdletBinding()]
     [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
     param()
@@ -75,12 +49,11 @@ function Get-InstallPath{
     [CmdletBinding()]
     [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
     param()
-    $platform = Get-PlatformName
-    if ($platform.ToLower() -eq 'windows'){
+    if (Get-PlatformName -eq 'Windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"
-    }elseif ($platform.ToLower() -eq 'Wsl2'){
+    }elseif (Get-PlatformName -eq 'Wsl2'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
-    }elseif ($platform.ToLower() -eq 'Linux'){
+    }elseif (Get-PlatformName -eq 'Linux'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
         Write-Warning "The current platform, $($PSVersionTable.Platform), has not been supported yet."

@@ -21,7 +21,7 @@ function local:Test-EnvPathLevelArg{
     )
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
-    }elseif (($Level -eq 'Machine') -and (Test-IfIsOnCertainPlatform -SystemName 'Windows')){
+    }elseif (($Level -eq 'Machine') -and (Get-PlatformName -eq 'Windows')){
         Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         if(-not(Test-AdminPermission)){
             throw [System.UnauthorizedAccessException]::new("You must run this function as administrator when arg `$Level is $Level.")
@@ -30,7 +30,7 @@ function local:Test-EnvPathLevelArg{
             return $true
         }
     }else{
-        if (((Test-IfIsOnCertainPlatform -SystemName 'Wsl2') -or (Test-IfIsOnCertainPlatform -SystemName 'Linux'))`
+        if (((Get-PlatformName -eq 'Wsl2') -or (Get-PlatformName -eq 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
             Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
@@ -109,14 +109,14 @@ function Get-EnvPathAsSplit{
         [string]$Level
     )
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+    if (Get-PlatformName -eq 'Windows'){
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
 
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+    }elseif (Get-PlatformName -eq 'Wsl2'){
 
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+    }elseif (Get-PlatformName -eq 'Linux'){
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
     }else{
@@ -133,13 +133,13 @@ function Set-EnvPathBySplit{
         [string]$Level
     )
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+    if (Get-PlatformName -eq 'Windows'){
         [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
 
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+    }elseif (Get-PlatformName -eq 'Wsl2'){
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+    }elseif (Get-PlatformName -eq 'Linux'){
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
     }else{

@@ -81,7 +81,7 @@ FunctionsToExport = @(
     'Add-EnvPathToCurrentProcess',
     'Remove-EnvPathByPattern',
     'Remove-EnvPathByTargetPath',
-    'Test-IfIsOnCertainPlatform',
+    'Get-PlatformName',
     'Set-DirSymbolicLinkWithSync',
     'Set-FileSymbolicLinkWithSync',
     'Set-DirJunctionWithSync',

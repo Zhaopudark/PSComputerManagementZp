@@ -206,19 +206,15 @@
 
 # Platform Tools
 
-## Test-IfIsOnCertainPlatform
+## Test-Get-PlatformName
 
 ```powershell
 <#
 .DESCRIPTION
-    Test if the current platform is compatible with the systemName.
-    It only support Windows and Wsl2.
-    If $Verbose is given, it will show the verbose result.
-.EXAMPLE
-    Test-IfIsOnCertainPlatform -SystemName 'Windows' 
-    Test-IfIsOnCertainPlatform -SystemName 'Wsl2' -Verbose
+    Get the current platform name.
+    It only support Windows, Linux or Wsl2.
 .OUTPUTS
-    $true if compatible, otherwise $false.
+    String of platform name with initial capitalized.
 #>
 ```
 

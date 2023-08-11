@@ -12,7 +12,7 @@ function Get-GatewayIPV4{
 #>
     [CmdletBinding()]
     param()
-    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+    if (Get-PlatformName -eq 'Windows'){
         # get Gateway IP, see https://blog.csdn.net/YOLO3/article/details/81117952
         # $wmi = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'true'"
         # File 'ProxyTools.psm1' uses WMI cmdlet. For PowerShell 3.0 and above, use CIM cmdlet
@@ -22,10 +22,10 @@ function Get-GatewayIPV4{
         # So, use Get-CimInstance to replace Get-WmiObject
         $wmi = Get-CimInstance win32_networkadapterconfiguration -filter "ipenabled = 'true'"
         return $wmi.DefaultIPGateway
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+    }elseif (Get-PlatformName -eq 'Linux'){
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip
-    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+    }elseif (Get-PlatformName -eq 'Wsl2'){
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip
     }else{
