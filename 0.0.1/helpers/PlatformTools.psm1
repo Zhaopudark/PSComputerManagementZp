@@ -52,9 +52,9 @@ function Get-InstallPath{
     if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
-        return = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
+        return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
-        return = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
+        return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
         Write-Verbose "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         return $null
