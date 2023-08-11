@@ -1,3 +1,4 @@
+Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function Test-AdminPermission {
     $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
@@ -45,3 +46,22 @@ function Test-IfIsOnCertainPlatform{
         return $false
     }
 }
+
+function Get-InstallPath{
+    [CmdletBinding()]
+    param()
+    if (Test-IfIsOnCertainPlatform -SystemName 'Windows'){
+        return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"
+    
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Wsl2'){
+        return = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
+    
+    }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
+        return = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
+    
+    }else{
+        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        exit -1
+    }
+}
+

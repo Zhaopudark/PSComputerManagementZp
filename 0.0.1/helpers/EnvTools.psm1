@@ -1,7 +1,6 @@
-$local:log_file_path = "${Home}\PowerShellEnvLogs.txt"
-
 Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
-function local:Write-EnvToolsLog{
+function local:Write-EnvModificationLog{
+    # [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateSet('User','Process','Machine')]
@@ -12,10 +11,7 @@ function local:Write-EnvToolsLog{
         [string]$Path='' # $null will be converted to empty string
     )
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
-    Write-VerboseLog $message
-    if($Level -in @('User','Machine')){
-        Write-VerboseLog "See the log file at $log_file_path for more details."
-    }
+    Write-VerboseLog $message -Verbose 
 }
 function local:Test-EnvPathLevelArg{
     param(
@@ -166,11 +162,11 @@ function local:Format-EnvPath{
                 $out_buf += $item
             }
             else{
-                Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
+                Write-EnvModificationLog -Level $Level -Type 'Remove' -Path $item
                 $counter += 1
             }
         }else{
-            Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
+            Write-EnvModificationLog -Level $Level -Type 'Remove' -Path $item
             $counter += 1
         }
 
@@ -209,7 +205,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
             $out_buf += $item
         }
         else{
-            Write-EnvToolsLog -Type 'Remove' -Path $item -Level 'Machine'
+            Write-EnvModificationLog -Type 'Remove' -Path $item -Level 'Machine'
             $counter += 1
         }
     }
@@ -238,16 +234,16 @@ function Add-EnvPathToCurrentProcess{
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         $Path = Format-Path -Path $Path
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
-            Write-EnvToolsLog -Level 'Process' -Type 'Add' -Path $Path
+            Write-EnvModificationLog -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
             Set-EnvPathBySplit -Paths $env_paths -Level 'Process'
             Write-VerboseLog "The path '$Path' has been added into Process level `$Env:PATH."
         }
         else{
-            Write-EnvToolsLog -Level 'Process' -Type 'Maintain' -Path $Path
+            Write-EnvModificationLog -Level 'Process' -Type 'Maintain' -Path $Path
         }
     }else{
-        Write-EnvToolsLog -Level 'Process' -Type 'Not Add' -Path $Path
+        Write-EnvModificationLog -Level 'Process' -Type 'Not Add' -Path $Path
     }
 }
 
@@ -278,7 +274,7 @@ function Remove-EnvPathByPattern{
             $out_buf += $item
         }
         else{
-            Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
+            Write-EnvModificationLog -Level $Level -Type 'Remove' -Path $item
             $counter += 1
         }
     }
@@ -313,12 +309,12 @@ function Remove-EnvPathByTargetPath{
                 $out_buf += $item
             }
             else{
-                Write-EnvToolsLog -Level $Level -Type 'Remove' -Path $item
+                Write-EnvModificationLog -Level $Level -Type 'Remove' -Path $item
                 $counter += 1
             }
         }
     }else{
-        Write-EnvToolsLog -Level $Level -Type 'Not Remove' -Path $TargetPath
+        Write-EnvModificationLog -Level $Level -Type 'Not Remove' -Path $TargetPath
     }
     Set-EnvPathBySplit -Paths $out_buf -Level $Level
     Write-VerboseLog "$counter paths eq target $TargetPath have been totally removed from $Level level `$Env:PATH."
