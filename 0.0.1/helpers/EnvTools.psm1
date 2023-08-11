@@ -1,6 +1,6 @@
 Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function local:Write-EnvModificationLog{
-    # [CmdletBinding()]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateSet('User','Process','Machine')]
@@ -14,6 +14,7 @@ function local:Write-EnvModificationLog{
     Write-VerboseLog $message -Verbose 
 }
 function local:Test-EnvPathLevelArg{
+    [CmdletBinding()]
     param(
         [string]$Level
     )
@@ -44,6 +45,7 @@ function local:Test-EnvPathExist{
     $true: if the `Path` is `existing` and not `empty` and not `$null`.
     $false: if the `Path` is not `existing` or is `empty` or `$null`.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]
@@ -76,25 +78,27 @@ function local:Test-EnvPathNotDuplicated{
         $false: if the `Path` is `duplicated` in the `$Container`.
 
     #>
-        param(
-            [Parameter(Mandatory)]
-            [ValidateScript({Test-EnvPathLevelArg $_})]
-            [string]$Level,
-            [Parameter(Mandatory)]
-            [string]$Path,
-            [Parameter(Mandatory)]
-            [AllowEmptyCollection()]
-            [string[]]$Container
-        )
-        if ($Path -in $Container){
-            Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
-            return $false
-        }else{
-            return $true
-        }
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [string]$Level,
+        [Parameter(Mandatory)]
+        [string]$Path,
+        [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
+        [string[]]$Container
+    )
+    if ($Path -in $Container){
+        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
+        return $false
+    }else{
+        return $true
     }
+}
 
 function Get-EnvPathAsSplit{
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]
@@ -117,6 +121,7 @@ function Get-EnvPathAsSplit{
     }
 }
 function Set-EnvPathBySplit{
+    [CmdletBinding()]
     param(
         [string[]]$Paths,
         [Parameter(Mandatory)]
@@ -145,6 +150,7 @@ function local:Format-EnvPath{
         1. Remove the invalid (non-existent or empty or duplicated) items.
         2. Format the content of all items by `Format-Path` function.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Test-EnvPathLevelArg $_})]
@@ -190,6 +196,8 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 .NOTES
     Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
 #>
+    [CmdletBinding()]
+    param()
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
     if(-not(Test-AdminPermission)){
         throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
@@ -221,6 +229,7 @@ function Add-EnvPathToCurrentProcess{
 .EXAMPLE
     Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Path
@@ -256,6 +265,7 @@ function Remove-EnvPathByPattern{
     # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:PATH`.
     Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Pattern,
@@ -289,6 +299,7 @@ function Remove-EnvPathByTargetPath{
     Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
     # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$TargetPath,

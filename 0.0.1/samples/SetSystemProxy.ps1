@@ -1,5 +1,6 @@
 #Requires -Version 7.0
 #Requires -RunAsAdministrator
+[CmdletBinding()]
 param (
     [Parameter(Mandatory)]
     [string]$ServerType,

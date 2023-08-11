@@ -95,6 +95,7 @@ function local:Reset-PathAttribute{
         We choose the last method since it's only suitable for FileSystem, bringing
         a expected `ineffect` when misuse this function on Non-FileSystem, which means a higher security.
     #>
+    [CmdletBinding()]
     param(
         [string]$Path
     )
@@ -173,6 +174,7 @@ function local:Get-PathType{
         What is `-band` ? See https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_operators?view=powershell-7.2#arithmetic-operators
         But for specific, we use `-eq` instead of `-band`
     #>
+    [CmdletBinding()]
     param(
         [string]$Path
     )
@@ -362,6 +364,7 @@ function local:Set-OriginalAcl{
 
     All `SDDLs`s are from a origin installed native system, so we can ensure it is in the original/correct/target state.
     #>
+    [CmdletBinding()]
     param(
         [string]$Path,
         [switch]$Recurse
@@ -538,6 +541,7 @@ function local:Set-OriginalAcl{
 }
 
 function local:Get-Sddl{
+    [CmdletBinding()]
     param(
         [string]$Path
     )

@@ -1,10 +1,14 @@
 function Test-AdminPermission {
+    [CmdletBinding()]
+    param()
     $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
 
     if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Verbose "Current process is not in AdminPermission."
         return $false
     }else{
+        Write-Verbose "Current process is in in AdminPermission."
         return $true
     }
 }
@@ -41,7 +45,7 @@ function Test-IfIsOnCertainPlatform{
         Write-Verbose  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
     } else {
-        Write-Verbose  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
+        Write-Error  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
         return $false
     }
 }
@@ -56,7 +60,7 @@ function Get-InstallPath{
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
-        Write-Verbose "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Error "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         return $null
     }
 }

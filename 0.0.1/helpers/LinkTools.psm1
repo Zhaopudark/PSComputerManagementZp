@@ -7,6 +7,7 @@ function local:Merge-DirectoryWithBackup{
     Then, merge items from $Source to $Destination
     Make logs in ${Home}\Merge-DirectoryWithBackup.log
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Source,
@@ -42,6 +43,7 @@ function local:Move-FileWithBackup{
     Then, move $Source to $Destination
     Make logs in ${Home}\Move-FileWithBackup.log
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Source,
@@ -88,6 +90,7 @@ function local:Merge-BeforeSetDirLink{
         dir-non-ReparsePoint    | dir-ReparsePoint      | throw error
         dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Target1,
@@ -166,6 +169,7 @@ function local:Move-BeforeSetFileLink{
         file-non-ReparsePoint   | file-ReparsePoint     | throw error
         file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Target1,
@@ -233,6 +237,7 @@ function Set-DirSymbolicLinkWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a symbolic link to $Target.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -258,6 +263,7 @@ function Set-FileSymbolicLinkWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a symbolic link to $Target.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -284,6 +290,7 @@ function Set-DirJunctionWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a junction to $Target.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -310,6 +317,7 @@ function Set-FileHardLinkWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a hard link to $Target.
 #>
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
