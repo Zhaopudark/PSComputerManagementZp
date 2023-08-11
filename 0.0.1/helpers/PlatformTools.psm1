@@ -57,7 +57,7 @@ function Get-IntsallPath{
         return = "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
         Write-Verbose "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-        return $false
+        return $null
     }
 }
 
