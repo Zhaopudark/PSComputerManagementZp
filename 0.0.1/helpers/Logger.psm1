@@ -1,4 +1,4 @@
-Import-Module "${PSScriptRoot}\Platform.psm1" -Scope local
+Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
 
 $local:log_dir = "$(Get-InstallPath)\Log"
 
