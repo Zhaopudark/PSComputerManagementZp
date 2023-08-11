@@ -43,11 +43,11 @@ function Test-IfIsOnCertainPlatform{
     } elseif (($PSVersionTable.Platform -eq "Unix") -and(Test-IsWSL2) -and ($SystemName.ToLower() -eq "wsl2")){
         Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
-    } elseif (($PSVersionTable.Platform -eq "Unix")-and ($SystemName.ToLower() -eq "linux")){
+    } elseif (($PSVersionTable.Platform -eq "Unix") -and(!(Test-IsWSL2)) -and ($SystemName.ToLower() -eq "linux")){
         Write-Verbose  "The current platform, $($PSVersionTable.Platform), is compatible with the systemName, ${SystemName}."
         return $true
     } else {
-        Write-Error  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
+        Write-Warning  "The platform, $($PSVersionTable.Platform), is not compatible with the systemName, ${SystemName}."
         return $false
     }
 }
@@ -63,7 +63,7 @@ function Get-InstallPath{
     }elseif (Test-IfIsOnCertainPlatform -SystemName 'Linux'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
-        Write-Error "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Warning "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         return $null
     }
 }
