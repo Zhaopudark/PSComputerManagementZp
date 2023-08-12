@@ -19,16 +19,16 @@ function local:Test-IsWSL2{
 }
 
 
-function Test-Plarform{
+function Test-Platform{
 <#
 .DESCRIPTION
     Test if the current platform is compatible with the arg `Name`.
     Currently, it only support Windows, Linux and Wsl2.
     If $Verbose is given, it will show the result.
 .EXAMPLE
-    Test-IfIsOnCertainPlatform -Name 'Windows' -Verbose
-    Test-IfIsOnCertainPlatform -Name 'Wsl2' -Verbose
-    Test-IfIsOnCertainPlatform -Name 'Linux' -Verbose
+    Test-Platform -Name 'Windows' -Verbose
+    Test-Platform -Name 'Wsl2' -Verbose
+    Test-Platform -Name 'Linux' -Verbose
 .OUTPUTS
     $true if compatible, otherwise $false.
 #>
@@ -87,11 +87,11 @@ function Get-InstallPath{
     [CmdletBinding()]
     [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
     param()
-    if (Test-Plarform 'Windows'){
+    if (Test-Platform 'Windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"
-    }elseif (Test-Plarform 'Wsl2'){
+    }elseif (Test-Platform 'Wsl2'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
-    }elseif (Test-Plarform 'Linux'){
+    }elseif (Test-Platform 'Linux'){
         return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
     }else{
         Write-Warning "The current platform, $($PSVersionTable.Platform), has not been supported yet."

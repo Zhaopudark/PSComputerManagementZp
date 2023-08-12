@@ -195,7 +195,7 @@
 ## Remove-EnvPathByTargetPath
 
 ```powershell
-<#
+<
 .DESCRIPTION
     Remove the target path in `$Env:PATH` in the specified level.
 .EXAMPLE
@@ -206,7 +206,7 @@
 
 # Platform Tools
 
-## Test-Plarform
+## Test-Platform
 
 ```powershell
 <#
@@ -215,9 +215,9 @@
     Currently, it only support Windows, Linux and Wsl2.
     If $Verbose is given, it will show the result.
 .EXAMPLE
-    Test-IfIsOnCertainPlatform -Name 'Windows' -Verbose
-    Test-IfIsOnCertainPlatform -Name 'Wsl2' -Verbose
-    Test-IfIsOnCertainPlatform -Name 'Linux' -Verbose
+    Test-Platform -Name 'Windows' -Verbose
+    Test-Platform -Name 'Wsl2' -Verbose
+    Test-Platform -Name 'Linux' -Verbose
 .OUTPUTS
     $true if compatible, otherwise $false.
 #>
