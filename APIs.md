@@ -211,10 +211,15 @@
 ```powershell
 <#
 .DESCRIPTION
-    Get the current platform name.
-    It only support Windows, Linux or Wsl2.
+    Test if the current platform is compatible with the arg `Name`.
+    Currently, it only support Windows, Linux and Wsl2.
+    If $Verbose is given, it will show the result.
+.EXAMPLE
+    Test-IfIsOnCertainPlatform -Name 'Windows' -Verbose
+    Test-IfIsOnCertainPlatform -Name 'Wsl2' -Verbose
+    Test-IfIsOnCertainPlatform -Name 'Linux' -Verbose
 .OUTPUTS
-    String of platform name with initial capitalized.
+    $true if compatible, otherwise $false.
 #>
 ```
 
