@@ -54,7 +54,7 @@ function Test-Plarform{
     # }
 
     if ($IsWindows){
-        if ($SystemName.ToLower() -eq "windows"){
+        if ($Name.ToLower() -eq "windows"){
             Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
             return $true
         } else {
@@ -62,7 +62,7 @@ function Test-Plarform{
             return $false
         }
     } elseif ($IsLinux -and (Test-IsWSL2)){
-        if ($SystemName.ToLower() -eq "wsl2"){
+        if ($Name.ToLower() -eq "wsl2"){
             Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
             return $true
         } else {
@@ -70,7 +70,7 @@ function Test-Plarform{
             return $false
         }
     } elseif ($IsLinux -and(!(Test-IsWSL2))){
-        if ($SystemName.ToLower() -eq "linux"){
+        if ($Name.ToLower() -eq "linux"){
             Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
             return $true
         } else {
