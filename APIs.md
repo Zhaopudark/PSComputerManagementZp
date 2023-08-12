@@ -206,7 +206,7 @@
 
 # Platform Tools
 
-## Test-Get-PlatformName
+## Test-Plarform
 
 ```powershell
 <#

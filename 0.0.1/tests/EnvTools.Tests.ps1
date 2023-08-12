@@ -16,7 +16,7 @@ BeforeAll {
 
 Describe 'Test EnvTools' {
     Context 'Symplify non-process level Env:PATH' {
-        It 'Test Merge-RedundantEnvPathFromLocalMachineToCurrentUser' -Skip:(!(Get-PlatformName -eq 'Windows')){
+        It 'Test Merge-RedundantEnvPathFromLocalMachineToCurrentUser' -Skip:(!(Test-Platform 'Windows')){
             Merge-RedundantEnvPathFromLocalMachineToCurrentUser
             $user_env_paths = Get-EnvPathAsSplit -Level 'User'
             $user_env_paths += $test_path

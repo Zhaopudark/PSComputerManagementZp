@@ -21,7 +21,7 @@ function local:Test-EnvPathLevelArg{
     )
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
-    }elseif (($Level -eq 'Machine') -and (Get-PlatformName -eq 'Windows')){
+    }elseif (($Level -eq 'Machine') -and (Test-Plarform 'Windows')){
         Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         if(-not(Test-AdminPermission)){
             throw [System.UnauthorizedAccessException]::new("You must run this function as administrator when arg `$Level is $Level.")
@@ -30,7 +30,7 @@ function local:Test-EnvPathLevelArg{
             return $true
         }
     }else{
-        if (((Get-PlatformName -eq 'Wsl2') -or (Get-PlatformName -eq 'Linux'))`
+        if (((Test-Plarform 'Wsl2') -or (Test-Plarform 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
             Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
@@ -109,14 +109,14 @@ function Get-EnvPathAsSplit{
         [string]$Level
     )
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-    if (Get-PlatformName -eq 'Windows'){
+    if (Test-Plarform 'Windows'){
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
 
-    }elseif (Get-PlatformName -eq 'Wsl2'){
+    }elseif (Test-Plarform 'Wsl2'){
 
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
-    }elseif (Get-PlatformName -eq 'Linux'){
+    }elseif (Test-Plarform 'Linux'){
         return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
 
     }else{
@@ -133,13 +133,13 @@ function Set-EnvPathBySplit{
         [string]$Level
     )
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-    if (Get-PlatformName -eq 'Windows'){
+    if (Test-Plarform 'Windows'){
         [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
 
-    }elseif (Get-PlatformName -eq 'Wsl2'){
+    }elseif (Test-Plarform 'Wsl2'){
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
-    }elseif (Get-PlatformName -eq 'Linux'){
+    }elseif (Test-Plarform 'Linux'){
         [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
 
     }else{
