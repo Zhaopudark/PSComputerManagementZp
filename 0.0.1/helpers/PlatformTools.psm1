@@ -52,7 +52,8 @@ function Test-Platform{
     #     Write-Warning  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
     #     return $null
     # }
-
+    # see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux
+    # for more information about $IsWindows and $IsLinux
     if ($IsWindows){
         if ($Name.ToLower() -eq "windows"){
             Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
