@@ -5,9 +5,9 @@ function local:Merge-DirectoryWithBackup{
     Backup $Source to a path based on $Backuppath
     Backup $Destination to a path based on $Backuppath
     Then, merge items from $Source to $Destination
-    Make logs in ${Home}\Merge-DirectoryWithBackup.log
+    Record logs
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Source,
@@ -16,7 +16,9 @@ function local:Merge-DirectoryWithBackup{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
+
     try{
+
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         Assert-IsDirectory $Source
         Assert-IsDirectory $Destination
@@ -26,9 +28,17 @@ function local:Merge-DirectoryWithBackup{
         $backup_source = "$Backuppath/$guid-$source_name"
         $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
         $backup_destination = "$Backuppath/$guid-$destination_name"
-        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-DirectoryWithBackup.log"
-        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-DirectoryWithBackup.log"
-        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-DirectoryWithBackup.log"
+        $log_file = Get-LogFileName "Robocopy Merge-DirectoryWithBackup"
+        if($PSCmdlet.ShouldProcess(
+            "Backup $Source to $backup_source"+[Environment]::NewLine+
+            "Backup $Destination to $backup_destination"+[Environment]::NewLine+
+            "Then, merge items from $Source to $Destination"+[Environment]::NewLine+
+            "Record logs to $log_file",'',''))
+        {
+            Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
+            Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+            Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        }
     }
     catch
     {
@@ -41,9 +51,9 @@ function local:Move-FileWithBackup{
     Backup $Source to a path based on $Backuppath
     Backup $Destination to a path based on $Backuppath
     Then, move $Source to $Destination
-    Make logs in ${Home}\Move-FileWithBackup.log
+    Record logs
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Source,
@@ -62,9 +72,18 @@ function local:Move-FileWithBackup{
         $backup_source = "$Backuppath/$guid-$source_name"
         $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
         $backup_destination = "$Backuppath/$guid-$destination_name"
-        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"${Home}\Move-FileWithBackup.log"
-        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Move-FileWithBackup.log"
-        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"${Home}\Move-FileWithBackup.log"
+        $log_file = Get-LogFileName "Robocopy Move-FileWithBackup"
+        if($PSCmdlet.ShouldProcess(
+            "Backup $Source to $backup_source"+[Environment]::NewLine+
+            "Backup $Destination to $backup_destination"+[Environment]::NewLine+
+            "Then, move $Source to $Destination"+[Environment]::NewLine+
+            "Record logs to $log_file",'',''))
+        {
+            Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
+            Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+            Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        }
+
     }
     catch
     {
@@ -90,7 +109,7 @@ function local:Merge-BeforeSetDirLink{
         dir-non-ReparsePoint    | dir-ReparsePoint      | throw error
         dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Target1,
@@ -99,54 +118,57 @@ function local:Merge-BeforeSetDirLink{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
-    if (Test-Path $Target1){
-        if (Test-ReparsePoint $Target1){
-            if (Test-Path $Target2){
-                if (Test-ReparsePoint $Target2){
-                    # dir-ReparsePoint        | dir-ReparsePoint      | throw error
-                    throw "Cannot merge $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
+    if($PSCmdlet.ShouldProcess("Merge the content in $Target1 to $Target2, and backup essential items in $Backuppath",'','')){
+        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        if (Test-Path $Target1){
+            if (Test-ReparsePoint $Target1){
+                if (Test-Path $Target2){
+                    if (Test-ReparsePoint $Target2){
+                        # dir-ReparsePoint        | dir-ReparsePoint      | throw error
+                        throw "Cannot merge $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
+                    }else{
+                        # dir-ReparsePoint        | dir-non-ReparsePoint  | del $Target1
+                        Write-VerboseLog  "Remove-Item $Target1 -Force"
+                        Remove-Item $Target1 -Force
+                    }
                 }else{
-                    # dir-ReparsePoint        | dir-non-ReparsePoint  | del $Target1
+                    # dir-ReparsePoint        | non-existent          | throw error
+                    throw "Cannot merge $Target1 to $Target2, because $Target2 does not exist."
+                }
+            }else{
+                if (Test-Path $Target2){
+                    if (Test-ReparsePoint $Target2){
+                        # dir-non-ReparsePoint    | dir-ReparsePoint      | throw error
+                        throw "Cannot merge $Target1 to $Target2, because $Target1 is not ReparsePoint, but $Target2 is."
+                    }else{
+                        #dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
+                        Merge-DirectoryWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
+                        Write-VerboseLog  "Remove-Item $Target1 -Force"
+                        Remove-Item $Target1 -Force
+                    }
+                }else{
+                    # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
+                    Write-VerboseLog  "Robocopy $Target1 $Target2"
+                    $log_file = Get-LogFileName "Robocopy Merge-BeforeSetDirLink"
+                    Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"$log_file"
                     Write-VerboseLog  "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
-            }else{
-                # dir-ReparsePoint        | non-existent          | throw error
-                throw "Cannot merge $Target1 to $Target2, because $Target2 does not exist."
             }
         }else{
             if (Test-Path $Target2){
                 if (Test-ReparsePoint $Target2){
-                    # dir-non-ReparsePoint    | dir-ReparsePoint      | throw error
-                    throw "Cannot merge $Target1 to $Target2, because $Target1 is not ReparsePoint, but $Target2 is."
+                    # non-existent            | dir-ReparsePoint      | throw error
+                    throw "Cannot merge $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
                 }else{
-                    #dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
-                    Merge-DirectoryWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                    Write-VerboseLog  "Remove-Item $Target1 -Force"
-                    Remove-Item $Target1 -Force
+                    # non-existent            | dir-non-ReparsePoint  | pass(do nothing)
+                    Write-VerboseLog  "Do nothing."
                 }
             }else{
-                # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
-                Write-VerboseLog  "Robocopy $Target1 $Target2"
-                Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"${Home}\Merge-BeforeSetDirLink.log"
-                Write-VerboseLog  "Remove-Item $Target1 -Force"
-                Remove-Item $Target1 -Force
+                # non-existent            | non-existent          | New-item $Target2 -Itemtype Directory
+                Write-VerboseLog  "New-Item $Target2 -ItemType Directory"
+                New-Item $Target2 -ItemType Directory
             }
-        }
-    }else{
-        if (Test-Path $Target2){
-            if (Test-ReparsePoint $Target2){
-                # non-existent            | dir-ReparsePoint      | throw error
-                throw "Cannot merge $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
-            }else{
-                # non-existent            | dir-non-ReparsePoint  | pass(do nothing)
-                Write-VerboseLog  "Do nothing."
-            }
-        }else{
-            # non-existent            | non-existent          | New-item $Target2 -Itemtype Directory
-            Write-VerboseLog  "New-Item $Target2 -ItemType Directory"
-            New-Item $Target2 -ItemType Directory
         }
     }
 }
@@ -169,7 +191,7 @@ function local:Move-BeforeSetFileLink{
         file-non-ReparsePoint   | file-ReparsePoint     | throw error
         file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Target1,
@@ -178,54 +200,56 @@ function local:Move-BeforeSetFileLink{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
-    if (Test-Path $Target1){
-        if (Test-ReparsePoint $Target1){
-            if (Test-Path $Target2){
-                if (Test-ReparsePoint $Target2){
-                    # file-ReparsePoint       | file-ReparsePoint     | throw error
-                    throw "Cannot move $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
+    if($PSCmdlet.ShouldProcess("Move the content in $Target1 to $Target2, and backup essential items in $Backuppath",'','')){
+        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        if (Test-Path $Target1){
+            if (Test-ReparsePoint $Target1){
+                if (Test-Path $Target2){
+                    if (Test-ReparsePoint $Target2){
+                        # file-ReparsePoint       | file-ReparsePoint     | throw error
+                        throw "Cannot move $Target1 to $Target2, because $Target1 and $Target2 are both ReparsePoint."
+                    }else{
+                        # file-ReparsePoint       | file-non-ReparsePoint | del $Target1
+                        Write-VerboseLog  "Remove-Item $Target1 -Force"
+                        Remove-Item $Target1 -Force
+                    }
                 }else{
-                    # file-ReparsePoint       | file-non-ReparsePoint | del $Target1
+                    # file-ReparsePoint       | non-existent          | throw error
+                    throw "Cannot move $Target1 to $Target2, because $Target1 is ReparsePoint while $Target2 does not exist."
+                }
+            }else{
+                if (Test-Path $Target2){
+                    if (Test-ReparsePoint $Target2){
+                        # file-non-ReparsePoint   | file-ReparsePoint     | throw error
+                        throw "Cannot move $Target1 to $Target2, because $Target1 is not ReparsePoint while $Target2 is."
+                    }else{
+                        # file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
+                        Move-FileWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
+                        Write-VerboseLog  "Remove-Item $Target1 -Force"
+                        Remove-Item $Target1 -Force
+                    }
+                }else{
+                    # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
+                    Write-VerboseLog  "Robocopy $Target1 $Target2"
+                    Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
                     Write-VerboseLog  "Remove-Item $Target1 -Force"
                     Remove-Item $Target1 -Force
                 }
-            }else{
-                # file-ReparsePoint       | non-existent          | throw error
-                throw "Cannot move $Target1 to $Target2, because $Target1 is ReparsePoint while $Target2 does not exist."
             }
         }else{
             if (Test-Path $Target2){
                 if (Test-ReparsePoint $Target2){
-                    # file-non-ReparsePoint   | file-ReparsePoint     | throw error
-                    throw "Cannot move $Target1 to $Target2, because $Target1 is not ReparsePoint while $Target2 is."
+                    # non-existent            | file-ReparsePoint     | throw error
+                    throw "Cannot move $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
                 }else{
-                    # file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
-                    Move-FileWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                    Write-VerboseLog  "Remove-Item $Target1 -Force"
-                    Remove-Item $Target1 -Force
+                    # non-existent            | file-non-ReparsePoint | pass(do nothing)
+                    Write-VerboseLog  "Do nothing."
                 }
             }else{
-                # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
-                Write-VerboseLog  "Robocopy $Target1 $Target2"
-                Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
-                Write-VerboseLog  "Remove-Item $Target1 -Force"
-                Remove-Item $Target1 -Force
+                # non-existent            | non-existent          | New-item $Target2 -ItemType File
+                Write-VerboseLog  "New-Item $Target2 -ItemType File"
+                New-Item $Target2 -ItemType File
             }
-        }
-    }else{
-        if (Test-Path $Target2){
-            if (Test-ReparsePoint $Target2){
-                # non-existent            | file-ReparsePoint     | throw error
-                throw "Cannot move $Target1 to $Target2, because $Target1 does not exist and $Target2 is ReparsePoint."
-            }else{
-                # non-existent            | file-non-ReparsePoint | pass(do nothing)
-                Write-VerboseLog  "Do nothing."
-            }
-        }else{
-            # non-existent            | non-existent          | New-item $Target2 -ItemType File
-            Write-VerboseLog  "New-Item $Target2 -ItemType File"
-            New-Item $Target2 -ItemType File
         }
     }
 }
@@ -233,11 +257,10 @@ function local:Move-BeforeSetFileLink{
 function Set-DirSymbolicLinkWithSync{
 <#
 .DESCRIPTION
-    Set a directory symbolic link from $Path to $Source.
-    Then, we will get a result as $Path->$Target,
-    which means $Path is a symbolic link to $Target.
+    Set a directory symbolic link from $Path to $Source
+    Then, we will get a result as $Path->$Target, which means $Path is a symbolic link to $Target
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -246,14 +269,16 @@ function Set-DirSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    try{
-        Merge-BeforeSetDirLink $Path $Target $Backuppath
-        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
-        $link | Select-Object LinkType, FullName, Target
-    }
-    catch
-    {
-        Write-VerboseLog  "Exception: $PSItem"
+    if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
+        try{
+            Merge-BeforeSetDirLink $Path $Target $Backuppath
+            $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
+            $link | Select-Object LinkType, FullName, Target
+        }
+        catch
+        {
+            Write-VerboseLog  "Exception: $PSItem"
+        }
     }
 }
 function Set-FileSymbolicLinkWithSync{
@@ -263,7 +288,7 @@ function Set-FileSymbolicLinkWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a symbolic link to $Target.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -272,14 +297,16 @@ function Set-FileSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    try{
-        Move-BeforeSetFileLink $Path $Target $Backuppath
-        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
-        $link | Select-Object LinkType, FullName, Target
-    }
-    catch
-    {
-        Write-VerboseLog "Exception: $PSItem"
+    if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
+        try{
+            Move-BeforeSetFileLink $Path $Target $Backuppath
+            $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
+            $link | Select-Object LinkType, FullName, Target
+        }
+        catch
+        {
+            Write-VerboseLog "Exception: $PSItem"
+        }
     }
 }
 
@@ -290,7 +317,7 @@ function Set-DirJunctionWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a junction to $Target.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -299,14 +326,16 @@ function Set-DirJunctionWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    try{
-        Merge-BeforeSetDirLink $Path $Target $Backuppath
-        $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
-        $link | Select-Object LinkType, FullName, Target
-    }
-    catch
-    {
-        Write-VerboseLog "Exception: $PSItem"
+    if ($PSCmdlet.ShouldProcess("Set a directory junction from $Path to $Source, as $Path->$Target",'','')){
+        try{
+            Merge-BeforeSetDirLink $Path $Target $Backuppath
+            $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
+            $link | Select-Object LinkType, FullName, Target
+        }
+        catch
+        {
+            Write-VerboseLog "Exception: $PSItem"
+        }
     }
 }
 
@@ -317,7 +346,7 @@ function Set-FileHardLinkWithSync{
     Then, we will get a result as $Path->$Target,
     which means $Path is a hard link to $Target.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path,
@@ -326,13 +355,15 @@ function Set-FileHardLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    try{
-        Move-BeforeSetFileLink $Path $Target $Backuppath
-        $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
-        $link | Select-Object LinkType, FullName, Target
-    }
-    catch
-    {
-        Write-VerboseLog "Exception: $PSItem"
+    if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
+        try{
+            Move-BeforeSetFileLink $Path $Target $Backuppath
+            $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
+            $link | Select-Object LinkType, FullName, Target
+        }
+        catch
+        {
+            Write-VerboseLog "Exception: $PSItem"
+        }
     }
 }

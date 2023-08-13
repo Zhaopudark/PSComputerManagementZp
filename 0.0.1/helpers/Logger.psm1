@@ -7,10 +7,21 @@ if (!(Test-Path $local:log_dir)){
 }
 
 $local:version = Get-Item "${PSScriptRoot}\..\" |Split-Path -Leaf
-$local:log_file = "$local:log_dir\PSComputerManagementZp-v$local:version-Log.txt"
+
+function Get-LogFileName{
+    param(
+        [string]$KeyInfo
+    )
+    if ($KeyInfo -ne ''){
+        return "$local:log_dir\PSComputerManagementZp-v$local:version-($KeyInfo)-Log.txt"
+    }
+    else{
+        return "$local:log_dir\PSComputerManagementZp-v$local:version-Log.txt"
+    }
+}
 
 function Write-VerboseLog{
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [string]$Message
     )
@@ -18,6 +29,9 @@ function Write-VerboseLog{
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $message = "[${time_stamp}] ${Message}"
     Write-Verbose $message
-    Add-Content -Path $log_file -Value $message
-    # Out-File -FilePath $log_file_path -Append
+    $log_file = Get-LogFileName
+    if ($PSCmdlet.ShouldProcess("$log_file","record logs")){
+        Add-Content -Path $log_file -Value $message
+        # Out-File -FilePath $log_file -Append
+    }
 }
