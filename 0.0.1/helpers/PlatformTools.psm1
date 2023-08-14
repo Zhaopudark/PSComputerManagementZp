@@ -33,7 +33,7 @@ function Test-Platform{
     $true if compatible, otherwise $false.
 #>
     [CmdletBinding()]
-    [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
+    [OutputType([System.Boolean],[System.Management.Automation.PSCustomObject])]
     param(
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
