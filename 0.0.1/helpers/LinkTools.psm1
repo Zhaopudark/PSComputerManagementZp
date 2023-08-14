@@ -18,7 +18,6 @@ function local:Merge-DirectoryWithBackup{
     )
 
     try{
-
         Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
         Assert-IsDirectory $Source
         Assert-IsDirectory $Destination
@@ -271,6 +270,8 @@ function Set-DirSymbolicLinkWithSync{
     )
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
         try{
+            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+            Assert-IsWindows
             Merge-BeforeSetDirLink $Path $Target $Backuppath
             $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
             $link | Select-Object LinkType, FullName, Target
@@ -299,6 +300,8 @@ function Set-FileSymbolicLinkWithSync{
     )
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
         try{
+            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+            Assert-IsWindows
             Move-BeforeSetFileLink $Path $Target $Backuppath
             $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
             $link | Select-Object LinkType, FullName, Target
@@ -328,6 +331,8 @@ function Set-DirJunctionWithSync{
     )
     if ($PSCmdlet.ShouldProcess("Set a directory junction from $Path to $Source, as $Path->$Target",'','')){
         try{
+            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+            Assert-IsWindows
             Merge-BeforeSetDirLink $Path $Target $Backuppath
             $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
             $link | Select-Object LinkType, FullName, Target
@@ -357,6 +362,8 @@ function Set-FileHardLinkWithSync{
     )
     if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
         try{
+            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+            Assert-IsWindows
             Move-BeforeSetFileLink $Path $Target $Backuppath
             $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
             $link | Select-Object LinkType, FullName, Target

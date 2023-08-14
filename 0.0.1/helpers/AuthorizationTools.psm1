@@ -100,6 +100,8 @@ function local:Reset-PathAttribute{
         [string]$Path
     )
     try{
+        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        Assert-IsWindows
         $Qualifier = Get-Qualifier $Path
         $Attributes = (Get-ItemProperty -LiteralPath $Path).Attributes
         $Linktype = (Get-ItemProperty -LiteralPath $Path).LinkType
@@ -180,6 +182,8 @@ function local:Get-PathType{
         [string]$Path
     )
     try{
+        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        Assert-IsWindows
         $Path = Format-Path $Path
         Assert-FileSystemAuthorized $Path
         if (Test-IsInInHome $Path){
@@ -371,6 +375,8 @@ function local:Set-OriginalAcl{
         [switch]$Recurse
     )
     try{
+        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        Assert-IsWindows
         $Path = Format-Path $Path
         Reset-PathAttribute $Path
         $PathType = Get-PathType $Path

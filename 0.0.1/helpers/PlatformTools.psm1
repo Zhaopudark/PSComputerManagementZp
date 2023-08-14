@@ -100,3 +100,9 @@ function Get-InstallPath{
     }
 }
 
+function Assert-IsWindows{
+    param()
+    if (!($IsWindows)){
+        throw "The current platform, $($PSVersionTable.Platform), is not Windows."
+    }
+}
