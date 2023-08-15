@@ -1,4 +1,4 @@
-# This test is not for CI/CD
+# This test is not for CI/CD because it can be run only on Windows and on atleast different FileSystems
 BeforeAll {
     Import-Module "${PSScriptRoot}\..\helpers\AuthorizationTools.psm1" -Scope local
     Import-Module PSComputerManagementZp -Force
