@@ -12,11 +12,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: install module 
+    - name: do pester tests 
       shell: pwsh
       run: | 
         ./install.ps1
-    - name: do pester tests
-      shell: pwsh
-      run: |
-        Invoke-Pester -Path '0.0.1/tests/' -Passthru
+        cd './0.0.1/tests/'
+        Invoke-Pester -Passthru

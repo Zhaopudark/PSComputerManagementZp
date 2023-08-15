@@ -3,6 +3,13 @@ BeforeAll {
     Import-Module "${PSScriptRoot}\..\helpers\AuthorizationTools.psm1" -Scope local
     Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
+    $vhdPath = "C:\${Home}\VirtualDisk.vhdx"
+    $vhdSize = '1GB'
+    New-VHD -Path $vhdPath -SizeBytes $vhdSize -Fixed
+    $volume = Get-VirtualDisk -Path $vhdPath | Get-Disk | Get-Partition | Get-Volume
+    Format-Volume -FileSystem NTFS -Partition $volume.PartitionNumber
+
+
     New-Item -Path "${Home}\${guid}" -ItemType Directory
     New-Item -Path "D:\${guid}" -ItemType Directory
 
@@ -53,6 +60,9 @@ BeforeAll {
 }
 
 Describe 'Link EnvTools' {
+    Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
+        
+    }
     Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
         It 'Test HardLink' {
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").Attributes | Should -Be 'Archive'
