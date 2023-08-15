@@ -20,6 +20,10 @@ jobs:
       shell: pwsh
       run: |
         Invoke-Pester -Path '0.0.1/tests/EnvTools.Tests.ps1' -Passthru
+    - name: do tests in LinkTools.Tests.ps1
+      shell: pwsh
+      run: |
+        Invoke-Pester -Path '0.0.1/tests/LinkTools.Tests.ps1' -Passthru
     - name: do tests in PathTools.Tests.ps1
       shell: pwsh
       run: |

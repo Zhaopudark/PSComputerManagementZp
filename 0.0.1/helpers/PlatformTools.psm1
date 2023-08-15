@@ -116,7 +116,7 @@ function Assert-IsAdmin{
     if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Write-Verbose "Current process is not in AdminPermission."
         throw [System.UnauthorizedAccessException]::new("You must run in administrator privilege.")
-    }    
+    }
 }
 function Assert-AdminRobocopyAvailable{
     [CmdletBinding()]
@@ -136,5 +136,5 @@ function Assert-IsWindowsAndAdmin{
     [CmdletBinding()]
     param()
     Assert-IsWindows
-    Assert-IsAdmin  
+    Assert-IsAdmin
 }
