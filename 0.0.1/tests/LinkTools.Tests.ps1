@@ -4,8 +4,10 @@ BeforeAll {
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
-    New-Item -Path "$test_path\file_for_symbolic_link.txt" -ItemType File
-    New-Item -Path "$test_path\file_for_hard_link.txt" -ItemType File
+    New-Item -Path "$test_path\file_for_symboliclink1.txt" -ItemType File
+    New-Item -Path "$test_path\file_for_symboliclink2.txt" -ItemType File
+    New-Item -Path "$test_path\file_for_hardlink1.txt" -ItemType File
+    New-Item -Path "$test_path\file_for_hardlink2.txt" -ItemType File
     New-Item -Path "$test_path\test_junction\dir3" -ItemType Directory
     New-Item -Path "$test_path\test_junction\dir3\file3.txt" -ItemType File
     New-Item -Path "$test_path\test_junction\dir3\dir3" -ItemType Directory
@@ -71,6 +73,33 @@ Describe 'Link EnvTools' {
             "$backup4\dir4" | Should -Exist
             "$backup4\dir4\file44.txt" | Should -Exist
         }
+        It 'Test Set-FileSymbolicLinkWithSync' {
+            Set-FileSymbolicLinkWithSync -Path "$test_path\file_for_symboliclink1.txt"  -Target "$test_path\file_for_symboliclink2.txt" -Backuppath "$test_path\backup"
+            $item = Get-ItemProperty "$test_path\file_for_symboliclink1.txt"
+            $item.LinkType | Should -Be 'SymbolicLink'
+            $item.LinkTarget | Should -Be "$test_path\file_for_symboliclink2.txt"
+            "$test_path\file_for_symboliclink1.txt" | Should -Exist
+            "$test_path\file_for_symboliclink2.txt" | Should -Exist
+            $backup1 = (Get-ChildItem "$test_path\backup"  -Filter "*symboliclink1.txt")[0]
+            $backup2 = (Get-ChildItem "$test_path\backup"  -Filter "*symboliclink2.txt")[0]
+            "$backup1" | Should -Exist
+            "$backup2" | Should -Exist
+        }
+        It 'Test Set-FileHardLinkWithSync' {
+            Set-FileHardLinkWithSync -Path "$test_path\file_for_hardlink1.txt"  -Target "$test_path\file_for_hardlink2.txt" -Backuppath "$test_path\backup"
+            $item = Get-ItemProperty "$test_path\file_for_hardlink1.txt"
+            $item.LinkType | Should -Be 'Hardlink'
+            $item.LinkTarget | Should -Be $null 
+            $item = Get-ItemProperty "$test_path\file_for_hardlink2.txt"
+            $item.LinkType | Should -Be 'Hardlink'
+            $item.LinkTarget | Should -Be $null 
+            "$test_path\file_for_hardlink1.txt" | Should -Exist
+            "$test_path\file_for_hardlink2.txt" | Should -Exist
+            $backup1 = (Get-ChildItem "$test_path\backup"  -Filter "*hardlink1.txt")[0]
+            $backup2 = (Get-ChildItem "$test_path\backup"  -Filter "*hardlink2.txt")[0]
+            "$backup1" | Should -Exist
+            "$backup2" | Should -Exist
+        }
     }
     Context 'On non-Windows' -Skip:(Test-Platform 'Windows'){
         It 'Test Set-DirSymbolicLinkWithSync' {
@@ -78,6 +107,9 @@ Describe 'Link EnvTools' {
         }
         It 'Test Set-DirJunctionWithSync' {
             {Set-DirJunctionWithSync -Path "$test_path\test_symbolick_dir\dir3"  -Target "$test_path\test_symbolick_dir\dir4" -Backuppath "$test_path\backup" }| Should -Throw
+        }
+        It 'Test Set-FileSymbolicLinkWithSync' {
+            {Set-FileSymbolicLinkWithSync -Path "$test_path\file_symbolic_link"  -Target "$test_path\file_for_symbolic_link.txt" -Backuppath "$test_path\backup"}| Should -Throw
         }
 
     }

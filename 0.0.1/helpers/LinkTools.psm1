@@ -65,18 +65,16 @@ function local:Move-FileWithBackup{
     $backup_source = "$Backuppath/$guid-$source_name"
     $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
     $backup_destination = "$Backuppath/$guid-$destination_name"
-    $log_file = Get-LogFileName "Robocopy Move-FileWithBackup"
+    $log_file = Get-LogFileName
     if($PSCmdlet.ShouldProcess(
         "Backup $Source to $backup_source"+[Environment]::NewLine+
         "Backup $Destination to $backup_destination"+[Environment]::NewLine+
         "Then, move $Source to $Destination"+[Environment]::NewLine+
         "Record logs to $log_file",'',''))
     {
-        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-        Assert-AdminRobocopyAvailable
-        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
-        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
-        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        Write-VerboseLog (Copy-Item $Source $backup_source)
+        Write-VerboseLog (Copy-Item $Destination $backup_destination)
+        Write-VerboseLog (Copy-Item $Source $Destination)
     }
 }
 function local:Merge-BeforeSetDirLink{
