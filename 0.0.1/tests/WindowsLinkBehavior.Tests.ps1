@@ -3,65 +3,62 @@ BeforeAll {
     Import-Module "${PSScriptRoot}\..\helpers\AuthorizationTools.psm1" -Scope local
     Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
-    $vhdPath = "C:\${Home}\VirtualDisk.vhdx"
-    $vhdSize = '1GB'
-    New-VHD -Path $vhdPath -SizeBytes $vhdSize -Fixed
-    $volume = Get-VirtualDisk -Path $vhdPath | Get-Disk | Get-Partition | Get-Volume
-    Format-Volume -FileSystem NTFS -Partition $volume.PartitionNumber
-
-
-    New-Item -Path "${Home}\${guid}" -ItemType Directory
-    New-Item -Path "D:\${guid}" -ItemType Directory
-
-    New-Item -Path "${Home}\${guid}\file_for_hardlink.txt" -ItemType File
-    New-Item -Path "${Home}\${guid}\hardlink" -ItemType HardLink -Target "${Home}\${guid}\file_for_hardlink.txt"
-
-    New-Item -Path "D:\${guid}\file_for_hardlink.txt" -ItemType File
-    New-Item -Path "D:\${guid}\hardlink" -ItemType HardLink -Target "D:\${guid}\file_for_hardlink.txt"
-
-    New-Item -Path "${Home}\${guid}\dir_for_local_junction" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_local_junction"
-
-    New-Item -Path "D:\${guid}\dir_for_local_junction" -ItemType Directory
-    New-Item -Path "D:\${guid}\local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_local_junction"
-
-    New-Item -Path "${Home}\${guid}\dir_for_non_local_junction" -ItemType Directory
-    New-Item -Path "D:\${guid}\non_local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_non_local_junction"
-
-    New-Item -Path "D:\${guid}\dir_for_non_local_junction" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\non_local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_non_local_junction"
-
-
-    New-Item -Path "${Home}\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "${Home}\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_local_symbiliclink.txt"
-
-    New-Item -Path "D:\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "D:\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_local_symbiliclink.txt"
-
-    New-Item -Path "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "D:\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_non_local_symbiliclink.txt"
-
-    New-Item -Path "D:\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "${Home}\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_non_local_symbiliclink.txt"
-
-    New-Item -Path "${Home}\${guid}\dir_for_local_symbiliclink" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_local_symbiliclink"
-
-    New-Item -Path "D:\${guid}\dir_for_local_symbiliclink" -ItemType Directory
-    New-Item -Path "D:\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_local_symbiliclink"
-
-    New-Item -Path "${Home}\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
-    New-Item -Path "D:\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_non_local_symbiliclink"
-
-    New-Item -Path "D:\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_non_local_symbiliclink"
-
-
 }
 
 Describe 'Link EnvTools' {
-    Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
-        
+    Context 'Test Initialization' -Skip:(!(Test-Platform 'Windows')){
+        $vhdPath = "C:\${guid}\VirtualDisk.vhdx"
+        $vhdSize = '1GB'
+        New-VHD -Path $vhdPath -SizeBytes $vhdSize -Fixed
+        $volume = Get-VirtualDisk -Path $vhdPath | Get-Disk | Get-Partition | Get-Volume
+        Format-Volume -FileSystem NTFS -Partition $volume.PartitionNumber
+        Mount-VHD -Path $vhdPath
+
+        New-Item -Path "${Home}\${guid}" -ItemType Directory
+        New-Item -Path "D:\${guid}" -ItemType Directory
+
+        New-Item -Path "${Home}\${guid}\file_for_hardlink.txt" -ItemType File
+        New-Item -Path "${Home}\${guid}\hardlink" -ItemType HardLink -Target "${Home}\${guid}\file_for_hardlink.txt"
+
+        New-Item -Path "D:\${guid}\file_for_hardlink.txt" -ItemType File
+        New-Item -Path "D:\${guid}\hardlink" -ItemType HardLink -Target "D:\${guid}\file_for_hardlink.txt"
+
+        New-Item -Path "${Home}\${guid}\dir_for_local_junction" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_local_junction"
+
+        New-Item -Path "D:\${guid}\dir_for_local_junction" -ItemType Directory
+        New-Item -Path "D:\${guid}\local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_local_junction"
+
+        New-Item -Path "${Home}\${guid}\dir_for_non_local_junction" -ItemType Directory
+        New-Item -Path "D:\${guid}\non_local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_non_local_junction"
+
+        New-Item -Path "D:\${guid}\dir_for_non_local_junction" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\non_local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_non_local_junction"
+
+
+        New-Item -Path "${Home}\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "${Home}\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_local_symbiliclink.txt"
+
+        New-Item -Path "D:\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "D:\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_local_symbiliclink.txt"
+
+        New-Item -Path "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "D:\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_non_local_symbiliclink.txt"
+
+        New-Item -Path "D:\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "${Home}\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_non_local_symbiliclink.txt"
+
+        New-Item -Path "${Home}\${guid}\dir_for_local_symbiliclink" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_local_symbiliclink"
+
+        New-Item -Path "D:\${guid}\dir_for_local_symbiliclink" -ItemType Directory
+        New-Item -Path "D:\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_local_symbiliclink"
+
+        New-Item -Path "${Home}\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
+        New-Item -Path "D:\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_non_local_symbiliclink"
+
+        New-Item -Path "D:\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_non_local_symbiliclink"
     }
     Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
         It 'Test HardLink' {
@@ -308,5 +305,7 @@ Describe 'Link EnvTools' {
 AfterAll {
     Remove-Item -Path "${Home}\${guid}" -Force -Recurse
     Remove-Item -Path "D:\${guid}" -Force -Recurse
+    Dismount-VHD -Path $vhdPath
+    Remove-Item -Path $vhdPath -Force
     Remove-Module PSComputerManagementZp -Force
 }
