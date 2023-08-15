@@ -16,19 +16,7 @@ jobs:
       shell: pwsh
       run: | 
         ./install.ps1
-    - name: do tests in EnvTools.Tests.ps1
+    - name: do pester tests
       shell: pwsh
       run: |
-        Invoke-Pester -Path '0.0.1/tests/EnvTools.Tests.ps1' -Passthru
-    - name: do tests in LinkTools.Tests.ps1
-      shell: pwsh
-      run: |
-        Invoke-Pester -Path '0.0.1/tests/LinkTools.Tests.ps1' -Passthru
-    - name: do tests in PathTools.Tests.ps1
-      shell: pwsh
-      run: |
-        Invoke-Pester -Path '0.0.1/tests/PathTools.Tests.ps1' -Passthru
-    - name: do tests in ProxyTools.Tests.ps1
-      shell: pwsh
-      run: |
-        Invoke-Pester -Path '0.0.1/tests/ProxyTools.Tests.ps1' -Passthru
+        Invoke-Pester -Path '0.0.1\tests\'
