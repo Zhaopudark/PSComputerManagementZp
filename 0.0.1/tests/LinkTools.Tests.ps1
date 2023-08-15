@@ -40,11 +40,11 @@ Describe 'Link EnvTools' {
             "$test_path\test_symbolick_dir\dir2\file2.txt" | Should -Exist
             "$test_path\test_symbolick_dir\dir2\dir2" | Should -Exist
             "$test_path\test_symbolick_dir\dir2\dir2\file22.txt" | Should -Exist
-            $backup1 = Get-ChildItem "$test_path\backup"  -Include "*dir1*"
-            $backup2 = Get-ChildItem "$test_path\backup"  -Include "*dir2*"
-            "$backup1\dir1\file1.txt" | Should -Exist
-            "$backup1\dir1\dir1" | Should -Exist
-            "$backup1\dir1\dir1\file11.txt" | Should -Exist
+            $backup1 = (Get-ChildItem "$test_path\backup"  -Filter "*dir1")[0]
+            $backup2 = (Get-ChildItem "$test_path\backup"  -Filter "*dir2")[0]
+            "$backup1\file1.txt" | Should -Exist
+            "$backup1\dir1" | Should -Exist
+            "$backup1\dir1\file11.txt" | Should -Exist
             "$backup2\file2.txt" | Should -Exist
             "$backup2\dir2" | Should -Exist
             "$backup2\dir2\file22.txt" | Should -Exist
