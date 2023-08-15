@@ -224,7 +224,8 @@ function local:Move-BeforeSetFileLink{
                     Assert-AdminRobocopyAvailable
                     # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
-                    Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
+                    $log_file = Get-LogFileName "Robocopy Move-BeforeSetFileLink"
+                    Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"$log_file"
                     Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
                     Remove-Item $Target1 -Force -Recurse
                 }
