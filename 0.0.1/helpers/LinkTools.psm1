@@ -118,7 +118,7 @@ function local:Merge-BeforeSetDirLink{
                     }else{
                         # dir-ReparsePoint        | dir-non-ReparsePoint  | del $Target1
                         Write-VerboseLog  "Remove-Item $Target1 -Force"
-                        Remove-Item $Target1 -Force
+                        Remove-Item $Target1 -Force # $Target1 is a ReparsePoint, so need not `-Recurse`
                     }
                 }else{
                     # dir-ReparsePoint        | non-existent          | throw error
@@ -132,8 +132,8 @@ function local:Merge-BeforeSetDirLink{
                     }else{
                         #dir-non-ReparsePoint    | dir-non-ReparsePoint  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
                         Merge-DirectoryWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                        Write-VerboseLog  "Remove-Item $Target1 -Force"
-                        Remove-Item $Target1 -Force
+                        Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
+                        Remove-Item $Target1 -Force -Recurse
                     }
                 }else{
                     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
@@ -142,8 +142,8 @@ function local:Merge-BeforeSetDirLink{
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
                     $log_file = Get-LogFileName "Robocopy Merge-BeforeSetDirLink"
                     Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"$log_file"
-                    Write-VerboseLog  "Remove-Item $Target1 -Force"
-                    Remove-Item $Target1 -Force
+                    Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
+                    Remove-Item $Target1 -Force -Recurse
                 }
             }
         }else{
@@ -202,7 +202,7 @@ function local:Move-BeforeSetFileLink{
                     }else{
                         # file-ReparsePoint       | file-non-ReparsePoint | del $Target1
                         Write-VerboseLog  "Remove-Item $Target1 -Force"
-                        Remove-Item $Target1 -Force
+                        Remove-Item $Target1 -Force # $Target1 is a ReparsePoint, so need not `-Recurse`
                     }
                 }else{
                     # file-ReparsePoint       | non-existent          | throw error
@@ -216,8 +216,8 @@ function local:Move-BeforeSetFileLink{
                     }else{
                         # file-non-ReparsePoint   | file-non-ReparsePoint | backup $Target1 and $Target2 to $Backuppath, then del $Target1
                         Move-FileWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                        Write-VerboseLog  "Remove-Item $Target1 -Force"
-                        Remove-Item $Target1 -Force
+                        Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
+                        Remove-Item $Target1 -Force -Recurse
                     }
                 }else{
                     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
@@ -225,8 +225,8 @@ function local:Move-BeforeSetFileLink{
                     # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
                     Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
-                    Write-VerboseLog  "Remove-Item $Target1 -Force"
-                    Remove-Item $Target1 -Force
+                    Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
+                    Remove-Item $Target1 -Force -Recurse
                 }
             }
         }else{
