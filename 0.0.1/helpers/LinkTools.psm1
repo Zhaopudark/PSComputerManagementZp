@@ -16,33 +16,29 @@ function local:Merge-DirectoryWithBackup{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-
-    try{
-        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
-        Assert-IsDirectory $Source
-        Assert-IsDirectory $Destination
-        Assert-IsDirectory $Backuppath
-        $guid = [guid]::NewGuid()
-        $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
-        $backup_source = "$Backuppath/$guid-$source_name"
-        $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
-        $backup_destination = "$Backuppath/$guid-$destination_name"
-        $log_file = Get-LogFileName "Robocopy Merge-DirectoryWithBackup"
-        if($PSCmdlet.ShouldProcess(
-            "Backup $Source to $backup_source"+[Environment]::NewLine+
-            "Backup $Destination to $backup_destination"+[Environment]::NewLine+
-            "Then, merge items from $Source to $Destination"+[Environment]::NewLine+
-            "Record logs to $log_file",'',''))
-        {
-            Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
-            Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
-            Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
-        }
-    }
-    catch
+    Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
+    Assert-IsDirectory $Source
+    Assert-IsDirectory $Destination
+    Assert-IsDirectory $Backuppath
+    $guid = [guid]::NewGuid()
+    $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $backup_source = "$Backuppath/$guid-$source_name"
+    $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $backup_destination = "$Backuppath/$guid-$destination_name"
+    $log_file = Get-LogFileName "Robocopy Merge-DirectoryWithBackup"
+    if($PSCmdlet.ShouldProcess(
+        "Backup $Source to $backup_source"+[Environment]::NewLine+
+        "Backup $Destination to $backup_destination"+[Environment]::NewLine+
+        "Then, merge items from $Source to $Destination"+[Environment]::NewLine+
+        "Record logs to $log_file",'',''))
     {
-        Write-VerboseLog  "Exception: $PSItem"
+        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        Assert-AdminRobocopyAvailable
+        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
     }
+
 }
 function local:Move-FileWithBackup{
 <#
@@ -61,32 +57,26 @@ function local:Move-FileWithBackup{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    try{
-        Import-Module "${PSScriptRoot}\PathTools.psm1" -Scope local
-        Assert-IsFile $Source
-        Assert-IsFile $Destination
-        Assert-IsDirectory $Backuppath
-        $guid = [guid]::NewGuid()
-        $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
-        $backup_source = "$Backuppath/$guid-$source_name"
-        $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
-        $backup_destination = "$Backuppath/$guid-$destination_name"
-        $log_file = Get-LogFileName "Robocopy Move-FileWithBackup"
-        if($PSCmdlet.ShouldProcess(
-            "Backup $Source to $backup_source"+[Environment]::NewLine+
-            "Backup $Destination to $backup_destination"+[Environment]::NewLine+
-            "Then, move $Source to $Destination"+[Environment]::NewLine+
-            "Record logs to $log_file",'',''))
-        {
-            Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
-            Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
-            Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
-        }
-
-    }
-    catch
+    Assert-IsFile $Source
+    Assert-IsFile $Destination
+    Assert-IsDirectory $Backuppath
+    $guid = [guid]::NewGuid()
+    $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $backup_source = "$Backuppath/$guid-$source_name"
+    $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $backup_destination = "$Backuppath/$guid-$destination_name"
+    $log_file = Get-LogFileName "Robocopy Move-FileWithBackup"
+    if($PSCmdlet.ShouldProcess(
+        "Backup $Source to $backup_source"+[Environment]::NewLine+
+        "Backup $Destination to $backup_destination"+[Environment]::NewLine+
+        "Then, move $Source to $Destination"+[Environment]::NewLine+
+        "Record logs to $log_file",'',''))
     {
-        Write-VerboseLog  "Exception: $PSItem"
+        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        Assert-AdminRobocopyAvailable
+        Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
+        Robocopy $Source $Destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
     }
 }
 function local:Merge-BeforeSetDirLink{
@@ -146,6 +136,8 @@ function local:Merge-BeforeSetDirLink{
                         Remove-Item $Target1 -Force
                     }
                 }else{
+                    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+                    Assert-AdminRobocopyAvailable
                     # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
                     $log_file = Get-LogFileName "Robocopy Merge-BeforeSetDirLink"
@@ -228,6 +220,8 @@ function local:Move-BeforeSetFileLink{
                         Remove-Item $Target1 -Force
                     }
                 }else{
+                    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+                    Assert-AdminRobocopyAvailable
                     # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
                     Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"${Home}\Move-BeforeSetFileLink.log"
@@ -268,18 +262,13 @@ function Set-DirSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Assert-IsWindowsAndAdmin
+
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
-        try{
-            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-            Assert-IsWindows
-            Merge-BeforeSetDirLink $Path $Target $Backuppath
-            $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
-            $link | Select-Object LinkType, FullName, Target
-        }
-        catch
-        {
-            Write-VerboseLog  "Exception: $PSItem"
-        }
+        Merge-BeforeSetDirLink $Path $Target $Backuppath
+        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
+        $link | Select-Object LinkType, FullName, Target
     }
 }
 function Set-FileSymbolicLinkWithSync{
@@ -298,18 +287,12 @@ function Set-FileSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
-        try{
-            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-            Assert-IsWindows
-            Move-BeforeSetFileLink $Path $Target $Backuppath
-            $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
-            $link | Select-Object LinkType, FullName, Target
-        }
-        catch
-        {
-            Write-VerboseLog "Exception: $PSItem"
-        }
+        Move-BeforeSetFileLink $Path $Target $Backuppath
+        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
+        $link | Select-Object LinkType, FullName, Target
     }
 }
 
@@ -329,18 +312,12 @@ function Set-DirJunctionWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a directory junction from $Path to $Source, as $Path->$Target",'','')){
-        try{
-            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-            Assert-IsWindows
-            Merge-BeforeSetDirLink $Path $Target $Backuppath
-            $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
-            $link | Select-Object LinkType, FullName, Target
-        }
-        catch
-        {
-            Write-VerboseLog "Exception: $PSItem"
-        }
+        Merge-BeforeSetDirLink $Path $Target $Backuppath
+        $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
+        $link | Select-Object LinkType, FullName, Target
     }
 }
 
@@ -360,17 +337,11 @@ function Set-FileHardLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
+    Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
-        try{
-            Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-            Assert-IsWindows
-            Move-BeforeSetFileLink $Path $Target $Backuppath
-            $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
-            $link | Select-Object LinkType, FullName, Target
-        }
-        catch
-        {
-            Write-VerboseLog "Exception: $PSItem"
-        }
+        Move-BeforeSetFileLink $Path $Target $Backuppath
+        $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
+        $link | Select-Object LinkType, FullName, Target
     }
 }

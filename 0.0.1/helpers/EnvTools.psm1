@@ -210,9 +210,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
     param()
 
     Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-    if(-not(Test-AdminPermission)){
-        throw [System.UnauthorizedAccessException]::new("You must run this function as administrator.")
-    }
+    Assert-IsAdmin
 
     $user_env_paths = Get-EnvPathAsSplit -Level 'User'
     $machine_env_paths = Get-EnvPathAsSplit -Level 'Machine'

@@ -1,18 +1,4 @@
-function Test-AdminPermission {
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param()
-    $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
 
-    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Verbose "Current process is not in AdminPermission."
-        return $false
-    }else{
-        Write-Verbose "Current process is in in AdminPermission."
-        return $true
-    }
-}
 function local:Test-IsWSL2{
     $output = bash -c "cat /proc/version 2>&1"
     return $output.Contains("WSL2")
@@ -103,6 +89,52 @@ function Get-InstallPath{
 function Assert-IsWindows{
     param()
     if (!($IsWindows)){
-        throw "The current platform, $($PSVersionTable.Platform), is not Windows."
+        throw "The current platform should be Windows, $($PSVersionTable.Platform), is not Windows."
     }
+}
+function Test-AdminPermission {
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param()
+    $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
+
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Verbose "Current process is not in AdminPermission."
+        return $false
+    }else{
+        Write-Verbose "Current process is in in AdminPermission."
+        return $true
+    }
+}
+function Assert-IsAdmin{
+    [CmdletBinding()]
+    param()
+    $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
+
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Verbose "Current process is not in AdminPermission."
+        throw [System.UnauthorizedAccessException]::new("You must run in administrator privilege.")
+    }    
+}
+function Assert-AdminRobocopyAvailable{
+    [CmdletBinding()]
+    param()
+    try {
+        Robocopy > $null
+    }
+    catch {
+        Write-Verbose "Exception: $PSItem"
+        throw "The robocopy command is not available, please install it first."
+    }
+    Assert-IsAdmin
+    Assert-IsWindows
+}
+
+function Assert-IsWindowsAndAdmin{
+    [CmdletBinding()]
+    param()
+    Assert-IsWindows
+    Assert-IsAdmin  
 }
