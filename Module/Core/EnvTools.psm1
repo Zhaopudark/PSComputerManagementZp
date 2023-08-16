@@ -1,4 +1,4 @@
-Import-Module "${PSScriptRoot}\..\RegisterUtils.psm1" -Force -Local
+Import-Module "${PSScriptRoot}\..\RegisterUtils.psm1" -Force -Scope Local
 function Write-EnvModificationLog{
     [CmdletBinding()]
     param(
