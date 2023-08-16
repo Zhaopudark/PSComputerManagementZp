@@ -1,4 +1,4 @@
-﻿# Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
+﻿# Import-Module "${PSScriptRoot}\Logger.psm1" -Scope Local
 function Format-Path{
 <#
 .DESCRIPTION

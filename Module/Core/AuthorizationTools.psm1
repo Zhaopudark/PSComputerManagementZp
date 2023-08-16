@@ -100,7 +100,7 @@ To check if a path is Directory or File:
         [string]$Path
     )
     try{
-        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
         Assert-IsWindows
         $Qualifier = Get-Qualifier $Path
         $Attributes = (Get-ItemProperty -LiteralPath $Path).Attributes
@@ -182,7 +182,7 @@ We use both `(Get-Item "$Path").Linktype` and `(Get-Item $Path).Attributes -band
         [string]$Path
     )
     try{
-        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
         Assert-IsWindows
         $Path = Format-Path $Path
         Assert-FileSystemAuthorized $Path
@@ -375,7 +375,7 @@ All `SDDLs`s are from a origin installed native system, so we can ensure it is i
         [switch]$Recurse
     )
     try{
-        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
         Assert-IsWindows
         $Path = Format-Path $Path
         Reset-PathAttribute $Path

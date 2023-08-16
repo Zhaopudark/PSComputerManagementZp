@@ -16,7 +16,7 @@ function Merge-DirectoryWithBackup{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    # import-module "${PSScriptRoot}\PathTools.psm1" -Scope local
+    # import-module "${PSScriptRoot}\PathTools.psm1" -Scope Local
     Assert-IsDirectory $Source
     Assert-IsDirectory $Destination
     Assert-IsDirectory $Backuppath
@@ -32,7 +32,7 @@ function Merge-DirectoryWithBackup{
         "Then, merge items from $Source to $Destination"+[Environment]::NewLine+
         "Record logs to $log_file",'',''))
     {
-        # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
         Assert-AdminRobocopyAvailable
         Robocopy $Source $backup_source /E /copyall /DCOPY:DATE /LOG:"$log_file"
         Robocopy $Destination $backup_destination /E /copyall /DCOPY:DATE /LOG:"$log_file"
@@ -106,7 +106,7 @@ function Merge-BeforeSetDirLink{
         [string]$Backuppath
     )
     if($PSCmdlet.ShouldProcess("Merge the content in $Target1 to $Target2, and backup essential items in $Backuppath",'','')){
-        # import-module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        # import-module "${PSScriptRoot}\PathTools.psm1" -Scope Local
         if (Test-Path $Target1){
             if (Test-ReparsePoint $Target1){
                 if (Test-Path $Target2){
@@ -134,7 +134,7 @@ function Merge-BeforeSetDirLink{
                         Remove-Item $Target1 -Force -Recurse
                     }
                 }else{
-                    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+                    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
                     Assert-AdminRobocopyAvailable
                     # dir-non-ReparsePoint    | non-existent          | copy $Target1 to $Target2, del $Target1
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
@@ -190,7 +190,7 @@ function Move-BeforeSetFileLink{
         [string]$Backuppath
     )
     if($PSCmdlet.ShouldProcess("Move the content in $Target1 to $Target2, and backup essential items in $Backuppath",'','')){
-        # import-module "${PSScriptRoot}\PathTools.psm1" -Scope local
+        # import-module "${PSScriptRoot}\PathTools.psm1" -Scope Local
         if (Test-Path $Target1){
             if (Test-ReparsePoint $Target1){
                 if (Test-Path $Target2){
@@ -218,7 +218,7 @@ function Move-BeforeSetFileLink{
                         Remove-Item $Target1 -Force -Recurse
                     }
                 }else{
-                    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+                    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
                     Assert-AdminRobocopyAvailable
                     # file-non-ReparsePoint   | non-existent          | copy $Target1 to $Target2, del $Target1
                     Write-VerboseLog  "Robocopy $Target1 $Target2"
@@ -261,7 +261,7 @@ function Set-DirSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
 
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
@@ -286,7 +286,7 @@ function Set-FileSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
         Move-BeforeSetFileLink $Path $Target $Backuppath
@@ -311,7 +311,7 @@ function Set-DirJunctionWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a directory junction from $Path to $Source, as $Path->$Target",'','')){
         Merge-BeforeSetDirLink $Path $Target $Backuppath
@@ -336,7 +336,7 @@ function Set-FileHardLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Backuppath
     )
-    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
         Move-BeforeSetFileLink $Path $Target $Backuppath
