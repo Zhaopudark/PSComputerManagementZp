@@ -1,7 +1,7 @@
 # This test is not for CI/CD because it need atleast 2 dirves, C: and D:
 
 BeforeAll {
-    Import-Module "${PSScriptRoot}\..\helpers\AuthorizationTools.psm1" -Scope local
+    Import-Module "${PSScriptRoot}\..\helpers\AuthorizationTools.psm1" -Scope Local
     Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
     New-Item -Path "${Home}\${guid}" -ItemType Directory

@@ -105,7 +105,7 @@ Just set env level proxy. But first, installation of PowerShell and this module 
 
   ```powershell
   # if has call pwsh from bash
-  Import-Module PSComputerManagementZp -Force -Scope local
+  Import-Module PSComputerManagementZp -Force -Scope Local
   Set-EnvProxyIPV4ForShellProcess -ServerIP $(Get-GatewayIPV4) -PortNumber 7890
   Remove-Module PSComputerManagementZp
   ```
@@ -124,7 +124,7 @@ Just set env level proxy. But first, installation of PowerShell and this module 
 
   ```powershell
   # if has call pwsh from bash
-  Import-Module PSComputerManagementZp -Force -Scope local
+  Import-Module PSComputerManagementZp -Force -Scope Local
   Remove-EnvProxyIPV4ForShellProcess
   Remove-Module PSComputerManagementZp
   ```
