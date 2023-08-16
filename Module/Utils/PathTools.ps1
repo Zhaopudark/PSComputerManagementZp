@@ -1,4 +1,4 @@
-﻿Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
+﻿# Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
 function Format-Path{
 <#
 .DESCRIPTION
@@ -95,20 +95,20 @@ function Assert-IsFile{
         throw "The `Path` $Path should be existing!"
     }
 }
-function local:Get-Qualifier{
+function Get-Qualifier{
     param(
         [string]$Path
     )
     return Format-Path (Split-Path $Path -Qualifier)
 }
 
-function local:Test-IsInSystemDisk{
+function Test-IsInSystemDisk{
     param(
         [string]$Path
     )
     return ((Get-Qualifier $Path).ToString() -eq (Get-Qualifier $Home).ToString())
 }
-function local:Test-IsInInHome{
+function Test-IsInInHome{
     param(
         [string]$Path
     )
@@ -126,7 +126,7 @@ function local:Test-IsInInHome{
     }
 }
 
-function local:Get-DriveWithFirstDir{
+function Get-DriveWithFirstDir{
     param(
         [string]$Path
     )

@@ -1,10 +1,3 @@
-
-function local:Test-IsWSL2{
-    $output = bash -c "cat /proc/version 2>&1"
-    return $output.Contains("WSL2")
-}
-
-
 function Test-Platform{
 <#
 .DESCRIPTION
@@ -70,22 +63,11 @@ function Test-Platform{
     }
 }
 
-function Get-InstallPath{
-    [CmdletBinding()]
-    [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
-    param()
-    if (Test-Platform 'Windows'){
-        return "$(Split-Path -Path $PROFILE -Parent)\Modules\PSComputerManagementZp"
-    }elseif (Test-Platform 'Wsl2'){
-        return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
-    }elseif (Test-Platform 'Linux'){
-        return "${Home}/.local/share/powershell/Modules/PSComputerManagementZp"
-    }else{
-        Write-Warning "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-        return $null
-    }
-}
 
+function Test-IsWSL2{
+    $output = bash -c "cat /proc/version 2>&1"
+    return $output.Contains("WSL2")
+}
 function Assert-IsWindows{
     param()
     if (!($IsWindows)){
@@ -138,3 +120,4 @@ function Assert-IsWindowsAndAdmin{
     Assert-IsWindows
     Assert-IsAdmin
 }
+

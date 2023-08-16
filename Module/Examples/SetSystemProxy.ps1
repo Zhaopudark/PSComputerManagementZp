@@ -48,7 +48,7 @@ param (
     # This can be used on Hyper-V Windows-11, if whose host has been enable `Allow LAN`(in Clash),
     # since by default the gateway IP of a Hyper-V windows is the IP of vEthernet (Default Switch) on its host.
     # To specific:
-    ./SetSystemProxy.ps1 -ServerType 'gateway' -PortNumber 7890
+    .\SetSystemProxy.ps1 -ServerType 'gateway' -PortNumber 7890
 
 #>
 try {

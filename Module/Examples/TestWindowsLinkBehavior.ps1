@@ -51,7 +51,7 @@ BeforeAll {
     New-Item -Path "${Home}\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_non_local_symbiliclink"
 }
 
-Describe 'Link EnvTools' {
+Describe 'Links Behavior' {
     Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
         It 'Test HardLink' {
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").Attributes | Should -Be 'Archive'

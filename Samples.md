@@ -20,7 +20,7 @@ $script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./Samples.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
+<img src="./Assets/Samples.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
 
 ## Set system proxy IPV4 by `Gateway` with `PortNumber`
 
@@ -47,7 +47,7 @@ $script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./Samples.assets/image-20230703160317798.png" alt="image-20230703160317798" style="zoom:67%;" />
+<img src="./Assets/Samples.assets/image-20230703160317798.png" alt="image-20230703160317798" style="zoom:67%;" />
 
 Optional: To inject this script `SetSystemProxy.ps1` into the the `virtual Windows` as a scheduled task `SetProxy`, setting proxy automatically when `logon` or `startup` , you can take the following further commands (Please run PowerShell with `Administrator` privilege.) :
 
@@ -65,7 +65,7 @@ Remove-Module PSComputerManagementZp
 
 Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->SetProxy` for checking:
 
-<img src="./Samples.assets/image-20230703170453897.png" alt="image-20230703170453897" style="zoom: 50%;" />
+<img src="./Assets/Samples.assets/image-20230703170453897.png" alt="image-20230703170453897" style="zoom: 50%;" />
 
 ### On WSL2
 
@@ -118,7 +118,7 @@ Just set env level proxy. But first, installation of PowerShell and this module 
 
   And the results can be as:
 
-  ![image-20230704021135547](./Samples.assets/image-20230704021135547.png)
+  ![image-20230704021135547](./Assets/Samples.assets/image-20230704021135547.png)
 
 - If want to remove these env proxy, you can do as:
 
@@ -143,4 +143,4 @@ $script_path = "$($module.Path | Split-Path -Parent)\samples\RemoveSystemProxy.p
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./Samples.assets/image-20230703161050758.png" alt="image-20230703161050758" style="zoom:67%;" />
+<img src="./Assets/Samples.assets/image-20230703161050758.png" alt="image-20230703161050758" style="zoom:67%;" />

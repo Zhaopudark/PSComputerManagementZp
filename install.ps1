@@ -1,20 +1,32 @@
-$version = Get-ChildItem -Directory $PSScriptRoot | Where-Object { $_.Name -match '^\d' } | Select-Object -ExpandProperty Name
-
-Import-Module "${PSScriptRoot}/$version/helpers/PlatformTools.psm1" -Force -Scope Local
-
-
-$module_install_path = Get-InstallPath
-
-if (Test-Path $module_install_path){
-    $content = Get-ChildItem $module_install_path -Exclude 'Log'
-    Remove-Item $content -Force
-}else{
-    New-Item -ItemType Directory -Path $module_install_path -Force
+foreach ($item in (Get-ChildItem "${PSScriptRoot}\Module" -Filter *.psm1)){
+    Import-Module $item.FullName -Force -Scope Local
 }
 
+$ModuleInfo = Get-ModuleInfo
 
-# to omit `.git` and other hidden items, do not use `-force`
-$source_paths = Get-ChildItem $PSScriptRoot -Exclude ".*"
+if (!(Test-Path $ModuleInfo.InstallPath)){
+    New-Item -Path $ModuleInfo.InstallPath -ItemType Directory
+}
+if (Test-Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)"){
+    $content = Get-ChildItem "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)" -Exclude $ModuleInfo.LogDir
+    Remove-Item $content -Force -Recurse
+}else{
+    New-Item -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)" -ItemType Directory 
+    New-Item -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)\$($ModuleInfo.LogDir)" -ItemType Directory
+}
 
-Copy-Item -Path $source_paths -Destination $module_install_path -Recurse -Force
+foreach ($item in (Get-ChildItem $ModuleInfo.InstallPath -Exclude $ModuleInfo.ModuleVersion)){
+    if (Test-Path "$($item.FullName)\$($ModuleInfo.LogDir)"){
+        Copy-Item -Path "$($item.FullName)\$($ModuleInfo.LogDir)\*" -Destination "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)\$($ModuleInfo.LogDir)" -Recurse -Force
+    }
+    Remove-Item $item.FullName -Force -Recurse
+}
 
+Copy-Item -Path "${PSScriptRoot}\Module\*" -Destination "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)" -Recurse -Force
+
+New-ModuleManifest -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)\$($ModuleInfo.ModuleName).psd1" `
+    -ModuleVersion $ModuleInfo.ModuleVersion `
+    -RootModule $ModuleInfo.RootModule `
+    -Author $ModuleInfo.Author`
+    -PowerShellVersion $ModuleInfo.PowerShellVersion`
+    -FunctionsToExport $ModuleInfo.FunctionsToExport

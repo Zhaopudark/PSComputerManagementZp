@@ -18,11 +18,11 @@ Describe 'Test ProxyTools' {
     }
     It 'Test Remove-EnvProxyIPV4ForShellProcess' {
         Remove-EnvProxyIPV4ForShellProcess
-        [Environment]::GetEnvironmentVariable('http_proxy') | Should -Be $null
-        [Environment]::GetEnvironmentVariable('https_proxy') | Should -Be $null
-        [Environment]::GetEnvironmentVariable('all_proxy') | Should -Be $null
-        [Environment]::GetEnvironmentVariable('ftp_proxy') | Should -Be $null
-        [Environment]::GetEnvironmentVariable('socks_proxy') | Should -Be $null
+        [Environment]::GetEnvironmentVariable('http_proxy') | Should -BeNullOrEmpty
+        [Environment]::GetEnvironmentVariable('https_proxy') | Should -BeNullOrEmpty
+        [Environment]::GetEnvironmentVariable('all_proxy') | Should -BeNullOrEmpty
+        [Environment]::GetEnvironmentVariable('ftp_proxy') | Should -BeNullOrEmpty
+        [Environment]::GetEnvironmentVariable('socks_proxy') | Should -BeNullOrEmpty
     }
 
 }

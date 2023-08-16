@@ -1,15 +1,35 @@
 BeforeAll {
-    Import-Module "${PSScriptRoot}\..\helpers\EnvTools.psm1" -Scope local
+    Import-Module PSComputerManagementZp -Force
     $user_env_paths_backup = Get-EnvPathAsSplit -Level 'User'
     $machine_env_paths_backup = Get-EnvPathAsSplit -Level 'Machine'
     $process_env_paths_backup = Get-EnvPathAsSplit -Level 'Process'
 
-    Import-Module PSComputerManagementZp -Force
-
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
-    Import-Module "${PSScriptRoot}\..\helpers\PathTools.psm1" -Scope local
+    function Format-Path{
+        <#
+        .DESCRIPTION
+            mimic the Format-Path in `Module\Utils\PathTools.ps1`
+        #>  param(
+                [string]$Path
+            )
+            $resolvedPath = Resolve-Path -Path $Path
+            $output = @()
+            foreach ($item in $resolvedPath){
+                $item = Get-Item -LiteralPath $item
+                if ($item.PSIsContainer){
+                    $output += (join-Path $item '')
+                }
+                else{
+                    $output += $item.FullName
+                }
+            }
+            return $output
+        }
+
+
+
     $test_path = Format-Path $test_path
 
 }

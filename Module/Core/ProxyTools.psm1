@@ -1,4 +1,4 @@
-﻿Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
+﻿Import-Module "${PSScriptRoot}\..\RegisterUtils.psm1" -Force -Scope Local
 function Get-GatewayIPV4{
 <#
 .DESCRIPTION

@@ -89,4 +89,4 @@ $script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./README.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
+<img src="./Assets/README.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />

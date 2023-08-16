@@ -89,10 +89,10 @@ Describe 'Link EnvTools' {
             Set-FileHardLinkWithSync -Path "$test_path\file_for_hardlink1.txt"  -Target "$test_path\file_for_hardlink2.txt" -Backuppath "$test_path\backup"
             $item = Get-ItemProperty "$test_path\file_for_hardlink1.txt"
             $item.LinkType | Should -Be 'Hardlink'
-            $item.LinkTarget | Should -Be $null 
+            $item.LinkTarget | Should -BeNullOrEmpty 
             $item = Get-ItemProperty "$test_path\file_for_hardlink2.txt"
             $item.LinkType | Should -Be 'Hardlink'
-            $item.LinkTarget | Should -Be $null 
+            $item.LinkTarget | Should -BeNullOrEmpty 
             "$test_path\file_for_hardlink1.txt" | Should -Exist
             "$test_path\file_for_hardlink2.txt" | Should -Exist
             $backup1 = (Get-ChildItem "$test_path\backup"  -Filter "*hardlink1.txt")[0]

@@ -1,22 +1,22 @@
-Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
-
-$local:log_dir = "$(Get-InstallPath)\Log"
-
-if (!(Test-Path $script:log_dir)){
-    New-Item -Path $script:log_dir -ItemType Directory -Force
-}
-
-$local:version = Get-Item "${PSScriptRoot}\..\" |Split-Path -Leaf
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$InstallPath,
+    [Parameter(Mandatory=$true)]
+    [string]$ModuleVersion,
+    [Parameter(Mandatory=$true)]
+    [string]$LogDir
+    
+)
 
 function Get-LogFileName{
     param(
         [string]$KeyInfo
     )
     if ($KeyInfo -ne ''){
-        return "$script:log_dir\PSComputerManagementZp-v$script:version-($KeyInfo)-Log.txt"
+        return "$InstallPath\$ModuleVersion\$LogDir\v$ModuleVersion($KeyInfo)-Log.txt"
     }
     else{
-        return "$script:log_dir\PSComputerManagementZp-v$script:version-Log.txt"
+        return "$InstallPath\$ModuleVersion\$LogDir\v$ModuleVersion-Log.txt"
     }
 }
 
@@ -25,7 +25,6 @@ function Write-VerboseLog{
     param(
         [string]$Message
     )
-
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $message = "[${time_stamp}] ${Message}"
     Write-Verbose $message

@@ -1,5 +1,5 @@
-﻿Import-Module "${PSScriptRoot}\Logger.psm1" -Scope local
-function local:Assert-FileSystemAuthorized{
+﻿Import-Module "${PSScriptRoot}\..\RegisterUtils.psm1" -Force -Local
+function Assert-FileSystemAuthorized{
 <#
 .Description
 Here we check if have the customized FileSystem Authorization.
@@ -21,7 +21,7 @@ Authorized Path is:
         throw "If `$Path: '$Path' is in SystemDisk, it sholuld be or in `$Home: $Home."
     }
 }
-function local:Reset-PathAttribute{
+function Reset-PathAttribute{
 <#
 .Description
 In a FileSystem, path’s arrtibuts can help us to distinguish a path's type:
@@ -100,7 +100,7 @@ To check if a path is Directory or File:
         [string]$Path
     )
     try{
-        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         Assert-IsWindows
         $Qualifier = Get-Qualifier $Path
         $Attributes = (Get-ItemProperty -LiteralPath $Path).Attributes
@@ -139,7 +139,7 @@ To check if a path is Directory or File:
         Write-VerboseLog  "Operation has been skipped."
     }
 }
-function local:Get-PathType{
+function Get-PathType{
 <#
 .Description
 Get a customized Path type
@@ -182,7 +182,7 @@ We use both `(Get-Item "$Path").Linktype` and `(Get-Item $Path).Attributes -band
         [string]$Path
     )
     try{
-        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         Assert-IsWindows
         $Path = Format-Path $Path
         Assert-FileSystemAuthorized $Path
@@ -375,7 +375,7 @@ All `SDDLs`s are from a origin installed native system, so we can ensure it is i
         [switch]$Recurse
     )
     try{
-        Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
+        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope local
         Assert-IsWindows
         $Path = Format-Path $Path
         Reset-PathAttribute $Path
@@ -547,7 +547,7 @@ All `SDDLs`s are from a origin installed native system, so we can ensure it is i
     }
 }
 
-function local:Get-Sddl{
+function Get-Sddl{
     [CmdletBinding()]
     param(
         [string]$Path
@@ -598,3 +598,5 @@ We use `Owner` info to test.
 
     return $output
 }
+
+Export-ModuleMember -Function Set-OriginalAcl
