@@ -21,10 +21,10 @@ Describe 'Test PathTools' {
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir\"
             }elseif (Test-Platform 'Linux') {
                 $path = Format-Path "${test_path}\test_dir"
-                $path | Should -BeExactly "$(Format-Path $test_path)test_dir\"
+                $path | Should -BeExactly "$(Format-Path $test_path)test_dir/"
             }elseif (Test-Platform 'Wsl2') {
                 $path = Format-Path "${test_path}\test_dir"
-                $path | Should -BeExactly "$(Format-Path $test_path)test_dir\"
+                $path | Should -BeExactly "$(Format-Path $test_path)test_dir/"
             }else{
                 $($PSVersionTable.Platform) | Should -Not -BeIn @('Windows','Linux','Wsl2')
             }
