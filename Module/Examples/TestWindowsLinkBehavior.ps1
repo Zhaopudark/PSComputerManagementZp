@@ -1,59 +1,83 @@
 # This test is not for CI/CD because it need atleast 2 dirves, C: and D:
+# For more information, see https://little-train.com/posts/f76966e4.html
 
 BeforeAll {
-    Import-Module "${PSScriptRoot}\..\helpers\AuthorizationTools.psm1" -Scope Local
+    Import-Module "${PSScriptRoot}\..\Core\AuthorizationTools.psm1" -Scope Local
     Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
-    New-Item -Path "${Home}\${guid}" -ItemType Directory
-    New-Item -Path "D:\${guid}" -ItemType Directory
+    function New-AllItems {
+        param (
+            $guid
+        )
+        New-Item -Path "${Home}\${guid}" -ItemType Directory
+        New-Item -Path "D:\${guid}" -ItemType Directory
 
-    New-Item -Path "${Home}\${guid}\file_for_hardlink.txt" -ItemType File
-    New-Item -Path "${Home}\${guid}\hardlink" -ItemType HardLink -Target "${Home}\${guid}\file_for_hardlink.txt"
+        New-Item -Path "${Home}\${guid}\file_for_hardlink.txt" -ItemType File
+        New-Item -Path "${Home}\${guid}\hardlink" -ItemType HardLink -Target "${Home}\${guid}\file_for_hardlink.txt"
 
-    New-Item -Path "D:\${guid}\file_for_hardlink.txt" -ItemType File
-    New-Item -Path "D:\${guid}\hardlink" -ItemType HardLink -Target "D:\${guid}\file_for_hardlink.txt"
+        New-Item -Path "D:\${guid}\file_for_hardlink.txt" -ItemType File
+        New-Item -Path "D:\${guid}\hardlink" -ItemType HardLink -Target "D:\${guid}\file_for_hardlink.txt"
 
-    New-Item -Path "${Home}\${guid}\dir_for_local_junction" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_local_junction"
+        New-Item -Path "${Home}\${guid}\dir_for_local_junction" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_local_junction"
 
-    New-Item -Path "D:\${guid}\dir_for_local_junction" -ItemType Directory
-    New-Item -Path "D:\${guid}\local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_local_junction"
+        New-Item -Path "D:\${guid}\dir_for_local_junction" -ItemType Directory
+        New-Item -Path "D:\${guid}\local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_local_junction"
 
-    New-Item -Path "${Home}\${guid}\dir_for_non_local_junction" -ItemType Directory
-    New-Item -Path "D:\${guid}\non_local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_non_local_junction"
+        New-Item -Path "${Home}\${guid}\dir_for_non_local_junction" -ItemType Directory
+        New-Item -Path "D:\${guid}\non_local_junction" -ItemType Junction -Target "${Home}\${guid}\dir_for_non_local_junction"
 
-    New-Item -Path "D:\${guid}\dir_for_non_local_junction" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\non_local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_non_local_junction"
+        New-Item -Path "D:\${guid}\dir_for_non_local_junction" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\non_local_junction" -ItemType Junction -Target "D:\${guid}\dir_for_non_local_junction"
 
 
-    New-Item -Path "${Home}\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "${Home}\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_local_symbiliclink.txt"
+        New-Item -Path "${Home}\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "${Home}\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_local_symbiliclink.txt"
 
-    New-Item -Path "D:\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "D:\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_local_symbiliclink.txt"
+        New-Item -Path "D:\${guid}\fire_for_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "D:\${guid}\local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_local_symbiliclink.txt"
 
-    New-Item -Path "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "D:\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_non_local_symbiliclink.txt"
+        New-Item -Path "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "D:\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "${Home}\${guid}\fire_for_non_local_symbiliclink.txt"
 
-    New-Item -Path "D:\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
-    New-Item -Path "${Home}\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_non_local_symbiliclink.txt"
+        New-Item -Path "D:\${guid}\fire_for_non_local_symbiliclink.txt" -ItemType File
+        New-Item -Path "${Home}\${guid}\non_local_symbiliclink-txt" -ItemType SymbolicLink -Target "D:\${guid}\fire_for_non_local_symbiliclink.txt"
 
-    New-Item -Path "${Home}\${guid}\dir_for_local_symbiliclink" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_local_symbiliclink"
+        New-Item -Path "${Home}\${guid}\dir_for_local_symbiliclink" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_local_symbiliclink"
 
-    New-Item -Path "D:\${guid}\dir_for_local_symbiliclink" -ItemType Directory
-    New-Item -Path "D:\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_local_symbiliclink"
+        New-Item -Path "D:\${guid}\dir_for_local_symbiliclink" -ItemType Directory
+        New-Item -Path "D:\${guid}\local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_local_symbiliclink"
 
-    New-Item -Path "${Home}\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
-    New-Item -Path "D:\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_non_local_symbiliclink"
+        New-Item -Path "${Home}\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
+        New-Item -Path "D:\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "${Home}\${guid}\dir_for_non_local_symbiliclink"
 
-    New-Item -Path "D:\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
-    New-Item -Path "${Home}\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_non_local_symbiliclink"
+        New-Item -Path "D:\${guid}\dir_for_non_local_symbiliclink" -ItemType Directory
+        New-Item -Path "${Home}\${guid}\non_local_symbiliclink" -ItemType SymbolicLink -Target "D:\${guid}\dir_for_non_local_symbiliclink"
+    }
+    function Remove-AllItems {
+        param (
+            $guid
+        )
+        try {
+            Remove-Item -Path "${Home}\${guid}" -Force -Recurse
+            Remove-Item -Path "D:\${guid}" -Force -Recurse
+        }
+        catch {
+            Write-VerboseLog  "Exception caught: $_"
+            Write-VerboseLog  "Remove system proxy failed."
+            exit -1
+        }
+    }
+    New-AllItems -guid $guid  
 }
 
 Describe 'Links Behavior' {
     Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
+       
         It 'Test HardLink' {
+            Remove-AllItems -guid $guid
+            New-AllItems -guid $guid
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").Attributes | Should -Be 'Archive'
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").LinkType | Should -Be 'HardLink'
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").LinkTarget | Should -BeNullOrEmpty
@@ -172,34 +196,11 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink").LinkTarget | Should -Be "D:\${guid}\dir_for_non_local_symbiliclink"
         }
     }
-    Context 'Test Authorization Behavior' -Skip:(!(Test-Platform 'Windows')){
-        It 'Test acl sync behavior on hardlink' {
-
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\hardlink" -Source "${Home}\${guid}\file_for_hardlink.txt" | Should -BeTrue
-            Test-LinkAclBeahvior -Link "D:\${guid}\hardlink" -Source "D:\${guid}\file_for_hardlink.txt" | Should -BeTrue
-        }
-        It 'Test acl sync behavior on junction' {
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\local_junction" -Source "${Home}\${guid}\dir_for_local_junction" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "D:\${guid}\local_junction" -Source "D:\${guid}\dir_for_local_junction" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "D:\${guid}\non_local_junction" -Source "${Home}\${guid}\dir_for_non_local_junction" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\non_local_junction" -Source "D:\${guid}\dir_for_non_local_junction" | Should -BeFalse
-        }
-        It 'Test acl sync behavior on symbolic link file' {
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\local_symbiliclink-txt" -Source "${Home}\${guid}\fire_for_local_symbiliclink.txt" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "D:\${guid}\local_symbiliclink-txt" -Source "D:\${guid}\fire_for_local_symbiliclink.txt" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "D:\${guid}\non_local_symbiliclink-txt" -Source "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\non_local_symbiliclink-txt" -Source "D:\${guid}\fire_for_non_local_symbiliclink.txt" | Should -BeFalse
-        }
-        It 'Test acl sync behavior on symbolic link dir' {
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\local_symbiliclink" -Source "${Home}\${guid}\dir_for_local_symbiliclink" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "D:\${guid}\local_symbiliclink" -Source "D:\${guid}\dir_for_local_symbiliclink" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "D:\${guid}\non_local_symbiliclink" -Source "${Home}\${guid}\dir_for_non_local_symbiliclink" | Should -BeFalse
-            Test-LinkAclBeahvior -Link "${Home}\${guid}\non_local_symbiliclink" -Source "D:\${guid}\dir_for_non_local_symbiliclink" | Should -BeFalse
-        }
-    }
-    Context 'Test Deletion Behavior' -Skip:(!(Test-Platform 'Windows')){
-        It 'Test deletion of hardlink' {
-
+    Context 'Test Deletion Behavior1 (delete link)' -Skip:(!(Test-Platform 'Windows')){
+        
+        It 'Test deletion about hardlink' {
+            Remove-AllItems -guid $guid
+            New-AllItems -guid $guid
             Remove-Item "${Home}\${guid}\hardlink" -Force
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").Attributes | Should -Be 'Archive'
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").LinkType | Should -BeNullOrEmpty
@@ -211,7 +212,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "D:\${guid}\file_for_hardlink.txt").LinkTarget | Should -BeNullOrEmpty
 
         }
-        It 'Test deletion of junction' {
+        It 'Test deletion about junction' {
             New-Item "${Home}\${guid}\local_junction\test.txt"
             Remove-Item "${Home}\${guid}\local_junction" -Force -Recurse
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_junction").Attributes | Should -Be 'Directory'
@@ -240,7 +241,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_junction").LinkTarget | Should -BeNullOrEmpty
             "D:\${guid}\dir_for_non_local_junction\test.txt" | Should -Exist
         }
-        It 'Test deletion of symbolic link file' {
+        It 'Test deletion about symbolic link file' {
             Remove-Item "${Home}\${guid}\local_symbiliclink-txt" -Force
             (Get-ItemProperty "${Home}\${guid}\fire_for_local_symbiliclink.txt").Attributes | Should -Be 'Archive'
             (Get-ItemProperty "${Home}\${guid}\fire_for_local_symbiliclink.txt").LinkType | Should -BeNullOrEmpty
@@ -262,7 +263,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "D:\${guid}\fire_for_non_local_symbiliclink.txt").LinkTarget | Should -BeNullOrEmpty
 
         }
-        It 'Test deletion of symbolic link dir' {
+        It 'Test deletion about symbolic link dir' {
             New-Item "${Home}\${guid}\local_symbiliclink\test.txt"
             Remove-Item "${Home}\${guid}\local_symbiliclink" -Force -Recurse
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_symbiliclink").Attributes | Should -Be 'Directory'
@@ -292,10 +293,133 @@ Describe 'Links Behavior' {
             "D:\${guid}\dir_for_non_local_symbiliclink\test.txt" | Should -Exist
         }
     }
+    Context 'Test Deletion Behavior2 (delete source|target)' -Skip:(!(Test-Platform 'Windows')){
+        
+        It 'Test deletion about hardlink' {
+            Remove-AllItems -guid $guid
+            New-AllItems -guid $guid
+            Remove-Item "${Home}\${guid}\file_for_hardlink.txt" -Force
+            (Get-ItemProperty "${Home}\${guid}\hardlink").Attributes | Should -Be 'Archive'
+            (Get-ItemProperty "${Home}\${guid}\hardlink").LinkType | Should -BeNullOrEmpty
+            (Get-ItemProperty "${Home}\${guid}\hardlink").LinkTarget | Should -BeNullOrEmpty
+
+            Remove-Item "D:\${guid}\file_for_hardlink.txt" -Force
+            (Get-ItemProperty "D:\${guid}\hardlink").Attributes | Should -Be 'Archive'
+            (Get-ItemProperty "D:\${guid}\hardlink").LinkType | Should -BeNullOrEmpty
+            (Get-ItemProperty "D:\${guid}\hardlink").LinkTarget | Should -BeNullOrEmpty
+
+        }
+        It 'Test deletion about junction' {
+            New-Item "${Home}\${guid}\dir_for_local_junction\test.txt"
+            Remove-Item "${Home}\${guid}\dir_for_local_junction" -Force -Recurse
+            (Get-ItemProperty "${Home}\${guid}\local_junction").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "${Home}\${guid}\local_junction").LinkType | Should -Be 'Junction'
+            (Get-ItemProperty "${Home}\${guid}\local_junction").LinkTarget | Should -Be "${Home}\${guid}\dir_for_local_junction"
+            "${Home}\${guid}\local_junction\test.txt" | Should -Not -Exist
+
+            New-Item "D:\${guid}\dir_for_local_junction\test.txt"
+            Remove-Item "D:\${guid}\dir_for_local_junction" -Force -Recurse
+            (Get-ItemProperty "D:\${guid}\local_junction").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "D:\${guid}\local_junction").LinkType | Should -Be 'Junction'
+            (Get-ItemProperty "D:\${guid}\local_junction").LinkTarget | Should -Be "D:\${guid}\dir_for_local_junction"
+            "D:\${guid}\local_junction\test.txt" | Should -Not -Exist
+
+            New-Item "D:\${guid}\dir_for_non_local_junction\test.txt"
+            Remove-item "D:\${guid}\dir_for_non_local_junction" -Force -Recurse
+            (Get-ItemProperty "${Home}\${guid}\non_local_junction").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "${Home}\${guid}\non_local_junction").LinkType | Should -Be 'Junction'
+            (Get-ItemProperty "${Home}\${guid}\non_local_junction").LinkTarget | Should -Be "D:\${guid}\dir_for_non_local_junction"
+            "${Home}\${guid}\non_local_junction\test.txt" | Should -Not -Exist
+
+            New-item "${Home}\${guid}\dir_for_non_local_junction\test.txt"
+            Remove-item "${Home}\${guid}\dir_for_non_local_junction" -Force -Recurse
+            (Get-ItemProperty "D:\${guid}\non_local_junction").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "D:\${guid}\non_local_junction").LinkType | Should -Be 'Junction'
+            (Get-ItemProperty "D:\${guid}\non_local_junction").LinkTarget | Should -Be "${Home}\${guid}\dir_for_non_local_junction"
+            "D:\${guid}\non_local_junction\test.txt" | Should -Not -Exist
+        }
+        It 'Test deletion about symbolic link file' {
+            Remove-Item "${Home}\${guid}\fire_for_local_symbiliclink.txt" -Force
+            (Get-ItemProperty "${Home}\${guid}\local_symbiliclink-txt").Attributes | Should -Be 'Archive, ReparsePoint'
+            (Get-ItemProperty "${Home}\${guid}\local_symbiliclink-txt").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "${Home}\${guid}\local_symbiliclink-txt").LinkTarget | Should -Be "${Home}\${guid}\fire_for_local_symbiliclink.txt"
+
+            Remove-Item "D:\${guid}\fire_for_local_symbiliclink.txt" -Force
+            (Get-ItemProperty "D:\${guid}\local_symbiliclink-txt").Attributes | Should -Be 'Archive, ReparsePoint'
+            (Get-ItemProperty "D:\${guid}\local_symbiliclink-txt").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "D:\${guid}\local_symbiliclink-txt").LinkTarget | Should -Be "D:\${guid}\fire_for_local_symbiliclink.txt"
+
+            Remove-Item "D:\${guid}\fire_for_non_local_symbiliclink.txt" -Force
+            (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink-txt").Attributes | Should -Be 'Archive, ReparsePoint'
+            (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink-txt").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink-txt").LinkTarget | Should -Be "D:\${guid}\fire_for_non_local_symbiliclink.txt"
+
+            Remove-Item "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" -Force
+            (Get-ItemProperty "D:\${guid}\non_local_symbiliclink-txt").Attributes | Should -Be 'Archive, ReparsePoint'
+            (Get-ItemProperty "D:\${guid}\non_local_symbiliclink-txt").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "D:\${guid}\non_local_symbiliclink-txt").LinkTarget | Should -Be "${Home}\${guid}\fire_for_non_local_symbiliclink.txt"
+
+        }
+        It 'Test deletion about symbolic link dir' {
+            New-Item "${Home}\${guid}\dir_for_local_symbiliclink\test.txt"
+            Remove-Item "${Home}\${guid}\dir_for_local_symbiliclink" -Force -Recurse
+            (Get-ItemProperty "${Home}\${guid}\local_symbiliclink").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "${Home}\${guid}\local_symbiliclink").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "${Home}\${guid}\local_symbiliclink").LinkTarget | Should -Be "${Home}\${guid}\dir_for_local_symbiliclink"
+            "${Home}\${guid}\local_symbiliclink\test.txt" | Should -Not -Exist
+
+            New-Item "D:\${guid}\dir_for_local_symbiliclink\test.txt"
+            Remove-Item "D:\${guid}\dir_for_local_symbiliclink" -Force -Recurse
+            (Get-ItemProperty "D:\${guid}\local_symbiliclink").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "D:\${guid}\local_symbiliclink").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "D:\${guid}\local_symbiliclink").LinkTarget | Should -Be "D:\${guid}\dir_for_local_symbiliclink"
+            "D:\${guid}\local_symbiliclink\test.txt" | Should -Not -Exist
+
+            New-Item "D:\${guid}\dir_for_non_local_symbiliclink\test.txt"
+            Remove-item "D:\${guid}\dir_for_non_local_symbiliclink" -Force -Recurse
+            (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink").LinkTarget | Should -Be "D:\${guid}\dir_for_non_local_symbiliclink"
+            "${Home}\${guid}\non_local_symbiliclink\test.txt" | Should -Not -Exist
+
+            New-item "${Home}\${guid}\dir_for_non_local_symbiliclink\test.txt"
+            Remove-item "${Home}\${guid}\dir_for_non_local_symbiliclink" -Force -Recurse
+            (Get-ItemProperty "D:\${guid}\non_local_symbiliclink").Attributes | Should -Be 'Directory, ReparsePoint'
+            (Get-ItemProperty "D:\${guid}\non_local_symbiliclink").LinkType | Should -Be 'SymbolicLink'
+            (Get-ItemProperty "D:\${guid}\non_local_symbiliclink").LinkTarget | Should -Be "${Home}\${guid}\dir_for_non_local_symbiliclink"
+            "D:\${guid}\non_local_symbiliclink\test.txt" | Should -Not -Exist
+        }
+    }
+    Context 'Test Authorization Behavior' -Skip:(!(Test-Platform 'Windows')){
+        
+        It 'Test acl sync behavior on hardlink' {
+            Remove-AllItems -guid $guid
+            New-AllItems -guid $guid
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\hardlink" -Source "${Home}\${guid}\file_for_hardlink.txt" | Should -BeTrue
+            Test-LinkAclBeahvior -Link "D:\${guid}\hardlink" -Source "D:\${guid}\file_for_hardlink.txt" | Should -BeTrue
+        }
+        It 'Test acl sync behavior on junction' {
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\local_junction" -Source "${Home}\${guid}\dir_for_local_junction" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "D:\${guid}\local_junction" -Source "D:\${guid}\dir_for_local_junction" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "D:\${guid}\non_local_junction" -Source "${Home}\${guid}\dir_for_non_local_junction" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\non_local_junction" -Source "D:\${guid}\dir_for_non_local_junction" | Should -BeFalse
+        }
+        It 'Test acl sync behavior on symbolic link file' {
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\local_symbiliclink-txt" -Source "${Home}\${guid}\fire_for_local_symbiliclink.txt" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "D:\${guid}\local_symbiliclink-txt" -Source "D:\${guid}\fire_for_local_symbiliclink.txt" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "D:\${guid}\non_local_symbiliclink-txt" -Source "${Home}\${guid}\fire_for_non_local_symbiliclink.txt" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\non_local_symbiliclink-txt" -Source "D:\${guid}\fire_for_non_local_symbiliclink.txt" | Should -BeFalse
+        }
+        It 'Test acl sync behavior on symbolic link dir' {
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\local_symbiliclink" -Source "${Home}\${guid}\dir_for_local_symbiliclink" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "D:\${guid}\local_symbiliclink" -Source "D:\${guid}\dir_for_local_symbiliclink" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "D:\${guid}\non_local_symbiliclink" -Source "${Home}\${guid}\dir_for_non_local_symbiliclink" | Should -BeFalse
+            Test-LinkAclBeahvior -Link "${Home}\${guid}\non_local_symbiliclink" -Source "D:\${guid}\dir_for_non_local_symbiliclink" | Should -BeFalse
+        }
+    }
 }
 
 AfterAll {
-    Remove-Item -Path "${Home}\${guid}" -Force -Recurse
-    Remove-Item -Path "D:\${guid}" -Force -Recurse
+    Remove-AllItems -guid $guid
     Remove-Module PSComputerManagementZp -Force
 }

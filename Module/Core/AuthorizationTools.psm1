@@ -258,6 +258,10 @@ We use both `(Get-Item "$Path").Linktype` and `(Get-Item $Path).Attributes -band
     }
 }
 
+
+
+
+
 function Set-OriginalAcl{
 <#
 .Description
