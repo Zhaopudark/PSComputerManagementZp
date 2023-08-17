@@ -95,7 +95,7 @@ To check if a path is Directory or File:
     We choose the last method since it's only suitable for FileSystem, bringing
     a expected `ineffect` when misuse this function on Non-FileSystem, which means a higher security.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [string]$Path
     )
@@ -107,31 +107,33 @@ To check if a path is Directory or File:
         $Linktype = (Get-ItemProperty -LiteralPath $Path).LinkType
         $Path = Format-Path $Path
         Assert-FileSystemAuthorized $Path
-        if ([bool]($Attributes -band [IO.FileAttributes]::Directory)){
-            if (($Path -eq (Format-Path "${Qualifier}\System Volume Information")) -or
-                ($Path -eq (Format-Path "${Qualifier}\`$Recycle.Bin"))){
-                Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System"
-            }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and
-                     ($Linktype -in @('SymbolicLink','Junction'))){
-                Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Normal"
+        if($PSCmdlet.ShouldProcess("$Path",'reset the attributes')){
+            if ([bool]($Attributes -band [IO.FileAttributes]::Directory)){
+                if (($Path -eq (Format-Path "${Qualifier}\System Volume Information")) -or
+                    ($Path -eq (Format-Path "${Qualifier}\`$Recycle.Bin"))){
+                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System"
+                }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and
+                         ($Linktype -in @('SymbolicLink','Junction'))){
+                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Normal"
+                }
+                else{
+                    $null
+                }
+            }
+            elseif([bool]($Attributes -band [IO.FileAttributes]::Archive)){
+                if ((Split-Path $Path -Leaf) -eq "desktop.ini"){
+                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System, Archive"
+                }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and
+                        ($Linktype -in @('SymbolicLink','HardLink'))){
+                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Archive"
+                }
+                else{
+                    $null
+                }
             }
             else{
-                $null
+                throw "`$Path: $Path $("`n`t")has unsupported $("`n`t") path `$Attributes: $Attributes."
             }
-        }
-        elseif([bool]($Attributes -band [IO.FileAttributes]::Archive)){
-            if ((Split-Path $Path -Leaf) -eq "desktop.ini"){
-                Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System, Archive"
-            }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and
-                    ($Linktype -in @('SymbolicLink','HardLink'))){
-                Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Archive"
-            }
-            else{
-                $null
-            }
-        }
-        else{
-            throw "`$Path: $Path $("`n`t")has unsupported $("`n`t") path `$Attributes: $Attributes."
         }
     }
     catch{
@@ -369,7 +371,7 @@ where, `$UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value`.
 
 All `SDDLs`s are from a origin installed native system, so we can ensure it is in the original/correct/target state.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [string]$Path,
         [switch]$Recurse
@@ -499,47 +501,51 @@ All `SDDLs`s are from a origin installed native system, so we can ensure it is i
             }
         }
         $NewAcl = Get-Acl -LiteralPath $Path
-        if ($NewAcl.Sddl -ne $Sddl){
-            try{
-                Write-VerboseLog  "`$Path is:`n`t $Path"
-                Write-VerboseLog  "Current Sddl is:`n`t $($NewAcl.Sddl)"
-                Write-VerboseLog  "Target Sddl is:`n`t $($Sddl)"
-
-                $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
-                Write-VerboseLog  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
-
-                Set-Acl -LiteralPath $Path -AclObject $NewAcl -ErrorAction Stop
-                Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
+        if($PSCmdlet.ShouldProcess("$Path",'set the original ACL')){
+            if ($NewAcl.Sddl -ne $Sddl){
+                try{
+                    Write-VerboseLog  "`$Path is:`n`t $Path"
+                    Write-VerboseLog  "Current Sddl is:`n`t $($NewAcl.Sddl)"
+                    Write-VerboseLog  "Target Sddl is:`n`t $($Sddl)"
+    
+                    $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
+                    Write-VerboseLog  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
+    
+                    Set-Acl -LiteralPath $Path -AclObject $NewAcl -ErrorAction Stop
+                    Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
+                }
+                catch [System.ArgumentException]{
+                    Write-VerboseLog  "`$Path is too long: '$Path'"
+                }
             }
-            catch [System.ArgumentException]{
-                Write-VerboseLog  "`$Path is too long: '$Path'"
+            if (($Recurse) -and
+                ($PathType -notin @(
+                    "NonSystemDisk[NTFS]\System Volume Information",
+                    "NonSystemDisk[NTFS]\`$Recycle.Bin",
+                    "NonSystemDisk[ReFS]\System Volume Information",
+                    "NonSystemDisk[ReFS]\`$Recycle.Bin"))){
+                # Recurse bypass: files, symbolic link directories, junctions, System Volume Information, `$Recycle.Bin
+                $Paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint
+                # The progress bar is refer to Chat-Gpt
+                $total = $Paths.Count
+                $current = 0
+                foreach ($item in $Paths) {
+                    $current++
+                    $progressPercentage = ($current / $total) * 100
+                    $progressStatus = "Processing file $current of $total"
+    
+                    Write-Progress -Activity "Traversing Directory" -Status $progressStatus -PercentComplete $progressPercentage
+    
+                    # Do your personal jobs, such as: $file.FullName
+                    Set-OriginalAcl -Path $item.FullName
+    
+                }
+    
+                Write-Progress -Activity "Traversing Directory" -Completed
             }
+
         }
-        if (($Recurse) -and
-            ($PathType -notin @(
-                "NonSystemDisk[NTFS]\System Volume Information",
-                "NonSystemDisk[NTFS]\`$Recycle.Bin",
-                "NonSystemDisk[ReFS]\System Volume Information",
-                "NonSystemDisk[ReFS]\`$Recycle.Bin"))){
-            # Recurse bypass: files, symbolic link directories, junctions, System Volume Information, `$Recycle.Bin
-            $Paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint
-            # The progress bar is refer to Chat-Gpt
-            $total = $Paths.Count
-            $current = 0
-            foreach ($item in $Paths) {
-                $current++
-                $progressPercentage = ($current / $total) * 100
-                $progressStatus = "Processing file $current of $total"
-
-                Write-Progress -Activity "Traversing Directory" -Status $progressStatus -PercentComplete $progressPercentage
-
-                # Do your personal jobs, such as: $file.FullName
-                Set-OriginalAcl -Path $item.FullName
-
-            }
-
-            Write-Progress -Activity "Traversing Directory" -Completed
-        }
+        
     }
     catch {
         Write-VerboseLog  "Set-OriginalAcl Exception: $PSItem"
@@ -561,7 +567,7 @@ function Get-Sddl{
 function Test-LinkAclBeahvior([string]$Link,[string]$Source){
 <#
 .Description
-Test link's ACL beahvior, i.e., check the ACL info whether be syncronized 
+Test link's ACL beahvior, i.e., check the ACL info whether be syncronized
 between Link and Source  on `SymbolicLink` `Junction` or `HardLink`
 
 We use `Owner` info to test.
@@ -598,5 +604,3 @@ We use `Owner` info to test.
 
     return $output
 }
-
-Export-ModuleMember -Function Set-OriginalAcl

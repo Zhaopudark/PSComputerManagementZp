@@ -265,7 +265,7 @@ function Set-DirSymbolicLinkWithSync{
     Assert-IsWindowsAndAdmin
 
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
-        Merge-BeforeSetDirLink $Path $Target $Backuppath
+        Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
         $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
@@ -289,7 +289,7 @@ function Set-FileSymbolicLinkWithSync{
     # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
-        Move-BeforeSetFileLink $Path $Target $Backuppath
+        Move-BeforeSetFileLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
         $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
@@ -314,7 +314,7 @@ function Set-DirJunctionWithSync{
     # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a directory junction from $Path to $Source, as $Path->$Target",'','')){
-        Merge-BeforeSetDirLink $Path $Target $Backuppath
+        Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
         $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }
@@ -339,7 +339,7 @@ function Set-FileHardLinkWithSync{
     # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
-        Move-BeforeSetFileLink $Path $Target $Backuppath
+        Move-BeforeSetFileLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
         $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target
     }

@@ -11,7 +11,7 @@ if (Test-Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)"){
     $content = Get-ChildItem "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)" -Exclude $ModuleInfo.LogDir
     Remove-Item $content -Force -Recurse
 }else{
-    New-Item -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)" -ItemType Directory 
+    New-Item -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)" -ItemType Directory
     New-Item -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion)\$($ModuleInfo.LogDir)" -ItemType Directory
 }
 

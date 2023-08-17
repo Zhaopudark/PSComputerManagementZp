@@ -5,18 +5,16 @@ param (
     [string]$ModuleVersion,
     [Parameter(Mandatory=$true)]
     [string]$LogDir
-    
 )
-
 function Get-LogFileName{
     param(
         [string]$KeyInfo
     )
     if ($KeyInfo -ne ''){
-        return "$InstallPath\$ModuleVersion\$LogDir\v$ModuleVersion($KeyInfo)-Log.txt"
+        return "$script:InstallPath\$script:ModuleVersion\$script:LogDir\v$script:ModuleVersion($KeyInfo)-Log.txt"
     }
     else{
-        return "$InstallPath\$ModuleVersion\$LogDir\v$ModuleVersion-Log.txt"
+        return "$script:InstallPath\$script:ModuleVersion\$script:LogDir\v$script:ModuleVersion-Log.txt"
     }
 }
 

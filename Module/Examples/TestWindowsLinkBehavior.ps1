@@ -94,7 +94,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "D:\${guid}\non_local_junction").Attributes | Should -Be 'Directory, ReparsePoint'
             (Get-ItemProperty "D:\${guid}\non_local_junction").LinkType | Should -Be 'Junction'
             (Get-ItemProperty "D:\${guid}\non_local_junction").LinkTarget | Should -Be  "${Home}\${guid}\dir_for_non_local_junction"
-        
+
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_junction").Attributes | Should -Be 'Directory'
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_junction").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_junction").LinkTarget | Should -BeNullOrEmpty
@@ -102,7 +102,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "${Home}\${guid}\non_local_junction").Attributes | Should -Be 'Directory, ReparsePoint'
             (Get-ItemProperty "${Home}\${guid}\non_local_junction").LinkType | Should -Be 'Junction'
             (Get-ItemProperty "${Home}\${guid}\non_local_junction").LinkTarget | Should -Be "D:\${guid}\dir_for_non_local_junction"
-        
+
         }
         It 'Test symbolic file' {
             (Get-ItemProperty "${Home}\${guid}\fire_for_local_symbiliclink.txt").Attributes | Should -Be 'Archive'
@@ -128,7 +128,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "D:\${guid}\non_local_symbiliclink-txt").Attributes | Should -Be 'Archive, ReparsePoint'
             (Get-ItemProperty "D:\${guid}\non_local_symbiliclink-txt").LinkType | Should -Be 'SymbolicLink'
             (Get-ItemProperty "D:\${guid}\non_local_symbiliclink-txt").LinkTarget | Should -Be "${Home}\${guid}\fire_for_non_local_symbiliclink.txt"
-        
+
             (Get-ItemProperty "D:\${guid}\fire_for_non_local_symbiliclink.txt").Attributes | Should -Be 'Archive'
             (Get-ItemProperty "D:\${guid}\fire_for_non_local_symbiliclink.txt").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "D:\${guid}\fire_for_non_local_symbiliclink.txt").LinkTarget | Should -BeNullOrEmpty
@@ -136,7 +136,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink-txt").Attributes | Should -Be 'Archive, ReparsePoint'
             (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink-txt").LinkType | Should -Be 'SymbolicLink'
             (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink-txt").LinkTarget | Should -Be "D:\${guid}\fire_for_non_local_symbiliclink.txt"
-        
+
         }
         It 'Test symbolic dir' {
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_symbiliclink").Attributes | Should -Be 'Directory'
@@ -162,7 +162,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "D:\${guid}\non_local_symbiliclink").Attributes | Should -Be 'Directory, ReparsePoint'
             (Get-ItemProperty "D:\${guid}\non_local_symbiliclink").LinkType | Should -Be 'SymbolicLink'
             (Get-ItemProperty "D:\${guid}\non_local_symbiliclink").LinkTarget | Should -Be "${Home}\${guid}\dir_for_non_local_symbiliclink"
-        
+
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_symbiliclink").Attributes | Should -Be 'Directory'
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_symbiliclink").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "D:\${guid}\dir_for_non_local_symbiliclink").LinkTarget | Should -BeNullOrEmpty
@@ -174,7 +174,7 @@ Describe 'Links Behavior' {
     }
     Context 'Test Authorization Behavior' -Skip:(!(Test-Platform 'Windows')){
         It 'Test acl sync behavior on hardlink' {
- 
+
             Test-LinkAclBeahvior -Link "${Home}\${guid}\hardlink" -Source "${Home}\${guid}\file_for_hardlink.txt" | Should -BeTrue
             Test-LinkAclBeahvior -Link "D:\${guid}\hardlink" -Source "D:\${guid}\file_for_hardlink.txt" | Should -BeTrue
         }
@@ -213,14 +213,14 @@ Describe 'Links Behavior' {
         }
         It 'Test deletion of junction' {
             New-Item "${Home}\${guid}\local_junction\test.txt"
-            Remove-Item "${Home}\${guid}\local_junction" -Force -Recurse 
+            Remove-Item "${Home}\${guid}\local_junction" -Force -Recurse
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_junction").Attributes | Should -Be 'Directory'
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_junction").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_junction").LinkTarget | Should -BeNullOrEmpty
             "${Home}\${guid}\dir_for_local_junction\test.txt" | Should -Exist
 
             New-Item "D:\${guid}\local_junction\test.txt"
-            Remove-Item "D:\${guid}\local_junction" -Force -Recurse 
+            Remove-Item "D:\${guid}\local_junction" -Force -Recurse
             (Get-ItemProperty "D:\${guid}\dir_for_local_junction").Attributes | Should -Be 'Directory'
             (Get-ItemProperty "D:\${guid}\dir_for_local_junction").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "D:\${guid}\dir_for_local_junction").LinkTarget | Should -BeNullOrEmpty
@@ -264,14 +264,14 @@ Describe 'Links Behavior' {
         }
         It 'Test deletion of symbolic link dir' {
             New-Item "${Home}\${guid}\local_symbiliclink\test.txt"
-            Remove-Item "${Home}\${guid}\local_symbiliclink" -Force -Recurse 
+            Remove-Item "${Home}\${guid}\local_symbiliclink" -Force -Recurse
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_symbiliclink").Attributes | Should -Be 'Directory'
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_symbiliclink").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "${Home}\${guid}\dir_for_local_symbiliclink").LinkTarget | Should -BeNullOrEmpty
             "${Home}\${guid}\dir_for_local_symbiliclink\test.txt" | Should -Exist
 
             New-Item "D:\${guid}\local_symbiliclink\test.txt"
-            Remove-Item "D:\${guid}\local_symbiliclink" -Force -Recurse 
+            Remove-Item "D:\${guid}\local_symbiliclink" -Force -Recurse
             (Get-ItemProperty "D:\${guid}\dir_for_local_symbiliclink").Attributes | Should -Be 'Directory'
             (Get-ItemProperty "D:\${guid}\dir_for_local_symbiliclink").LinkType | Should -BeNullOrEmpty
             (Get-ItemProperty "D:\${guid}\dir_for_local_symbiliclink").LinkTarget | Should -BeNullOrEmpty

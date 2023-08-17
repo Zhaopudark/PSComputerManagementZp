@@ -6,7 +6,7 @@ BeforeAll {
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
-   
+
     $test_dir = "${test_path}\test_dir"
     $test_file = "${test_path}\test.txt"
     New-Item -Path $test_dir -ItemType Directory -Force
