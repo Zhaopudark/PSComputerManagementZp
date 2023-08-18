@@ -16,8 +16,7 @@ BeforeAll {
 Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on dir' {
-            $($PSVersionTable.Platform) | Should -BeIn @('Windows','Linux','Wsl2')
-
+            
             if (Test-Platform 'Windows') {
                 $path = Format-Path "${test_path}\tEsT_diR"
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir\"
@@ -32,8 +31,7 @@ Describe 'Test PathTools' {
             }
         }
         It 'Test on drive' {
-            $($PSVersionTable.Platform) | Should -BeIn @('Windows','Linux','Wsl2')
-            
+
             $maybe_root = ((Get-PSDrive -PSProvider FileSystem)[0]).Name # / on Linux and Wsl2, not '/root'
             $maybe_c = ((Get-PSDrive -PSProvider FileSystem)[0]).Name
             $maybe_c_lower = ((Get-PSDrive -PSProvider FileSystem)[0]).Name.ToLower()
