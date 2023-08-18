@@ -14,6 +14,10 @@ function Format-Path{
     -> C:\Users\
 
 .Example
+    Format-Path -Path 'c:'
+    -> C:\
+
+.Example
     Format-Path -Path 'c:\uSeRs\test.txt'
     -> C:\Users\test.txt
 
