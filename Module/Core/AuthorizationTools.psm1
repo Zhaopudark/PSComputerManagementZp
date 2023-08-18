@@ -17,7 +17,8 @@ Authorized Path is:
     if ($Qualifier -notin (Get-PSProvider FileSystem).Drives.Root){
         throw "`$Path: '$Path' $("`n`t")should be contained in FileSystem, such as C:, D:, X:, instead of this or other PSProviders."
     }
-    elseif (((Get-Qualifier $Path) -eq (Get-Qualifier ${Home})) -and !(Test-IsInInHome $Path)){
+    
+    if (((Get-Qualifier $Path) -eq (Get-Qualifier ${Home})) -and !(Test-IsInInHome $Path)){
         throw "If `$Path: '$Path' is in SystemDisk, it sholuld be or in `${Home}: ${Home}."
     }
 }

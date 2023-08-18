@@ -90,3 +90,11 @@ $script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 <img src="./Assets/README.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
+
+# Contribution
+
+Contributions are welcome. But recently, the introduction and documentation are not complete. So, please wait for a while.
+
+A simple way to contribute is to open an issue to report bugs or request new features.
+
+A formative rule is, for variable's name, `snake_case` is used to indicate private variables wile `PascalCase` is used for non-private variables. So, in code style consistency, please consider the above rule.

@@ -124,22 +124,20 @@ function Test-IsInSystemDisk{
     param(
         [string]$Path
     )
-    return ((Get-Qualifier $Path).ToString() -eq (Get-Qualifier $Home).ToString())
+    return ((Get-Qualifier $Path).ToString() -eq (Get-Qualifier ${Home}).ToString())
 }
 function Test-IsInInHome{
+    [CmdletBinding()]
     param(
         [string]$Path
     )
-    if ($Path -ne ''){
-        $Path = Format-Path $Path
-        if ($Path -eq (Format-Path $Home)){
-            return $true
-        }
-        else{
-            return (Test-IsInInHome (Split-Path $Path -Parent))
-        }
-    }
-    else{
+    $home_path = Format-Path ([System.Environment]::GetFolderPath("UserProfile"))
+    
+    if ((Format-Path $Path).StartsWith($home_path)) {
+        Write-Verbose "The test path is within the user's home directory."
+        return $true
+    } else {
+        Write-Verbose "The test path is not within the user's home directory."
         return $false
     }
 }
