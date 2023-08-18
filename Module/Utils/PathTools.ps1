@@ -51,6 +51,9 @@ function Format-Path{
     return $output
 }
 
+# *******************************************************************************#
+# Tests
+
 function Test-ReparsePoint{
 <#
 .DESCRIPTION
@@ -61,40 +64,105 @@ function Test-ReparsePoint{
     )
     return [bool]((Get-Item -Path $Path).Attributes -band [System.IO.FileAttributes]::ReparsePoint)
 }
+
+# *******************************************************************************#
+# Validations (Assertions) 
+# Can be used directly or as a validation function in `ValidateScript`.
+
+function Assert-NotReparsePoint{
+    param(
+        [string]$Path
+    )
+    if ([bool]((Get-Item -Path $Path).Attributes -band [System.IO.FileAttributes]::ReparsePoint)){
+        throw "The $Path should not be a `ReparsePoint`(SymbolicLink or Junction)!"
+    }
+    else{
+        return $true 
+    }
+}
 function Assert-IsDirectory{
     param(
         [string]$Path
     )
-    # 判断路径是否存在且是一个目录
     if (Test-Path -Path $Path -PathType Container) {
-        # 判断路径是否是软链接或交接点
-        if (-not (Test-ReparsePoint $Path)) {
-            return
-        }
-        else {
-            throw "The `Path` $Path should be an existed directory and should not be a `ReparsePoint`(SymbolicLink or Junction)!"
-        }
+        return $true 
     }
-    else {
-        throw "The `Path` $Path should be an existed directory!"
+    else{
+        throw "The $Path should be an existed directory!"
     }
 }
+
 function Assert-IsFile{
     param(
         [string]$Path
     )
-    # 判断路径是否存在
     if (Test-Path -Path $Path) {
-        # 判断路径是否指向一个文件
         if ((Get-Item -Path $Path).PSIsContainer -eq $false) {
-            return
+            return $true
         } else {
-            throw "The `Path` $Path should be existing and be a file!"
+            throw "The $Path should be a file!"
         }
     } else {
-        throw "The `Path` $Path should be existing!"
+        throw "The $Path should be existing!"
     }
 }
+
+
+# function Test-IsDirectory{
+#     param(
+#         [string]$Path
+#     )
+#     # 判断路径是否存在且是一个目录
+#     if (Test-Path -Path $Path -PathType Container) {
+#         # 判断路径是否是软链接或交接点
+#         if (-not (Test-ReparsePoint $Path)) {
+#             return 
+#         }
+#         else {
+#             throw "The `Path` $Path should be an existed directory and should not be a `ReparsePoint`(SymbolicLink or Junction)!"
+#         }
+#     }
+#     else {
+#         throw "The `Path` $Path should be an existed directory!"
+#     }
+# }
+
+# # *******************************************************************************#
+# # Assertions
+# function Assert-IsDirectory{
+#     param(
+#         [string]$Path
+#     )
+#     # 判断路径是否存在且是一个目录
+#     if (Test-Path -Path $Path -PathType Container) {
+#         # 判断路径是否是软链接或交接点
+#         if (-not (Test-ReparsePoint $Path)) {
+#             return
+#         }
+#         else {
+#             throw "The `Path` $Path should be an existed directory and should not be a `ReparsePoint`(SymbolicLink or Junction)!"
+#         }
+#     }
+#     else {
+#         throw "The `Path` $Path should be an existed directory!"
+#     }
+# }
+# function Assert-IsFile{
+#     param(
+#         [string]$Path
+#     )
+#     # 判断路径是否存在
+#     if (Test-Path -Path $Path) {
+#         # 判断路径是否指向一个文件
+#         if ((Get-Item -Path $Path).PSIsContainer -eq $false) {
+#             return
+#         } else {
+#             throw "The `Path` $Path should be existing and be a file!"
+#         }
+#     } else {
+#         throw "The `Path` $Path should be existing!"
+#     }
+# }
 function Get-Qualifier{
     param(
         [string]$Path

@@ -13,7 +13,7 @@ function Write-EnvModificationLog{
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
     Write-VerboseLog $message -Verbose
 }
-function Test-EnvPathLevelArg{
+function Assert-ValidEnvPathLevel{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
@@ -22,13 +22,7 @@ function Test-EnvPathLevelArg{
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
     }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
-        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
-        if(-not(Test-AdminPermission)){
-            throw [System.UnauthorizedAccessException]::new("You must run this function as administrator when arg `$Level is $Level.")
-        }
-        else{
-            return $true
-        }
+        return Assert-AdminPermission
     }else{
         if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
             -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
@@ -50,7 +44,7 @@ function Test-EnvPathExist{
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level,
         [Parameter(Mandatory)]
         [AllowEmptyString()]
@@ -84,7 +78,7 @@ function Test-EnvPathNotDuplicated{
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level,
         [Parameter(Mandatory)]
         [string]$Path,
@@ -105,7 +99,7 @@ function Get-EnvPathAsSplit{
     [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level
     )
     # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
@@ -132,7 +126,7 @@ See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/ever
     param(
         [string[]]$Paths,
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level
     )
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","cover `{$Paths}` ")){
@@ -162,7 +156,7 @@ function Format-EnvPath{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level
     )
     $env_paths = Get-EnvPathAsSplit -Level $Level
@@ -208,9 +202,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param()
-
-    # import-module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
-    Assert-IsAdmin
+    Assert-AdminPermission
 
     $user_env_paths = Get-EnvPathAsSplit -Level 'User'
     $machine_env_paths = Get-EnvPathAsSplit -Level 'Machine'
@@ -284,7 +276,7 @@ function Remove-EnvPathByPattern{
         [Parameter(Mandatory)]
         [string]$Pattern,
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level
     )
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","remove items matched pattern `{$Pattern}` ")){
@@ -320,7 +312,7 @@ function Remove-EnvPathByTargetPath{
         [Parameter(Mandatory)]
         [string]$TargetPath,
         [Parameter(Mandatory)]
-        [ValidateScript({Test-EnvPathLevelArg $_})]
+        [ValidateScript({Assert-ValidEnvPathLevel $_})]
         [string]$Level
     )
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","remove target `{$TargetPath}` ")){

@@ -4,7 +4,7 @@ param (
 )
 function Get-InstallPath{
     [CmdletBinding()]
-    [OutputType([System.String],[System.Management.Automation.PSCustomObject])]
+    [OutputType([System.String])]
     param()
     if (Test-Platform 'Windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\$script:ModuleName"

@@ -12,7 +12,7 @@ function Test-Platform{
     $true if compatible, otherwise $false.
 #>
     [CmdletBinding()]
-    [OutputType([System.Boolean],[System.Management.Automation.PSCustomObject])]
+    [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory=$true)]
         [ValidateNotNullOrEmpty()]
@@ -73,8 +73,11 @@ function Assert-IsWindows{
     if (!($IsWindows)){
         throw "The current platform should be Windows, $($PSVersionTable.Platform), is not Windows."
     }
+    else {
+        return $true
+    }
 }
-function Test-AdminPermission {
+function Assert-AdminPermission {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param()
@@ -83,21 +86,10 @@ function Test-AdminPermission {
 
     if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Write-Verbose "Current process is not in AdminPermission."
-        return $false
+        throw [System.UnauthorizedAccessException]::new("You must run in administrator privilege.")
     }else{
         Write-Verbose "Current process is in in AdminPermission."
         return $true
-    }
-}
-function Assert-IsAdmin{
-    [CmdletBinding()]
-    param()
-    $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
-
-    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Verbose "Current process is not in AdminPermission."
-        throw [System.UnauthorizedAccessException]::new("You must run in administrator privilege.")
     }
 }
 function Assert-AdminRobocopyAvailable{
@@ -110,14 +102,16 @@ function Assert-AdminRobocopyAvailable{
         Write-Verbose "Exception: $PSItem"
         throw "The robocopy command is not available, please install it first."
     }
-    Assert-IsAdmin
     Assert-IsWindows
+    Assert-AdminPermission
+    return $true
 }
 
 function Assert-IsWindowsAndAdmin{
     [CmdletBinding()]
     param()
     Assert-IsWindows
-    Assert-IsAdmin
+    Assert-AdminPermission
+    return $true
 }
 

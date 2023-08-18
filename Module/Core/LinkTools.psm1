@@ -1,7 +1,29 @@
 Import-Module "${PSScriptRoot}\..\RegisterUtils.psm1" -Force -Scope Local
+
+function Test-EnvPathLevelArg{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [string]$Level
+    )
+    if ($Level -notin @('User','Process','Machine')){
+        throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
+    }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
+        return Assert-AdminPermission
+    }else{
+        if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
+            -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
+            Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+        }
+        return $true
+    }
+}
+
+
+
 function Merge-DirectoryWithBackup{
 <#
-.Description
+.DESCRIPTION
     Backup $Source to a path based on $Backuppath
     Backup $Destination to a path based on $Backuppath
     Then, merge items from $Source to $Destination
@@ -10,16 +32,15 @@ function Merge-DirectoryWithBackup{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
+        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotReparsePoint $_})]
         [string]$Source,
         [Parameter(Mandatory)]
+        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotReparsePoint $_})]
         [string]$Destination,
         [Parameter(Mandatory)]
+        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotReparsePoint $_})]
         [string]$Backuppath
     )
-    # import-module "${PSScriptRoot}\PathTools.psm1" -Scope Local
-    Assert-IsDirectory $Source
-    Assert-IsDirectory $Destination
-    Assert-IsDirectory $Backuppath
     $guid = [guid]::NewGuid()
     $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
     $backup_source = "$Backuppath/$guid-$source_name"
@@ -42,7 +63,7 @@ function Merge-DirectoryWithBackup{
 }
 function Move-FileWithBackup{
 <#
-.Description
+.DESCRIPTION
     Backup $Source to a path based on $Backuppath
     Backup $Destination to a path based on $Backuppath
     Then, move $Source to $Destination
@@ -51,15 +72,15 @@ function Move-FileWithBackup{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
+        [ValidateScript({Assert-IsFile $_ -and Assert-NotReparsePoint $_})]
         [string]$Source,
         [Parameter(Mandatory)]
+        [ValidateScript({Assert-IsFile $_ -and Assert-NotReparsePoint $_})]
         [string]$Destination,
         [Parameter(Mandatory)]
+        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotReparsePoint $_})]
         [string]$Backuppath
     )
-    Assert-IsFile $Source
-    Assert-IsFile $Destination
-    Assert-IsDirectory $Backuppath
     $guid = [guid]::NewGuid()
     $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
     $backup_source = "$Backuppath/$guid-$source_name"
