@@ -9,9 +9,9 @@ function Get-InstallPath{
     if (Test-Platform 'Windows'){
         return "$(Split-Path -Path $PROFILE -Parent)\Modules\$script:ModuleName"
     }elseif (Test-Platform 'Wsl2'){
-        return "${Home}\.local\share\powershell\Modules\$script:ModuleName"
+        return "${Home}/.local/share/powershell/Modules/$script:ModuleName"
     }elseif (Test-Platform 'Linux'){
-        return "${Home}\.local\share\powershell\Modules\$script:ModuleName"
+        return "${Home}/.local/share/powershell/Modules/$script:ModuleName"
     }else{
         Write-Warning "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         return $null

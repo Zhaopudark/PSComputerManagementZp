@@ -16,6 +16,8 @@ BeforeAll {
 Describe 'Test PathTools' {
     Context 'Test Format-Path' {
         It 'Test on dir' {
+            $($PSVersionTable.Platform) | Should -BeIn @('Windows','Linux','Wsl2')
+
             if (Test-Platform 'Windows') {
                 $path = Format-Path "${test_path}\tEsT_diR"
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir\"
@@ -26,7 +28,68 @@ Describe 'Test PathTools' {
                 $path = Format-Path "${test_path}\test_dir"
                 $path | Should -BeExactly "$(Format-Path $test_path)test_dir/"
             }else{
-                $($PSVersionTable.Platform) | Should -Not -BeIn @('Windows','Linux','Wsl2')
+                throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+            }
+        }
+        It 'Test on drive' {
+            $($PSVersionTable.Platform) | Should -BeIn @('Windows','Linux','Wsl2')
+            
+            $maybe_root = ((Get-PSDrive -PSProvider FileSystem)[0]).Name # / on Linux and Wsl2, not '/root'
+            $maybe_c = ((Get-PSDrive -PSProvider FileSystem)[0]).Name
+            $maybe_c_lower = ((Get-PSDrive -PSProvider FileSystem)[0]).Name.ToLower()
+
+            if (Test-Platform 'Windows') {
+                $path = Format-Path "$maybe_c`:\"
+                $path | Should -BeExactly "$maybe_c`:\"
+
+                $path = Format-Path "$maybe_c`:/"
+                $path | Should -BeExactly "$maybe_c`:\"
+
+                $path = Format-Path "$maybe_c`:"
+                $path | Should -BeExactly "$maybe_c`:\"
+
+                $path = Format-Path "$maybe_c_lower`:\"
+                $path | Should -BeExactly "$maybe_c`:\"
+
+                $path = Format-Path "$maybe_c_lower`:/"
+                $path | Should -BeExactly "$maybe_c`:\"
+
+                $path = Format-Path "$maybe_c_lower`:"
+                $path | Should -BeExactly "$maybe_c`:\"
+
+            }elseif (Test-Platform 'Linux') {
+                $path = Format-Path "$maybe_root"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root/"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root\"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root\/\/\/\/\/"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root/\/\/\/\/\"
+                $path | Should -BeExactly "$maybe_root"
+
+            }elseif (Test-Platform 'Wsl2') {
+                $path = Format-Path "$maybe_root"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root/"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root\"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root\/\/\/\/\/"
+                $path | Should -BeExactly "$maybe_root"
+
+                $path = Format-Path "$maybe_root/\/\/\/\/\"
+                $path | Should -BeExactly "$maybe_root"
+            }else{
+                throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
             }
         }
     }
