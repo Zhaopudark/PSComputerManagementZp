@@ -1,8 +1,8 @@
 # Navigation
 
 - [Home](README.md)
-- [AIPs](APIs.md)
-- [Samples](Samples.md) 
+- [AIPs](Tests/APIs/APIs.md)
+- [Examples](Examples/Examples.md) 
 
 # Backgrounds
 
@@ -98,3 +98,7 @@ Contributions are welcome. But recently, the introduction and documentation are 
 A simple way to contribute is to open an issue to report bugs or request new features.
 
 A formative rule is, for variable's name, `snake_case` is used to indicate private variables wile `PascalCase` is used for non-private variables. So, in code style consistency, please consider the above rule.
+
+Another formative rule is that almost all components deal only with existent and accessible paths. If a path is not existent or not accessible, errors or warnings will be thrown. This rule is to avoid unexpected operations and can be seen in almost all components of this module.
+
+On comments, `.SYNOPSIS` and `.DESCRIPTION` may have been used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with principles and ideas usually. And, `.SYNOPSIS` may use more normal language than `.DESCRIPTION`.

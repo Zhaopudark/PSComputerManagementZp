@@ -1,9 +1,9 @@
 param (
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory)]
     [string]$InstallPath,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory)]
     [string]$ModuleVersion,
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory)]
     [string]$LogDir
 )
 function Get-LogFileName{
@@ -28,7 +28,7 @@ function Write-VerboseLog{
     Write-Verbose $message
     $log_file = Get-LogFileName
     if ($PSCmdlet.ShouldProcess("$log_file","record logs")){
-        Add-Content -Path $log_file -Value $message
+        Add-Content -LiteralPath $log_file -Value $message
         # Out-File -FilePath $log_file -Append
     }
 }

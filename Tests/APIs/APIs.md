@@ -195,7 +195,7 @@
 ## Remove-EnvPathByTargetPath
 
 ```powershell
-<
+<#
 .DESCRIPTION
     Remove the target path in `$Env:PATH` in the specified level.
 .EXAMPLE

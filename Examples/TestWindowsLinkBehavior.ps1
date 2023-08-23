@@ -65,8 +65,8 @@ BeforeAll {
             $guid
         )
         if ($PSCmdlet.ShouldProcess("Remove all items for tests in ${Home}\${guid} and D:\${guid}, including these 2 dir.",'','')){
-            Remove-Item -Path "${Home}\${guid}" -Force -Recurse
-            Remove-Item -Path "D:\${guid}" -Force -Recurse
+            Remove-Item "${Home}\${guid}" -Force -Recurse
+            Remove-Item "D:\${guid}" -Force -Recurse
         }
     }
     New-AllItem -guid $guid

@@ -1,149 +1,39 @@
-﻿Import-Module "${PSScriptRoot}\..\RegisterUtils.psm1" -Force -Scope Local
-function Assert-FileSystemAuthorized{
-<#
-.DESCRIPTION
-Here we check if have the customized FileSystem Authorization.
-We artificially define some rules and inspect the path to ensure it's a path that can be controlled by the users (include administrators), instead of by system only.
-Authorized Path is:
-    Non-system disk root path
-    Anything in Non-system disk
-    ${Home} Directory
-    Anything in ${Home}
-#>
-    param(
-        [string]$Path
-    )
-    $Qualifier = Get-Qualifier $Path
-    if ($Qualifier -notin (Get-PSProvider FileSystem).Drives.Root){
-        throw "`$Path: '$Path' $("`n`t")should be contained in FileSystem, such as C:, D:, X:, instead of this or other PSProviders."
-    }
-    
-    if (((Get-Qualifier $Path) -eq (Get-Qualifier ${Home})) -and !(Test-IsInInHome $Path)){
-        throw "If `$Path: '$Path' is in SystemDisk, it sholuld be or in `${Home}: ${Home}."
-    }
-}
-function Reset-PathAttribute{
+﻿function Assert-ValidatePath{
 <#
 .SYNOPSIS
+    Check if a path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
 
 .DESCRIPTION
-In a FileSystem, path’s arrtibuts can help us to distinguish a path's type:
-    Is it a File, Directory, SymbolLink or Other type?
-We can use the command `(Get-ItemProperty "$Path").Attributes` to get the attriibuts.
-Consider a drive disk letter `X`.`X` have better not refer to the system disk,
-since modify arrtibuts on system file or system-generated file of system disk is hazardous.
-But in some cases, we can modify some items that belong to user and are established by user.
-
-We only specify the following 8 path types with standard attriibuts:
-    Directory:
-        X:\                             Hidden, System, Directory
-        X:\System Volume Information\   Hidden, System, Directory
-        X:\$Recycle.Bin\                Hidden, System, Directory
-        X:\*some_symbolic_link_dir\     Directory, ReparsePoint
-        X:\*some_junction\              Directory, ReparsePoint
-    File:
-        X:\*desktop.ini                 Hidden, System, Archive
-        X:\*some_symbolic_link_file     Archive, ReparsePoint
-        X:\*some_hardlink               Archive
-If $Path is recognized with one of the above path types, its attriibuts will be reset.
-Other directories' attriibuts will not be reset.
-Other files' attriibuts will not be reset.
-
-Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
-    ReadOnly, Hidden, System, Directory, Archive, Device,
-    Normal, Temporary, SparseFile, ReparsePoint, Compressed,
-    Offline, NotContentIndexed, Encrypted, IntegrityStream, NoScrubData.
-We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But
-`$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
-So, to reset (normalize, standardize) the attributes to original status, we cannot directly give the target attributes, but use a specific `$some_attributes`.
-
-Here are the above specified 8 path types with corresponding `$some_attributes`:
-    Directory:
-        X:\                             Normal
-        X:\System Volume Information\   Hidden, System
-        X:\$Recycle.Bin\                Hidden, System
-        X:\*some_symbolic_link_dir\     Normal
-        X:\*some_junction\              Normal
-    File:
-        X:\*desktop.ini                 Hidden, System, Archive
-        X:\*some_symbolic_link_file     Archive
-        X:\*some_hardlink               Archive
-
-How to do? Check if a Directory or File, then deal with it with specifical rules:
-    If is a Directory?
-        If is `X:\System Volume Information\` or `X:\$Recycle.Bin\`?
-            set Attributes with $some_Attributes="Hidden, System"
-        ElseIf is `X:\` or `X:\*some_symbolic_link_dir\` or `X:\*some_junction\`:
-            set Attributes with $some_Attributes="Normal"
-        Else:
-            set nothing, modify nothing, do not reset the attributes
-    Else, consider as a File：
-        If is `X:\*desktop.ini`?
-            set Attributes with $some_Attributes="Hidden, System, Archive"
-        ElseIf is `X:\*some_symbolic_link_file` or `X:\*some_hardlink`:
-            set Attributes with $some_Attributes="Archive"
-        Else:
-            set nothing, modify nothing, do not reset the attributes
-
-To check if a path is Directory or File:
-    Test-Path -Path $Path -PathType Container, # true->Directory, false->File, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/test-path?view=powershell-7.2#-pathtype
-    or
-    Test-Path -Path $Path -PathType Leaf, # true->File, false->Directory, https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/test-path?view=powershell-7.2#-pathtype
-    or
-    (Get-Item $Path).PSIsContainer, # true->Directory, false->File,https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/foreach-object?view=powershell-7.2#example-2-get-the-length-of-all-the-files-in-a-directory
-    or
-    [bool]((Get-ItemProperty "$Path").Attributes -band [IO.FileAttributes]::Directory)
-        https://learn.microsoft.com/en-us/dotnet/api/system.io.fileAttributes?view=net-6.0
-        P.S. [bool]([IO.FileAttributes]::Directory,[IO.FileAttributes]::ReparsePoint -join ",") for Directory link
-    We choose the last method since it's only suitable for FileSystem, bringing
-    a expected `ineffect` when misuse this function on Non-FileSystem, which means a higher security.
+    Check if $Path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
+    Only the following 4 types of paths are valid:
+        1. root path of Non-system disk 
+        2. other path in Non-system disk
+        3. path of ${Home} 
+        4. other path in ${Home}
 #>
-    [CmdletBinding(SupportsShouldProcess)]
     param(
-        [string]$Path
+        [string]$Path,
+        [switch]$SkipFormat
     )
-    try{
-        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
-        Assert-IsWindows
-        $Qualifier = Get-Qualifier $Path
-        $Attributes = (Get-ItemProperty -LiteralPath $Path).Attributes
-        $Linktype = (Get-ItemProperty -LiteralPath $Path).LinkType
-        $Path = Format-Path $Path
-        Assert-FileSystemAuthorized $Path
-        if($PSCmdlet.ShouldProcess("$Path",'reset the attributes')){
-            if ([bool]($Attributes -band [IO.FileAttributes]::Directory)){
-                if (($Path -eq (Format-Path "${Qualifier}\System Volume Information")) -or
-                    ($Path -eq (Format-Path "${Qualifier}\`$Recycle.Bin"))){
-                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System"
-                }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and
-                         ($Linktype -in @('SymbolicLink','Junction'))){
-                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Normal"
-                }
-                else{
-                    $null
-                }
-            }
-            elseif([bool]($Attributes -band [IO.FileAttributes]::Archive)){
-                if ((Split-Path $Path -Leaf) -eq "desktop.ini"){
-                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Hidden, System, Archive"
-                }elseif ([bool]($Attributes -band [IO.FileAttributes]::ReparsePoint) -and
-                        ($Linktype -in @('SymbolicLink','HardLink'))){
-                    Set-ItemProperty -LiteralPath $Path -Name Attributes -Value "Archive"
-                }
-                else{
-                    $null
-                }
-            }
-            else{
-                throw "`$Path: $Path $("`n`t")has unsupported $("`n`t") path `$Attributes: $Attributes."
-            }
-        }
+    if (-not $SkipFormat){
+        $Path = Format-LiteralPath $Path
     }
-    catch{
-        Write-VerboseLog  "Reset-PathAttribute Exception: $PSItem"
-        Write-VerboseLog  "Operation has been skipped."
+    Assert-IsInFileSystem $Path
+    Write-Verbose "The $Path is in FileSystem."
+    if (Test-IsInSystemDrive $Path){
+        if (Test-IsInInHome $Path -SkipFormat){
+            return $true
+        }
+        else{
+            throw "If $Path is in SystemDisk, it sholuld be or in `${Home}: ${Home}."
+        }
+    }else{
+        Write-Verbose "The $Path is not in SystemDisk."
+        return $true
     }
 }
+    
+
 function Get-PathType{
 <#
 .SYNOPSIS
@@ -190,17 +80,19 @@ function Get-PathType{
     To check file system type:
         (Get-Volume (Get-Qualifier $Path).TrimEnd(":\")).FileSystemType
     To check link type:
-        (Get-Item "$Path").Linktype
-        (Get-Item $Path).Attributes -band [IO.FileAttributes]::$some_Attributes
+        (Get-ItemProperty "$Path").Linktype
+        (Get-ItemProperty $Path).Attributes -band [IO.FileAttributes]::$some_Attributes
 
 .PARAMETER Path
-    The path to be checked. 
-    For stability, ny default, this function will automatically format the path by `Format-Path` at the beginning.
-    For better performance in cascading calls, it is recommended to be formatted by `Format-Path` before input and
-    call this function by `Get-PathType -Path $Path -NoFormat`.
-.PARAMETER NoFormat
-    Switch to disable automatic formatting of `$Path` by `Format-Path` at the beginning.
-    If true(given), the `$Path` will not be formatted by `Format-Path` at the beginning. 
+    The path to be checked to get its type.
+
+.PARAMETER SkipFormat
+    Switch to disable automatic formatting of `$Path` by `Format-LiteralPath` at the beginning.
+    If true(given), the `$Path` will not be formatted by `Format-LiteralPath` at the beginning. 
+
+.PARAMETER SkipPlatformCheck
+    Switch to disable platform check at the beginning.
+    If true(given), the platform will not be checked at the beginning.
 
 .OUTPUTS
     System.String if `$Path` can be recognized as a customized path type.
@@ -209,15 +101,20 @@ function Get-PathType{
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
+        [Parameter(Mandatory)]
+        [ValidateScript({Assert-ValidatePath $_})]
         [string]$Path,
-        [switch]$NoFormat
+        [switch]$SkipFormat,
+        [switch]$SkipPlatformCheck
     )
     try {
-        Assert-IsWindows
-        if (!($NoFormat)){
-            $Path = Format-Path $Path
+        
+        if (-not $SkipFormat){
+            $Path = Format-LiteralPath $Path
         }
-        Assert-FileSystemAuthorized $Path
+        if (-not $SkipPlatformCheck){
+            Assert-IsWindows
+        }
     }
     catch {
         Write-VerboseLog  "Exception caught: $_"
@@ -242,24 +139,24 @@ function Get-PathType{
     }
 
     $Qualifier = Get-Qualifier $Path
-    $Linktype = (Get-ItemProperty -LiteralPath $Path).LinkType
-    $Attributes = (Get-ItemProperty -LiteralPath $Path).Attributes
+    $Linktype = (Get-ItemProperty $Path).LinkType
+    $Attributes = (Get-ItemProperty $Path).Attributes
 
     if ([bool]($Attributes -band [IO.FileAttributes]::Directory)){
-        if (($Path -eq $Qualifier) -or ($Path -eq (Format-Path ${Home}))){
+        if (($Path -eq $Qualifier) -or ($Path -eq (Format-LiteralPath ${Home}))){
             return  "$header\Root"
         }
-        elseif($Path -eq (Format-Path "${Qualifier}\System Volume Information")){
+        elseif($Path -eq (Format-LiteralPath "${Qualifier}\System Volume Information")){
             return  "$header\System Volume Information"
         }
-        elseif($Path -eq (Format-Path "${Qualifier}\`$Recycle.Bin")){
+        elseif($Path -eq (Format-LiteralPath "${Qualifier}\`$Recycle.Bin")){
             return "$header\`$Recycle.Bin"
         }
-        elseif((Get-DriveWithFirstDir $Path) -eq (Format-Path "${Qualifier}\System Volume Information")){
+        elseif((Get-DriveWithFirstDir $Path) -eq (Format-LiteralPath "${Qualifier}\System Volume Information")){
             Write-VerboseLog "`$Path: $Path $("`n`t")has unsupported type $("`n`t")with `$Linktype:$Linktype and `$Attributes:$Attributes."
             return $null
         }
-        elseif((Get-DriveWithFirstDir $Path) -eq (Format-Path "${Qualifier}\`$Recycle.Bin")){
+        elseif((Get-DriveWithFirstDir $Path) -eq (Format-LiteralPath "${Qualifier}\`$Recycle.Bin")){
             Write-VerboseLog "`$Path: $Path $("`n`t")has unsupported type $("`n`t")with `$Linktype:$Linktype and `$Attributes:$Attributes."
             return $null
             
@@ -291,6 +188,110 @@ function Get-PathType{
     else{
         Write-VerboseLog "`$Path: $Path $("`n`t")has unsupported type $("`n`t")with `$Linktype:$Linktype and `$Attributes:$Attributes."
         return $null
+    }
+}
+
+
+function Reset-PathAttribute{
+<#
+.SYNOPSIS
+    Reset the attributes of a path to the original status, when the path is recognized in some
+    special path types that are defined in the function `Get-PathType`.
+
+.DESCRIPTION
+    Reset the attributes of $Path to the original status, when it is recognized in the following 8 types
+    (appended with corresponding standard attriibuts):
+    Directory:
+        X:\                             Hidden, System, Directory
+        X:\System Volume Information\   Hidden, System, Directory
+        X:\$Recycle.Bin\                Hidden, System, Directory
+        X:\*some_symbolic_link_dir\     Directory, ReparsePoint
+        X:\*some_junction\              Directory, ReparsePoint
+    File:
+        X:\*desktop.ini                 Hidden, System, Archive
+        X:\*some_symbolic_link_file     Archive, ReparsePoint
+        X:\*some_hardlink               Archive
+    Here the `X` represents any drive disk letter.
+
+    Other directories' attriibuts will not be reset.
+    Other files' attriibuts will not be reset.
+
+    See https://little-train.com/posts/7fdde8eb.html for more details.
+
+    Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
+        ReadOnly, Hidden, System, Directory, Archive, Device,
+        Normal, Temporary, SparseFile, ReparsePoint, Compressed,
+        Offline, NotContentIndexed, Encrypted, IntegrityStream, NoScrubData.
+    We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But
+    `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
+    So, to reset the attributes to standard status, we cannot directly give the
+    target attributes, but use a specific `$some_attributes`.
+
+    
+.COMPONENT
+    To get the attriibuts of $Path:
+        (Get-ItemProperty $Path).Attributes
+    To set the attriibuts of $Path:
+        Set-ItemProperty $Path -Name Attributes -Value $some_attributes
+
+.PARAMETER Path
+    The path to be checked to reset its attributes.
+
+.PARAMETER SkipFormat
+    Switch to disable automatic formatting of `$Path` by `Format-LiteralPath` at the beginning.
+    If true(given), the `$Path` will not be formatted by `Format-LiteralPath` at the beginning. 
+
+.PARAMETER SkipPlatformCheck
+    Switch to disable platform check at the beginning.
+    If true(given), the platform will not be checked at the beginning.
+#>
+    [CmdletBinding(SupportsShouldProcess)]
+    param(
+        [ValidateScript({Assert-IsInFileSystem $_})]
+        [string]$Path,
+        [switch]$SkipFormat,
+        [switch]$SkipPlatformCheck
+    )
+    try{
+        if (-not $SkipFormat){
+            $Path = Format-LiteralPath $Path
+        }
+        if (-not $SkipPlatformCheck){
+            Assert-IsWindows
+        }
+        
+        $Attributes = (Get-ItemProperty $Path).Attributes
+        $Linktype = (Get-ItemProperty $Path).LinkType
+        $Path = Format-LiteralPath $Path -SkipFormat
+        if($PSCmdlet.ShouldProcess("$Path",'reset the attributes')){
+            if (Test-IsDirectory $Path){
+                if ((Test-IsSystemVolumeInfo $Path -SkipFormat) -or (Test-IsRecycleBin $Path -SkipFormat)){
+                    Set-ItemProperty $Path -Name Attributes -Value "Hidden, System"
+                }elseif (Test-IsSymbolicOrJunction $Path){
+                    Set-ItemProperty $Path -Name Attributes -Value "Normal"
+                }
+                else{
+                    # $null
+                }
+            }
+            elseif(Test-IsFile $Path){
+                if ((Split-Path $Path -Leaf) -eq "desktop.ini"){
+                    Set-ItemProperty $Path -Name Attributes -Value "Hidden, System, Archive"
+                }elseif (Test-IsSymbolicOrJunction $Path){
+                    Set-ItemProperty $Path -Name Attributes -Value "Archive"
+                }
+                else{
+                    # $null
+                }
+            }
+            else{
+                throw "`$Path: $Path $("`n`t")has unsupported $("`n`t") path `$Attributes: $Attributes."
+            }
+        }
+    }
+    catch{
+        Write-VerboseLog  "Reset-PathAttribute Exception: $PSItem"
+        Write-VerboseLog  "Operation has been skipped."
     }
 }
 
@@ -333,13 +334,13 @@ function Get-DefaultSddl{
 
 .PARAMETER Path
     The path to be checked. 
-    For stability, ny default, this function will automatically format the path by `Format-Path` at the beginning.
-    For better performance in cascading calls, it is recommended to be formatted by `Format-Path` before input and
-    call this function by `Get-DefaultSddl -Path $Path -NoFormat`.
+    For stability, ny default, this function will automatically format the path by `Format-LiteralPath` at the beginning.
+    For better performance in cascading calls, it is recommended to be formatted by `Format-LiteralPath` before input and
+    call this function by `Get-DefaultSddl -Path $Path -SkipFormat`.
 
-.PARAMETER NoFormat
-    Switch to disable automatic formatting of `$Path` by `Format-Path` at the beginning.
-    If true(given), the `$Path` will not be formatted by `Format-Path` at the beginning. 
+.PARAMETER SkipFormat
+    Switch to disable automatic formatting of `$Path` by `Format-LiteralPath` at the beginning.
+    If true(given), the `$Path` will not be formatted by `Format-LiteralPath` at the beginning. 
 
 .OUTPUTS
     System.String if the `$PathType` from `$Path` is involved in the above mappings between `$PathType` and default SDDLs.
@@ -348,12 +349,12 @@ function Get-DefaultSddl{
     [CmdletBinding()]
     param(
         [string]$Path,
-        [switch]$NoFormat
+        [switch]$SkipFormat
     )
-    if (!($NoFormat)){
-        $Path = Format-Path $Path
+    if (-not $SkipFormat){
+        $Path = Format-LiteralPath $Path
     }
-    $PathType = Get-PathType -Path $Path -NoFormat
+    $PathType = Get-PathType -Path $Path -SkipFormat
     $UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value
     switch ($PathType) {
         "NonSystemDisk[NTFS]\Root"{
@@ -482,7 +483,7 @@ function Get-DefaultSddl{
 function Reset-Acl{
 <#
 .SYNOPSIS
-Reset ACL of `$Path` to its default state.
+Reset the ACL of a path to its default state.
 For more information on the motivation, rationale, logic, and use of this function, see https://little-train.com/posts/7fdde8eb.html
 
 .DESCRIPTION
@@ -580,12 +581,14 @@ All `SDDLs`s are from a origin installed native system, so we can ensure it is i
         [CmdletBinding(SupportsShouldProcess)]
         param(
             [string]$Path,
+            [switch]$SkipFormat,
             [switch]$Recurse
         )
         try{
-            # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
             Assert-IsWindows
-            $Path = Format-Path $Path
+            if (-not $SkipFormat){
+                $Path = Format-LiteralPath $Path
+            }
             Reset-PathAttribute $Path
             
             $NewAcl = Get-Acl -LiteralPath $Path
@@ -761,9 +764,8 @@ All `SDDLs`s are from a origin installed native system, so we can ensure it is i
         [switch]$Recurse
     )
     try{
-        # Import-Module "${PSScriptRoot}\PlatformTools.psm1" -Scope Local
         Assert-IsWindows
-        $Path = Format-Path $Path
+        $Path = Format-LiteralPath $Path
         Reset-PathAttribute $Path
         $PathType = Get-PathType $Path
         $UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value

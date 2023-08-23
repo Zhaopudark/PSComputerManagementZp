@@ -1,6 +1,6 @@
-Import-Module "${PSScriptRoot}\RegisterUtils.psm1" -Force -Scope Local
+. "${PSScriptRoot}\Config.ps1"
 
-foreach ($module in Get-ChildItem "${PSScriptRoot}\Core" -Filter *.psm1) {
+foreach ($module in Get-ChildItem "${PSScriptRoot}\Public" -Filter *.ps1) {
     Import-Module $module.FullName -Force -Scope Local
 }
 
