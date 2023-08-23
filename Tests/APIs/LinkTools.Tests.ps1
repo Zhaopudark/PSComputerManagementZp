@@ -28,7 +28,7 @@ BeforeAll {
 }
 
 Describe 'Link EnvTools' {
-    Context 'On Windows' -Skip:(!(Test-Platform 'Windows')){
+    Context 'On Windows' -Skip:(!$IsWindows){
         It 'Test Set-DirSymbolicLinkWithSync' {
             Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -Backuppath "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_symbolick_dir\dir1"
@@ -101,7 +101,7 @@ Describe 'Link EnvTools' {
             "$backup2" | Should -Exist
         }
     }
-    Context 'On non-Windows' -Skip:(Test-Platform 'Windows'){
+    Context 'On non-Windows' -Skip:$IsWindows{
         It 'Test Set-DirSymbolicLinkWithSync' {
             {Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -Backuppath "$test_path\backup" }| Should -Throw
         }
