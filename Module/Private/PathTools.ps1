@@ -27,33 +27,33 @@
         But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
 
 
-.Example
-    $path = [FormattedPath]::new('c:\uSeRs\test.txt') 
-        check $path.LiteralPath is 'C:\Users\test.txt'
-
     Some properties of the path are also provided:
-
-
-
-
-        1. LiteralPath: the path after formatting.
-        2. OriginalPlatform: the platform of the source path.
-        3. IsContainer: whether the path is a container.
-        4. IsInFileSystem: whether the path is in FileSystem.
-           IsDriveRoot: whether the path is the root of a drive.
-           DriveFormat: the format of the drive, such as NTFS, FAT32, ReFS etc.
-        5. IsDir: whether the path is a directory.
-        6. IsFile: whether the path is a file.
-        7. IsInSystemDrive: whether the path is or is in system drive.
-      
-        8. IsInHome: whether the path is or is in home directory.
-            IsHome: whether the path is just the home directory.
+        1. LiteralPath: The formatted path.
+        2. OriginalPlatform: The platform of the source path.
+        3. Attributes: The attributes of the path.
+        4. Linktype: The link type of the path.
+        5. LinkTarget: The link target of the path.
+        6. Qualifier: The qualifier of the path.
+        7. QualifierRoot: The root of the qualifier of the path.
+        8. IsContainer: If the path is a container.
+        9. IsInFileSystem: If the path is in file system.
+        10. DriveFormat: The format of the drive that contain the path.
+        11. IsDir: If the path is a directory.
+        12. IsFile: If the path is a file.
+        13. IsInSystemDrive: If the path is in system drive.
+        14. IsDriveRoot: If the path is a drive root.
+        15. IsInHome: If the path is in home directory.
+        16. IsHome: If the path is home directory.
         Windows-exclusive:
-            9. IsDesktopINI: whether the path is a desktop.ini file.
-            10. IsSystemVolumeInfo: whether the path is a System Volume Information directory.
-            11. IsRecycleBin: whether the path is a Recycle Bin directory.
+            17. IsDesktopINI: If the path is desktop.ini.
+            18. IsSystemVolumeInfo: If the path is System Volume Information.
+            19. IsInSystemVolumeInfo: If the path is in System Volume Information.
 
-
+        20. IsRecycleBin: If the path is Recycle Bin.
+        21. IsInRecycleBin: If the path is in Recycle Bin.
+        22. IsSymbolicLink: If the path is symbolic link.
+        23. IsJunction: If the path is junction.
+        24. IsHardLink: If the path is hard link.
 
 .COMPONENT
     Resolve-Path $some_path
