@@ -48,9 +48,9 @@ function Set-FileSymbolicLinkWithSync{
 function Set-DirJunctionWithSync{
 <#
 .DESCRIPTION
-    Set a directory junction from $Path to $Source.
+    Set a junction point from $Path to $Source.
     Then, we will get a result as $Path->$Target,
-    which means $Path is a junction to $Target.
+    which means $Path is a junction point to $Target.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -62,7 +62,7 @@ function Set-DirJunctionWithSync{
         [string]$Backuppath
     )
     Assert-IsWindowsAndAdmin
-    if ($PSCmdlet.ShouldProcess("Set a directory junction from $Path to $Source, as $Path->$Target",'','')){
+    if ($PSCmdlet.ShouldProcess("Set a junction point from $Path to $Source, as $Path->$Target",'','')){
         Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
         $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
         $link | Select-Object LinkType, FullName, Target

@@ -16,7 +16,9 @@ function Test-Platform{
     param(
         [Parameter(Mandatory)]
         [ValidateNotNullOrEmpty()]
-        [string]$Name
+        [string]$Name,
+        [switch]$Throw
+        
     )
     # if ($IsWindows){
     #     Write-Verbose "Windows"
@@ -35,31 +37,47 @@ function Test-Platform{
     # for more information about $IsWindows and $IsLinux
     if ($IsWindows){
         if ($Name.ToLower() -eq "windows"){
-            Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
-            return $true
+            $info = "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
+            $output = $true
         } else {
-            Write-Verbose  "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
-            return $false
+            $info = "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
+            $output = $false
         }
     } elseif ($IsLinux -and (Test-IsWSL2)){
         if ($Name.ToLower() -eq "wsl2"){
-            Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
-            return $true
+            $info = "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
+            $output = $true
         } else {
-            Write-Verbose  "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
-            return $false
+            $info =  "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
+            $output = $false
         }
     } elseif ($IsLinux -and(!(Test-IsWSL2))){
         if ($Name.ToLower() -eq "linux"){
-            Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
-            return $true
+            $info = "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
+            $output = $true
         } else {
-            Write-Verbose  "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
-            return $false
+            $info = "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
+            $output = $false
         }
     } else {
-        Write-Warning  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-        return $null
+        $info = "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        $output = $null
+    }
+
+    if ($output -eq $true){
+        Write-Verbose $info
+    }elseif ($null -eq $output) {
+        Write-Warning $info
+    }else {
+        <# Action when all if and elseif conditions are false #>
+        if($Throw){
+            throw $info
+        }else{
+            Write-Verbose $info
+        }
+    }
+    if(!$Throw){
+        return $output
     }
 }
 
@@ -67,15 +85,6 @@ function Test-Platform{
 function Test-IsWSL2{
     $output = bash -c "cat /proc/version 2>&1"
     return $output.Contains("WSL2")
-}
-function Assert-IsWindows{
-    param()
-    if (!($IsWindows)){
-        throw "The current platform should be Windows, $($PSVersionTable.Platform), is not Windows."
-    }
-    else {
-        return $true
-    }
 }
 function Assert-AdminPermission {
     [CmdletBinding()]
@@ -89,11 +98,12 @@ function Assert-AdminPermission {
         throw [System.UnauthorizedAccessException]::new("You must run in administrator privilege.")
     }else{
         Write-Verbose "Current process is in in AdminPermission."
-        return $true
+        # return $true
     }
 }
 function Assert-AdminRobocopyAvailable{
     [CmdletBinding()]
+    [OutputType([bool])]
     param()
     try {
         Robocopy > $null
@@ -102,16 +112,15 @@ function Assert-AdminRobocopyAvailable{
         Write-Verbose "Exception: $PSItem"
         throw "The robocopy command is not available, please install it first."
     }
-    Assert-IsWindows
+    Test-Platform -Name 'Windows' -Throw
     Assert-AdminPermission
-    return $true
 }
 
 function Assert-IsWindowsAndAdmin{
     [CmdletBinding()]
+    [OutputType([bool])]
     param()
-    Assert-IsWindows
+    Test-Platform -Name 'Windows' -Throw
     Assert-AdminPermission
-    return $true
 }
 

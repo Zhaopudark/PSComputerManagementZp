@@ -27,20 +27,31 @@
         But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
 
 
-    .Example
-        Format-LiteralPath -Path 'c:\uSeRs\test.txt'
-        -> C:\Users\test.txt
+.Example
+    $path = [FormattedPath]::new('c:\uSeRs\test.txt') 
+        check $path.LiteralPath is 'C:\Users\test.txt'
 
     Some properties of the path are also provided:
-        1. BasePath: the path after formatting.
-        2. IsContainer: whether the path is a directory.
-        3. IsFile: whether the path is a file.
-        4. IsInSystemDrive: whether the path is in system drive.
-        5. IsInHome: whether the path is in home directory.
+
+
+
+
+        1. LiteralPath: the path after formatting.
+        2. OriginalPlatform: the platform of the source path.
+        3. IsContainer: whether the path is a container.
+        4. IsInFileSystem: whether the path is in FileSystem.
+           IsDriveRoot: whether the path is the root of a drive.
+           DriveFormat: the format of the drive, such as NTFS, FAT32, ReFS etc.
+        5. IsDir: whether the path is a directory.
+        6. IsFile: whether the path is a file.
+        7. IsInSystemDrive: whether the path is or is in system drive.
+      
+        8. IsInHome: whether the path is or is in home directory.
+            IsHome: whether the path is just the home directory.
         Windows-exclusive:
-            6. IsDesktopINI: whether the path is a desktop.ini file.
-            7. IsSystemVolumeInfo: whether the path is a System Volume Information directory.
-            8. IsRecycleBin: whether the path is a Recycle Bin directory.
+            9. IsDesktopINI: whether the path is a desktop.ini file.
+            10. IsSystemVolumeInfo: whether the path is a System Volume Information directory.
+            11. IsRecycleBin: whether the path is a Recycle Bin directory.
 
 
 
@@ -62,15 +73,30 @@
 .OUTPUTS
     String
 #>  
-    [ValidateNotNullOrEmpty()][string] $BasePath
+    [ValidateNotNullOrEmpty()][string] $LiteralPath
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform 
-    [ValidateNotNullOrEmpty()][bool] $IsContainer = $false
-    [ValidateNotNullOrEmpty()][bool] $IsFile = $false
-    [ValidateNotNullOrEmpty()][bool] $IsInSystemDrive = $false
-    [ValidateNotNullOrEmpty()][bool] $IsInInHome = $false
-    [ValidateNotNullOrEmpty()][bool] $IsDesktopINI = $false
-    [ValidateNotNullOrEmpty()][bool] $IsSystemVolumeInfo = $false
-    [ValidateNotNullOrEmpty()][bool] $IsRecycleBin = $false
+    [ValidateNotNullOrEmpty()][string] $Attributes
+    [string] $Linktype
+    [string] $LinkTarget
+    [ValidateNotNullOrEmpty()][string] $Qualifier
+    [ValidateNotNullOrEmpty()][string] $QualifierRoot
+    [ValidateNotNullOrEmpty()][bool] $IsContainer = $null
+    [ValidateNotNullOrEmpty()][bool] $IsInFileSystem = $null
+    [string] $DriveFormat = $null
+    [ValidateNotNullOrEmpty()][bool] $IsDir = $null
+    [ValidateNotNullOrEmpty()][bool] $IsFile = $null
+    [ValidateNotNullOrEmpty()][bool] $IsInSystemDrive = $null
+    [ValidateNotNullOrEmpty()][bool] $IsDriveRoot = $null
+    [ValidateNotNullOrEmpty()][bool] $IsInHome = $null
+    [ValidateNotNullOrEmpty()][bool] $IsHome = $null
+    [ValidateNotNullOrEmpty()][bool] $IsDesktopINI = $null
+    [ValidateNotNullOrEmpty()][bool] $IsSystemVolumeInfo = $null
+    [ValidateNotNullOrEmpty()][bool] $IsInSystemVolumeInfo = $null
+    [ValidateNotNullOrEmpty()][bool] $IsRecycleBin = $null
+    [ValidateNotNullOrEmpty()][bool] $IsInRecycleBin = $null
+    [ValidateNotNullOrEmpty()][bool] $IsSymbolicLink = $null
+    [ValidateNotNullOrEmpty()][bool] $IsJunction = $null
+    [ValidateNotNullOrEmpty()][bool] $IsHardLink = $null
 
     FormattedPath([string] $Path) {
         
@@ -83,57 +109,135 @@
         }
 
         if(Test-Path -LiteralPath $Path){
-            $this.BasePath = $this.FormatLiteralPath($Path)
+            $this.LiteralPath = $this.FormatLiteralPath($Path)
         }
         else{
-            throw "Path does not exist: $Path"
+            throw (New-Object System.Management.Automation.ItemNotFoundException "Path '$path' not found.")
         }
-        if (Test-Path -LiteralPath $this.BasePath -PathType Container){
+
+        $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
+        $this.Linktype = (Get-ItemProperty $this.LiteralPath).Linktype
+        $this.LinkTarget = (Get-ItemProperty $this.LiteralPath).LinkTarget
+        $this.Qualifier = $this.GetQualifier($this.LiteralPath).Name
+        $this.QualifierRoot = $this.GetQualifier($this.LiteralPath).Root
+
+
+
+        if (Test-Path -LiteralPath $this.LiteralPath -PathType Container){
             $this.IsContainer = $true
-            $this.IsFile = $false
         }
         else {
             $this.IsContainer = $false
+        }
+
+        if ($this.LiteralPath -eq $this.QualifierRoot){
+            $this.IsDriveRoot = $true
+        }
+        else {
+            $this.IsDriveRoot = $false
+        }
+
+        if ($this.GetQualifier($Path).Provider.Name -eq 'FileSystem'){
+            $this.IsInFileSystem = $true
+            $this.DriveFormat = ([System.IO.DriveInfo]::GetDrives() | Where-Object {$_.RootDirectory.FullName -eq $this.QualifierRoot}).DriveFormat
+
+        }else{
+            $this.IsInFileSystem = $false   
+        }
+         
+
+        if ($this.IsInFileSystem -and $this.IsContainer){
+            $this.IsDir = $true
+            $this.IsFile = $false
+        }else{
+            $this.IsDir = $false
             $this.IsFile = $true
         }
 
-
         $home_path = $this.FormatLiteralPath([System.Environment]::GetFolderPath("UserProfile"))
 
-        if (($this.GetQualifier($this.BasePath)).Name -eq ($this.GetQualifier($home_path)).Name){
+        if ($this.Qualifier -eq $this.GetQualifier($home_path).Name){
             $this.IsInSystemDrive = $true
         }
         else {
             $this.IsInSystemDrive = $false
         }
-        if ($this.BasePath.StartsWith($home_path)){
-            $this.IsInInHome = $true
+        if ($this.LiteralPath.StartsWith($home_path)){
+            if ($this.LiteralPath.EndsWith($home_path)){
+                $this.IsHome = $true
+                $this.IsInHome = $false
+            }else{
+                $this.IsHome = $false
+                $this.IsInHome = $true
+            }
         }else{
-            $this.IsInInHome = $false
+            $this.IsHome = $false
+            $this.IsInHome = $false
         }
+        
 
         
         if ($this.OriginalPlatform -eq "Win32NT"){
-            if ($this.IsFile -and ((Split-Path $this.BasePath -Leaf) -eq "desktop.ini")){
+            if ($this.IsFile -and ((Split-Path $this.LiteralPath -Leaf) -eq "desktop.ini")){
                 $this.IsDesktopINI = $true
             }
             else {
                 $this.IsDesktopINI = $false
             }
-            if ($this.BasePath -eq $this.FormatLiteralPath("$($this.GetQualifier($this.BasePath).Root)System Volume Information")){
-                $this.IsSystemVolumeInfo = $true
-            }
-            else {
+            $system_volume_information_path = $this.FormatLiteralPath("$($this.QualifierRoot)System Volume Information")
+            if ($this.LiteralPath.StartsWith($system_volume_information_path)){
+                if ($this.LiteralPath.EndsWith($system_volume_information_path)){
+                    $this.IsSystemVolumeInfo = $true
+                    $this.IsInSystemVolumeInfo = $false
+                }else{
+                    $this.IsSystemVolumeInfo = $false
+                    $this.IsInSystemVolumeInfo = $true
+                }
+            }else{
                 $this.IsSystemVolumeInfo = $false
+                $this.IsInSystemVolumeInfo = $false
             }
-    
-            if ($this.BasePath -eq $this.FormatLiteralPath("$($this.GetQualifier($this.BasePath).Root)`$RECYCLE.BIN")){
-                $this.IsSystemVolumeInfo = $true
+            
+            
+            $recycle_bin_path = $this.FormatLiteralPath("$($this.QualifierRoot)`$RECYCLE.BIN")
+            if ($this.LiteralPath.StartsWith($recycle_bin_path)){
+                if ($this.LiteralPath.EndsWith($recycle_bin_path)){
+                    $this.IsRecycleBin = $true
+                    $this.IsInRecycleBin = $false
+                }else{
+                    $this.IsRecycleBin = $false
+                    $this.IsInRecycleBin = $true
+                }
+            }else{
+                $this.IsRecycleBin = $false
+                $this.IsInRecycleBin = $false
             }
-            else {
-                $this.IsSystemVolumeInfo = $false
+        } 
+        if ([bool]($this.Attributes -band [System.IO.FileAttributes]::ReparsePoint)){
+            if ($this.Linktype -eq 'SymbolicLink'){
+                $this.IsSymbolicLink = $true
+                $this.IsJunction = $false
+                $this.IsHardLink = $false
             }
-        }  
+            elseif ($this.Linktype -eq 'Junction'){
+                $this.IsSymbolicLink = $false
+                $this.IsJunction = $true
+                $this.IsHardLink = $false
+            }
+            else{
+                $this.IsSymbolicLink = $false
+                $this.IsJunction = $false
+                $this.IsHardLink = $false
+            }
+        }elseif($this.Linktype -eq 'HardLink'){
+            $this.IsSymbolicLink = $false
+            $this.IsJunction = $false
+            $this.IsHardLink = $true
+        }else{
+            $this.IsSymbolicLink = $false
+            $this.IsJunction = $false
+            $this.IsHardLink = $false
+        }
         
     }
 
@@ -159,24 +263,21 @@
     [System.Management.Automation.PSDriveInfo] GetQualifier([string]$LiteralPath){
         return (Get-ItemProperty -LiteralPath $LiteralPath -ErrorAction Stop).PSDrive
     }
-    [string] GetDriveWithFirstDir(){
+    # [string] GetQualifierWithFirstDir(){
 
-        $splited_paths = $this.BasePath -split '\\'
-        if ($splited_paths.Count -gt 1) { $max_index = 1 } else { $max_index = 0 }
-        return $this.FormatLiteralPath($splited_paths[0..$max_index] -join '\\')
-    }
+    #     $splited_paths = $this.LiteralPath -split '\\'
+    #     if ($splited_paths.Count -gt 1) { $max_index = 1 } else { $max_index = 0 }
+    #     return $this.FormatLiteralPath($splited_paths[0..$max_index] -join '\\')
+    # }
     [string] ToString() { # like __repr__ in python
-        return $this.BasePath
+        return $this.LiteralPath
     }
+    [string] ToShortName() {
 
+        return ($this.LiteralPath -replace '[\\/:]+', '-').Trim('-')
+    }
 }
 
-
-
-function Get-FormattedPath{
-    param()
-    return [FormattedPath]
-}
 
 
 function Format-LiteralPath{
@@ -236,285 +337,4 @@ function Format-LiteralPath{
         $output += $item.FullName
     }
     return $output
-}
-
-
-
-
-
-
-
-function Format-Path{
-<#
-.DESCRIPTION
-    Format existed windows path(s) to standard format:
-        1. Should be existed.
-        2. Resolved to a full path.
-        3. Drive letter will be capitalized.
-        4. Maintain original case in a case-sensitive way, even though windows is not case-sensitive.
-        5. Directory paths will be appended with `\`.
-
-.Example
-    Format-Path -Path 'c:\uSeRs'
-    -> C:\Users\
-
-.Example
-    Format-Path -Path 'c:'
-    -> C:\
-
-.Example
-    Format-Path -Path 'c:\uSeRs\test.txt'
-    -> C:\Users\test.txt
-
-.COMPONENT
-    Resolve-Path $some_path
-    (Get-ItemProperty $some_path).FullName
-    Test-Path -LiteralPath $Path -PathType Container
-    Join-Path $some_path ''
-
-.NOTES
-    To support wildcard characters, we use `Resolve-Path` to realize
-        points `1,2,3` in the above description.
-    To realize point `4`, we use `Get-ItemProperty` to get path-object's `FullName`.
-    To realize point `5`, we use `Test-Path -LiteralPath $Path -PathType Container` to check if it is a directory, and use `join-Path $item ''` to append `\` to a directory path.
-
-.INPUTS
-    String or string with wildcard characters to represent (a) exited path(s).
-
-.OUTPUTS
-    String or String[]
-#>  param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-    if ($Path -match ":$") {
-        $Path = $Path + "\"
-    }
-    $resolvedPath = Resolve-Path -Path $Path
-    $output = @()
-    foreach ($item in $resolvedPath){
-
-        $item = Get-ItemProperty -LiteralPath $item
-
-        if (Test-Path -LiteralPath $item -PathType Container){
-            $output += (join-Path $item '')
-        }
-        else{
-            $output += $item.FullName
-        }
-    }
-    return $output
-}
-
-
-function Get-Qualifier{
-    [OutputType([System.Management.Automation.PSDriveInfo])]
-    param(
-        [string]$LiteralPath
-    )
-    return (Get-ItemProperty -LiteralPath $LiteralPath -ErrorAction Stop).PSDrive
-}
-
-# *******************************************************************************#
-# Tests
-
-function Test-IsSymbolicOrJunction{
-    <#
-    .DESCRIPTION
-        Test if a path is a Symbolic link Junction point.
-    
-        There are more than 2 types of reparse points, and if one care about symbolic link and junction point,
-        the following commands can be used:
-            [bool]((Get-ItemProperty -LiteralPath $LiteralPath).Attributes -band [System.IO.FileAttributes]::ReparsePoint) -and
-            ((Get-ItemProperty -LiteralPath $LiteralPath).LinkType -in @('SymbolicLink','Junction'))
-    #>
-    param(
-        [string]$LiteralPath
-    )
-    return [bool]((Get-ItemProperty -LiteralPath $LiteralPath).Attributes -band [System.IO.FileAttributes]::ReparsePoint) -and
-            ((Get-ItemProperty -LiteralPath $LiteralPath).LinkType -in @('SymbolicLink','Junction'))              
-}
-
-
-
-
-function Test-IsDirectory{
-    param(
-        [string]$Path
-    )
-    if (Test-Path -LiteralPath $Path) {
-        if (Test-Path -LiteralPath $Path -PathType Container) {
-            return $true
-        } else {
-            return $false
-        }
-    } else {
-        throw "The $Path should be existing!"
-    }
-}
-
-function Test-IsFile{
-    param(
-        [string]$Path
-    )
-    if (Test-Path -LiteralPath $Path) {
-        if (Test-Path -LiteralPath $Path -PathType Leaf){
-            return $true
-        } else {
-            return $false
-        }
-    } else {
-        throw "The $Path should be existing!"
-    }
-}
-
-function Test-IsDesktopINI{
-    param(
-        [string]$Path
-    )
-    if (Test-Path -LiteralPath $Path) {
-        if (Test-Path -LiteralPath $Path -PathType Leaf){
-            return (Split-Path $Path -Leaf) -eq "desktop.ini"
-            # return $true
-        } else {
-            return $false
-        }
-    } else {
-        throw "The $Path should be existing!"
-    }
-}
-
-
-
-function Test-IsInSystemDrive{
-    param(
-        [string]$Path
-    )
-
-    if ((Get-Qualifier $Path).Name -eq (Get-Qualifier ${Home}).Name){
-        return $true
-    }
-    else{
-        Write-Verbose "The $Path in not System FileSystem as ${Home}."
-        return $false
-    }
-}
-
-function Test-IsInInHome{
-    [CmdletBinding()]
-    param(
-        [string]$Path,
-        [switch]$SkipFormat
-    )
-    if (-not $SkipFormat) {
-        $Path = Format-LiteralPath $Path
-    }
-    $home_path = Format-LiteralPath ([System.Environment]::GetFolderPath("UserProfile"))
-    
-    if ($Path.StartsWith($home_path)) {
-        Write-Verbose "The test path is in the user's home directory."
-        return $true
-    } else {
-        Write-Verbose "The test path is not in the user's home directory."
-        return $false
-    }
-}
-
-function Test-IsSystemVolumeInfo{
-    [CmdletBinding()]
-    param(
-        [string]$Path,
-        [switch]$SkipFormat
-    )
-    if (-not $SkipFormat) {
-        $Path = Format-LiteralPath $Path
-    }
-    return ($Path -eq (Format-LiteralPath "$((Get-Qualifier $Path).Root)System Volume Information"))
-}
-function Test-IsRecycleBin{
-    [CmdletBinding()]
-    param(
-        [string]$Path,
-        [switch]$SkipFormat
-    )
-    if (-not $SkipFormat) {
-        $Path = Format-LiteralPath $Path
-    }
-    return ($Path -eq (Format-LiteralPath "$((Get-Qualifier $Path).Root)`$RECYCLE.BIN"))
-}
-
-
-
-# *******************************************************************************#
-# Validations (Assertions) 
-# Can be used directly or as a validation function in `ValidateScript`.
-
-function Assert-NotSymbolicOrJunction{
-    param(
-        [string]$Path
-    )
-    if (Test-IsSymbolicOrJunction $Path){
-        throw "The $Path should not be a Symbolic link or Junction point!"
-    }
-    else{
-        return $true 
-    }
-}
-
-function Assert-IsDirectory{
-    param(
-        [string]$Path
-    )
-    if (Test-Path -LiteralPath $Path) {
-        if (Test-Path -LiteralPath $Path -PathType Container) {
-            return $true
-        } else {
-            return "The $Path should be a directory!"
-        }
-    } else {
-        throw "The $Path should be existing!"
-    }
-}
-
-function Assert-IsFile{
-    param(
-        [string]$Path
-    )
-    if (Test-Path -LiteralPath $Path) {
-        if (Test-Path -LiteralPath $Path -PathType Leaf){
-            return $true
-        } else {
-            throw "The $Path should be a file!"
-        }
-    } else {
-        throw "The $Path should be existing!"
-    }
-}
-
-function Assert-IsInFileSystem{
-    param(
-        [string]$Path
-    )
-   
-    if ((Get-Qualifier $Path).Provider.Name -eq 'FileSystem'){
-        return $true
-    }
-    else{
-        throw "The $Path should be in FileSystem, such as C:, D:, X:, instead of this or other PSProviders."
-    }
-}
-
-
-
-function Get-DriveWithFirstDir{
-    param(
-        [string]$Path,
-        [switch]$SkipFormat
-    )
-    if (-not $SkipFormat) {
-        $Path = Format-LiteralPath $Path
-    }
-    $splited_paths = $Path -split '\\'
-    if ($splited_paths.Count -gt 1) { $max_index = 1 } else { $max_index = 0 }
-    return Format-LiteralPath ($splited_paths[0..$max_index] -join '\\')
 }

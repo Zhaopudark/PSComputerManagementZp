@@ -5,7 +5,7 @@ $sb = {
         $IsxWsl2)
 
     Describe 'Test PathTools' {
-    Context 'Test Format-LiteralPath' {
+    Context 'Test FormattedPath' {
         It 'Test on Windows dir' -Skip:(!$IsxWIndows){
             $path = [FormattedPath]::new("${test_path}\tEsT_diR")
             $path | Should -BeExactly "$([FormattedPath]::new($test_path))test_dir\"

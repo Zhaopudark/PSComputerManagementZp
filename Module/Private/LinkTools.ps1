@@ -1,21 +1,26 @@
-function Test-EnvPathLevelArg{
+function Assert-ValidPath4LinkTools{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [string]$Level
+        [FormattedPath]$Path,
+        [switch]$File
     )
-    if ($Level -notin @('User','Process','Machine')){
-        throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
-    }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
-        return Assert-AdminPermission
-    }else{
-        if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
-            -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
-            Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+    if($File){
+        if(!$Path.IsFile){
+            throw "The $Path should be a file."
         }
-        return $true
+    }else{
+        if(!$Path.IsDir){
+            throw "The $Path should be a directory."
+        }
     }
+
+    if($Path.IsSymbolicLink -or $Path.IsJunction){
+        throw "The $Path should not be a symbolic link or junction point."
+    }
+    return $true
 }
+
 
 function Merge-DirectoryWithBackup{
 <#
@@ -28,19 +33,20 @@ function Merge-DirectoryWithBackup{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotSymbolicOrJunction $_})]
-        [string]$Source,
+        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [FormattedPath]$Source,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotSymbolicOrJunction $_})]
-        [string]$Destination,
+        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [FormattedPath]$Destination,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotSymbolicOrJunction $_})]
-        [string]$Backuppath
+        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [FormattedPath]$Backuppath
     )
+
     $guid = [guid]::NewGuid()
-    $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $source_name = $Source.ToShortName()
     $backup_source = "$Backuppath/$guid-$source_name"
-    $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $destination_name = $Destination.ToShortName()
     $backup_destination = "$Backuppath/$guid-$destination_name"
     $log_file = Get-LogFileName "Robocopy Merge-DirectoryWithBackup"
     if($PSCmdlet.ShouldProcess(
@@ -67,19 +73,19 @@ function Move-FileWithBackup{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-IsFile $_ -and Assert-NotSymbolicOrJunction $_})]
-        [string]$Source,
+        [ValidateScript({Assert-ValidPath4LinkTools $_ -File})]
+        [FormattedPath]$Source,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-IsFile $_ -and Assert-NotSymbolicOrJunction $_})]
-        [string]$Destination,
+        [ValidateScript({Assert-ValidPath4LinkTools $_ -File})]
+        [FormattedPath]$Destination,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-IsDirectory $_ -and Assert-NotSymbolicOrJunction $_})]
-        [string]$Backuppath
+        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [FormattedPath]$Backuppath
     )
     $guid = [guid]::NewGuid()
-    $source_name = $Source -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $source_name = $Source.ToShortName()
     $backup_source = "$Backuppath/$guid-$source_name"
-    $destination_name = $Destination -replace ':', '-' -replace '\\', '-' -replace '/', '-' -replace '--','-' -replace '--','-'
+    $destination_name = $Destination.ToShortName()
     $backup_destination = "$Backuppath/$guid-$destination_name"
     $log_file = Get-LogFileName
     if($PSCmdlet.ShouldProcess(
@@ -102,15 +108,15 @@ function Merge-BeforeSetDirLink{
 
     Merge form $Target1 to $Target2 by the following rules:
         $Target1------------------------| $Target2----------------------| Opeartion
-        non-existent                    | non-existent                  | New-item $Target2 -Itemtype Directory
-        non-existent                    | dir-symbolic-or-junction      | throw error
-        non-existent                    | dir-not-symbolic-or-junction  | pass(do nothing)
-        dir-symbolic-or-junction        | non-existent                  | throw error
-        dir-symbolic-or-junction        | dir-symbolic-or-junction      | throw error
-        dir-symbolic-or-junction        | dir-not-symbolic-or-junction  | del $Target1
-        dir-not-symbolic-or-junction    | non-existent                  | copy $Target1 to $Target2, del $Target1
-        dir-not-symbolic-or-junction    | dir-symbolic-or-junction      | throw error
-        dir-not-symbolic-or-junction    | dir-not-symbolic-or-junction  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
+        non-existent                    | non-existent                  | pass(do nothing)
+        non-existent                    | dir-symbolic-or-hardlink      | throw error
+        non-existent                    | dir-not-symbolic-or-hardlink  | pass(do nothing)
+        dir-symbolic-or-hardlink        | non-existent                  | throw error
+        dir-symbolic-or-hardlink        | dir-symbolic-or-hardlink      | throw error
+        dir-symbolic-or-hardlink        | dir-not-symbolic-or-hardlink  | del $Target1
+        dir-not-symbolic-or-hardlink    | non-existent                  | copy $Target1 to $Target2, del $Target1
+        dir-not-symbolic-or-hardlink    | dir-symbolic-or-hardlink      | throw error
+        dir-not-symbolic-or-hardlink    | dir-not-symbolic-or-hardlink  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -119,58 +125,90 @@ function Merge-BeforeSetDirLink{
         [Parameter(Mandatory)]
         [string]$Target2,
         [Parameter(Mandatory)]
-        [string]$Backuppath
+        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [FormattedPath]$Backuppath
     )
-    if($PSCmdlet.ShouldProcess("Merge the content in $Target1 to $Target2, and backup essential items in $Backuppath",'','')){
-        if (Test-Path -LiteralPath $Target1){
-            if (Test-IsSymbolicOrJunction $Target1){
-                if (Test-Path -LiteralPath $Target2){
-                    if (Test-IsSymbolicOrJunction $Target2){
-                        # dir-symbolic-or-junction        | dir-symbolic-or-junction      | throw error
-                        throw "Cannot merge $Target1 to $Target2, because $Target1 and $Target2 are both symbolic link or junction point."
+    try {
+        $_target1 = [FormattedPath]::new($Target1)
+        $_target1_exist = $true
+    }
+    catch [System.Management.Automation.ItemNotFoundException]{
+        $_target1_exist = $false
+    }
+    catch {
+        Write-VerboseLog  "Exception caught: $_"
+    }
+    if ($_target1_exist){
+        if (!$_target1.IsDir){
+            throw "The $_target1 should be a directory"
+        }
+    }
+
+    try {
+        $_target2 = [FormattedPath]::new($Target2)
+        $_target2_exist = $true
+    }
+    catch [System.Management.Automation.ItemNotFoundException]{
+        $_target2_exist = $false
+    }
+    catch {
+        Write-VerboseLog  "Exception caught: $_"
+    }
+    if ($_target2_exist){
+        if (!$_target2.IsDir){
+            throw "The $_target2 should be a directory."
+        }
+    }
+
+    if($PSCmdlet.ShouldProcess("Merge the content in $_target1 to $_target2, and backup essential items in $Backuppath",'','')){
+        if ($_target1_exist){
+            if ($_target1.IsSymbolicLink -or $_target1.IsJunction){
+                if ($_target2_exist){
+                    if ($_target2.IsSymbolicLink -or $_target2.IsJunction){
+                        # dir-symbolic-or-hardlink        | dir-symbolic-or-hardlink      | throw error
+                        throw "Cannot merge $_target1 to $_target2, because $_target1 and $_target2 are both symbolic link or junction point."
                     }else{
-                        # dir-symbolic-or-junction        | dir-not-symbolic-or-junction  | del $Target1
-                        Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
-                        Remove-Item $Target1 -Force -Recurse
+                        # dir-symbolic-or-hardlink        | dir-not-symbolic-or-hardlink  | del $Target1
+                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
-                    # dir-symbolic-or-junction        | non-existent          | throw error
-                    throw "Cannot merge $Target1 to $Target2, because $Target2 does not exist."
+                    # dir-symbolic-or-hardlink        | non-existent          | throw error
+                    throw "Cannot merge $_target1 to $_target2, because $_target2 does not exist."
                 }
             }else{
-                if (Test-Path -LiteralPath $Target2){
-                    if (Test-IsSymbolicOrJunction $Target2){
-                        # dir-not-symbolic-or-junction    | dir-symbolic-or-junction      | throw error
-                        throw "Cannot merge $Target1 to $Target2, because $Target1 is not symbolic link or junction point, but $Target2 is."
+                if ($_target2_exist){
+                    if ($_target2.IsSymbolicLink -or $_target2.IsJunction){
+                        # dir-not-symbolic-or-hardlink    | dir-symbolic-or-hardlink      | throw error
+                        throw "Cannot merge $_target1 to $_target2, because $_target1 is not symbolic link or junction point, but $_target2 is."
                     }else{
-                        #dir-not-symbolic-or-junction    | dir-not-symbolic-or-junction  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
-                        Merge-DirectoryWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                        Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
-                        Remove-Item $Target1 -Force -Recurse
+                        #dir-not-symbolic-or-hardlink    | dir-not-symbolic-or-hardlink  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
+                        Merge-DirectoryWithBackup -Source $_target1 -Destination $_target2 -Backuppath $Backuppath
+                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
                     Assert-AdminRobocopyAvailable
-                    # dir-not-symbolic-or-junction    | non-existent          | copy $Target1 to $Target2, del $Target1
-                    Write-VerboseLog  "Robocopy $Target1 $Target2"
+                    # dir-not-symbolic-or-hardlink    | non-existent          | copy $Target1 to $Target2, del $Target1
+                    Write-VerboseLog  "Robocopy $_target1 $_target2"
                     $log_file = Get-LogFileName "Robocopy Merge-BeforeSetDirLink"
-                    Robocopy $Target1 $Target2  /E /copyall /DCOPY:DATE /LOG:"$log_file"
-                    Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
-                    Remove-Item $Target1 -Force -Recurse
+                    Robocopy $_target1 $_target2  /E /copyall /DCOPY:DATE /LOG:"$log_file"
+                    Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                    Remove-Item $_target1 -Force -Recurse
                 }
             }
         }else{
-            if (Test-Path -LiteralPath $Target2){
-                if (Test-IsSymbolicOrJunction $Target2){
-                    # non-existent            | dir-symbolic-or-junction      | throw error
-                    throw "Cannot merge $Target1 to $Target2, because $Target1 does not exist and $Target2 is symbolic link or junction point."
+            if ($_target2_exist){
+                if ($_target2.IsSymbolicLink -or $_target2.IsJunction){
+                    # non-existent            | dir-symbolic-or-hardlink      | throw error
+                    throw "Cannot merge $_target1 to $_target2, because $_target1 does not exist and $_target2 is symbolic link or junction point."
                 }else{
-                    # non-existent            | dir-not-symbolic-or-junction  | pass(do nothing)
+                    # non-existent            | dir-not-symbolic-or-hardlink  | pass(do nothing)
                     Write-VerboseLog  "Do nothing."
                 }
             }else{
-                # non-existent            | non-existent          | New-item $Target2 -Itemtype Directory
-                Write-VerboseLog  "New-Item $Target2 -ItemType Directory"
-                New-Item $Target2 -ItemType Directory
+                # non-existent            | non-existent          | pass(do nothing)
+                Write-VerboseLog  "Do nothing."
             }
         }
     }
@@ -184,15 +222,15 @@ function Move-BeforeSetFileLink{
 
     Move the file $Target1 to $Target2 by the following rules:
         $Target1------------------------| $Target2----------------------| Opeartion
-        non-existent                    | non-existent                  | New-item $Target2 -Itemtype File
-        non-existent                    | file-symbolic-or-junction     | throw error
-        non-existent                    | file-non-symbolic-or-junction | pass(do nothing)
-        file-symbolic-or-junction       | non-existent                  | throw error
-        file-symbolic-or-junction       | file-symbolic-or-junction     | throw error
-        file-symbolic-or-junction       | file-non-symbolic-or-junction | del $Target1
-        file-non-symbolic-or-junction   | non-existent                  | copy $Target1 to $Target2, del $Target1
-        file-non-symbolic-or-junction   | file-symbolic-or-junction     | throw error
-        file-non-symbolic-or-junction   | file-non-symbolic-or-junction | backup $Target1 and $Target2 to $Backuppath, then del $Target1
+        non-existent                    | non-existent                  | pass(do nothing) 
+        non-existent                    | file-symbolic-or-hardlink     | throw error
+        non-existent                    | file-non-symbolic-or-hardlink | pass(do nothing)
+        file-symbolic-or-hardlink       | non-existent                  | throw error
+        file-symbolic-or-hardlink       | file-symbolic-or-hardlink     | throw error
+        file-symbolic-or-hardlink       | file-non-symbolic-or-hardlink | del $Target1
+        file-non-symbolic-or-hardlink   | non-existent                  | copy $Target1 to $Target2, del $Target1
+        file-non-symbolic-or-hardlink   | file-symbolic-or-hardlink     | throw error
+        file-non-symbolic-or-hardlink   | file-non-symbolic-or-hardlink | backup $Target1 and $Target2 to $Backuppath, then del $Target1
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -201,58 +239,93 @@ function Move-BeforeSetFileLink{
         [Parameter(Mandatory)]
         [string]$Target2,
         [Parameter(Mandatory)]
-        [string]$Backuppath
+        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [FormattedPath]$Backuppath
     )
-    if($PSCmdlet.ShouldProcess("Move the content in $Target1 to $Target2, and backup essential items in $Backuppath",'','')){
-        if (Test-Path -LiteralPath $Target1){
-            if (Test-IsSymbolicOrJunction $Target1){
-                if (Test-Path -LiteralPath $Target2){
-                    if (Test-IsSymbolicOrJunction $Target2){
-                        # file-symbolic-or-junction       | file-symbolic-or-junction     | throw error
-                        throw "Cannot move $Target1 to $Target2, because $Target1 and $Target2 are both symbolic link or junction point."
+
+    try {
+        $_target1 = [FormattedPath]::new($Target1)
+        $_target1_exist = $true
+    }
+    catch [System.Management.Automation.ItemNotFoundException]{
+        $_target1_exist = $false
+    }
+    catch {
+        Write-VerboseLog  "Exception caught: $_"
+    }
+    if ($_target1_exist){
+        if (!$_target1.IsFile){
+            throw "The $_target1 should be a file."
+        }
+    }
+    
+    try {
+        $_target2 = [FormattedPath]::new($Target2)
+        $_target2_exist = $true
+    }
+    catch [System.Management.Automation.ItemNotFoundException]{
+        $_target2_exist = $false
+    }
+    catch {
+        Write-VerboseLog  "Exception caught: $_"
+    }
+    if ($_target2_exist){
+        if (!$_target2.IsFile){
+            throw "The $_target2 should be a file."
+        }
+    }
+
+
+
+    if($PSCmdlet.ShouldProcess("Move the content in $_target1 to $_target2, and backup essential items in $Backuppath",'','')){
+        if ($_target1_exist){
+            if ($_target1.IsSymbolicLink -or $_target1.IsHardLink){
+                if ($_target2_exist){
+                    if ($_target2.IsSymbolicLink -or $_target2.IsHardLink){
+                        # file-symbolic-or-hardlink       | file-symbolic-or-hardlink     | throw error
+                        throw "Cannot move $_target1 to $_target2, because $_target1 and $_target2 are both symbolic link or hard link."
                     }else{
-                        # file-symbolic-or-junction       | file-non-symbolic-or-junction | del $Target1
-                        Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
-                        Remove-Item $Target1 -Force -Recurse
+                        # file-symbolic-or-hardlink       | file-non-symbolic-or-hardlink | del $Target1
+                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
-                    # file-symbolic-or-junction       | non-existent          | throw error
-                    throw "Cannot move $Target1 to $Target2, because $Target1 is symbolic link or junction point while $Target2 does not exist."
+                    # file-symbolic-or-hardlink       | non-existent          | throw error
+                    throw "Cannot move $_target1 to $_target2, because $_target1 is symbolic link or hard link while $_target2 does not exist."
                 }
             }else{
-                if (Test-Path -LiteralPath $Target2){
-                    if (Test-IsSymbolicOrJunction $Target2){
-                        # file-non-symbolic-or-junction   | file-symbolic-or-junction     | throw error
-                        throw "Cannot move $Target1 to $Target2, because $Target1 is not symbolic link or junction point while $Target2 is."
+                if ($_target2_exist){
+                    if ($_target2.IsSymbolicLink -or $_target2.IsHardLink){
+                        # file-non-symbolic-or-hardlink   | file-symbolic-or-hardlink     | throw error
+                        throw "Cannot move $_target1 to $_target2, because $_target1 is not symbolic link or hard link while $_target2 is."
                     }else{
-                        # file-non-symbolic-or-junction   | file-non-symbolic-or-junction | backup $Target1 and $Target2 to $Backuppath, then del $Target1
-                        Move-FileWithBackup -Source $Target1 -Destination $Target2 -Backuppath $Backuppath
-                        Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
-                        Remove-Item $Target1 -Force -Recurse
+                        # file-non-symbolic-or-hardlink   | file-non-symbolic-or-hardlink | backup $Target1 and $Target2 to $Backuppath, then del $Target1
+                        Move-FileWithBackup -Source $_target1 -Destination $_target2 -Backuppath $Backuppath
+                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
                     Assert-AdminRobocopyAvailable
-                    # file-non-symbolic-or-junction   | non-existent          | copy $Target1 to $Target2, del $Target1
-                    Write-VerboseLog  "Robocopy $Target1 $Target2"
+                    # file-non-symbolic-or-hardlink   | non-existent          | copy $Target1 to $Target2, del $Target1
+                    Write-VerboseLog  "Robocopy $_target1 $_target2"
                     $log_file = Get-LogFileName "Robocopy Move-BeforeSetFileLink"
-                    Robocopy $Target1 $Target2  /copyall /DCOPY:DATE /LOG:"$log_file"
-                    Write-VerboseLog  "Remove-Item $Target1 -Force -Recurse"
-                    Remove-Item $Target1 -Force -Recurse
+                    Robocopy $_target1 $_target2  /copyall /DCOPY:DATE /LOG:"$log_file"
+                    Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                    Remove-Item $_target1 -Force -Recurse
                 }
             }
         }else{
-            if (Test-Path -LiteralPath $Target2){
-                if (Test-IsSymbolicOrJunction $Target2){
-                    # non-existent            | file-symbolic-or-junction     | throw error
-                    throw "Cannot move $Target1 to $Target2, because $Target1 does not exist and $Target2 is symbolic link or junction point."
+            if ($_target2_exist){
+                if ($_target2.IsSymbolicLink -or $_target2.IsHardLink){
+                    # non-existent            | file-symbolic-or-hardlink     | throw error
+                    throw "Cannot move $_target1 to $_target2, because $_target1 does not exist and $_target2 is symbolic link or hard link."
                 }else{
-                    # non-existent            | file-non-symbolic-or-junction | pass(do nothing)
+                    # non-existent            | file-non-symbolic-or-hardlink | pass(do nothing)
                     Write-VerboseLog  "Do nothing."
                 }
             }else{
-                # non-existent            | non-existent          | New-item $Target2 -ItemType File
-                Write-VerboseLog  "New-Item $Target2 -ItemType File"
-                New-Item $Target2 -ItemType File
+                # non-existent            | non-existent          | pass(do nothing)
+                Write-VerboseLog  "Do nothing."
             }
         }
     }

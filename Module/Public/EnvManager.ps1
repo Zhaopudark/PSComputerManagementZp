@@ -3,7 +3,7 @@ function Get-EnvPathAsSplit{
     [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level
     )
     if (Test-Platform 'Windows'){
@@ -29,7 +29,7 @@ See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/ever
     param(
         [string[]]$Paths,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level
     )
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","cover `{$Paths}` ")){
@@ -66,7 +66,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param()
-    Assert-AdminPermission
+    Assert-IsWindowsAndAdmin
 
     $user_env_paths = Get-EnvPathAsSplit -Level 'User'
     $machine_env_paths = Get-EnvPathAsSplit -Level 'Machine'
@@ -101,7 +101,7 @@ function Add-EnvPathToCurrentProcess{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [string]$Path
+        [FormattedPath]$Path
     )
     Format-EnvPath -Level 'Process'
 
@@ -109,8 +109,7 @@ function Add-EnvPathToCurrentProcess{
     $env_paths = Get-EnvPathAsSplit -Level 'Process'
 
     if (Test-EnvPathExist -Level 'Process' -Path $Path){
-        # $Path = Format-LiteralPath $Path
-        $Path = [FormattedPath]::new($Path)
+
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths ){
             Write-EnvModificationLog -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
@@ -140,7 +139,7 @@ function Remove-EnvPathByPattern{
         [Parameter(Mandatory)]
         [string]$Pattern,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level
     )
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","remove items matched pattern `{$Pattern}` ")){
@@ -176,7 +175,7 @@ function Remove-EnvPathByTargetPath{
         [Parameter(Mandatory)]
         [string]$TargetPath,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level
     )
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","remove target `{$TargetPath}` ")){
@@ -185,7 +184,7 @@ function Remove-EnvPathByTargetPath{
         $out_buf = @()
         $counter = 0
         if (Test-EnvPathExist -Level $Level -Path $TargetPath){
-            # $TargetPath = Format-LiteralPath $TargetPath
+
             $TargetPath = [FormattedPath]::new($TargetPath)
             foreach ($item in $env_paths)
             {

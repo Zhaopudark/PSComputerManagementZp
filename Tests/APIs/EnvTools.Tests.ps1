@@ -1,113 +1,25 @@
 BeforeAll {
-    class FormattedxPath {
-    
-        [ValidateNotNullOrEmpty()][string] $BasePath
-        [ValidateNotNullOrEmpty()][string] $OriginalPlatform 
-        [ValidateNotNullOrEmpty()][bool] $IsContainer = $false
-        [ValidateNotNullOrEmpty()][bool] $IsFile = $false
-        [ValidateNotNullOrEmpty()][bool] $IsInSystemDrive = $false
-        [ValidateNotNullOrEmpty()][bool] $IsInInHome = $false
-        [ValidateNotNullOrEmpty()][bool] $IsDesktopINI = $false
-        [ValidateNotNullOrEmpty()][bool] $IsSystemVolumeInfo = $false
-        [ValidateNotNullOrEmpty()][bool] $IsRecycleBin = $false
-    
-        FormattedxPath([string] $Path) {
-            
-            if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
-                $this.OriginalPlatform = "Win32NT"
-            }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
-                $this.OriginalPlatform = "Unix"
-            }else{
-                throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
-            }
-    
-            if(Test-Path -LiteralPath $Path){
-                $this.BasePath = $this.FormatLiteralPath($Path)
-            }
-            else{
-                throw "Path does not exist: $Path"
-            }
-            if (Test-Path -LiteralPath $this.BasePath -PathType Container){
-                $this.IsContainer = $true
-                $this.IsFile = $false
-            }
-            else {
-                $this.IsContainer = $false
-                $this.IsFile = $true
-            }
-    
-    
-            $home_path = $this.FormatLiteralPath([System.Environment]::GetFolderPath("UserProfile"))
-    
-            if (($this.GetQualifier($this.BasePath)).Name -eq ($this.GetQualifier($home_path)).Name){
-                $this.IsInSystemDrive = $true
-            }
-            else {
-                $this.IsInSystemDrive = $false
-            }
-            if ($this.BasePath.StartsWith($home_path)){
-                $this.IsInInHome = $true
-            }else{
-                $this.IsInInHome = $false
-            }
-    
-            
-            if ($this.OriginalPlatform -eq "Win32NT"){
-                if ($this.IsFile -and ((Split-Path $this.BasePath -Leaf) -eq "desktop.ini")){
-                    $this.IsDesktopINI = $true
-                }
-                else {
-                    $this.IsDesktopINI = $false
-                }
-                if ($this.BasePath -eq $this.FormatLiteralPath("$($this.GetQualifier($this.BasePath).Root)System Volume Information")){
-                    $this.IsSystemVolumeInfo = $true
-                }
-                else {
-                    $this.IsSystemVolumeInfo = $false
-                }
-        
-                if ($this.BasePath -eq $this.FormatLiteralPath("$($this.GetQualifier($this.BasePath).Root)`$RECYCLE.BIN")){
-                    $this.IsSystemVolumeInfo = $true
-                }
-                else {
-                    $this.IsSystemVolumeInfo = $false
-                }
-            }  
-            
+    function Format-LiteralPath{
+        <#
+        .DESCRIPTION
+            mimic the function `Format-LiteralPath` in Private\PathTools.ps1
+        #>  
+        param(
+            [Parameter(Mandatory)]
+            [string]$Path
+        )
+        if ($Path -match ":$") {
+            $Path = $Path + "\"
         }
-    
-        [string] FormatLiteralPath([string] $Path){
-            
-            if ($Path -match ":$") {
-                if ($this.OriginalPlatform -eq "Win32NT"){
-                    $Path = $Path + "\"
-                }else{
-                    $Path = $Path + "/"
-                }
-            }
-            $resolvedPath = Resolve-Path -LiteralPath $Path
-            $item = Get-ItemProperty -LiteralPath $resolvedPath
-            if (Test-Path -LiteralPath $item -PathType Container){
-                $output += (join-Path $item '')
-            }
-            else{
-                $output += $item.FullName
-            }
-            return $output
+        $resolvedPath = Resolve-Path -LiteralPath $Path
+        $item = Get-ItemProperty -LiteralPath $resolvedPath
+        if (Test-Path -LiteralPath $item -PathType Container){
+            $output += (join-Path $item '')
         }
-        [System.Management.Automation.PSDriveInfo] GetQualifier([string]$LiteralPath){
-            return (Get-ItemProperty -LiteralPath $LiteralPath -ErrorAction Stop).PSDrive
+        else{
+            $output += $item.FullName
         }
-        [string] GetDriveWithFirstDir(){
-    
-            $splited_paths = $this.BasePath -split '\\'
-            if ($splited_paths.Count -gt 1) { $max_index = 1 } else { $max_index = 0 }
-            return $this.FormatLiteralPath($splited_paths[0..$max_index] -join '\\')
-        }
-        [string] ToString() { # like __repr__ in python
-            return $this.BasePath
-        }
-    
+        return $output
     }
 
     Import-Module PSComputerManagementZp -Force 
@@ -119,10 +31,7 @@ BeforeAll {
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
 
-
-    # $test_path = Format-LiteralPath $test_path
-    $test_path = [FormattedxPath]::new($test_path)
-
+    $test_path = Format-LiteralPath $test_path
 }
 
 Describe 'Test EnvTools' {

@@ -12,7 +12,7 @@ function Write-EnvModificationLog{
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
     Write-VerboseLog $message -Verbose
 }
-function Assert-ValidEnvPathLevel{
+function Assert-ValidLevel4EnvTools{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
@@ -21,10 +21,11 @@ function Assert-ValidEnvPathLevel{
     if ($Level -notin @('User','Process','Machine')){
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
     }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
-        return Assert-AdminPermission
+        Assert-AdminPermission
+        return $true
     }else{
         if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
-            -and (($Level -eq 'User') -or ($Level -eq 'Machine'))){
+            -and ($Level -in @('User','Machine'))){
             Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
         return $true
@@ -43,7 +44,7 @@ function Test-EnvPathExist{
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level,
         [Parameter(Mandatory)]
         [AllowEmptyString()]
@@ -77,7 +78,7 @@ function Test-EnvPathNotDuplicated{
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level,
         [Parameter(Mandatory)]
         [string]$Path,
@@ -103,7 +104,7 @@ function Format-EnvPath{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidEnvPathLevel $_})]
+        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level
     )
     $env_paths = Get-EnvPathAsSplit -Level $Level

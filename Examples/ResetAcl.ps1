@@ -1,6 +1,6 @@
 #Requires -Version 7.0
 #Requires -RunAsAdministrator
-try{    
+try {    
 }
 catch {
     Write-VerboseLog  "Set-OriginalAcl Exception: $PSItem"

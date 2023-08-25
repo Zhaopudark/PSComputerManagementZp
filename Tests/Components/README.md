@@ -15,4 +15,3 @@ Configuration of the environment for testing (Adding components to testing scope
 - Forbid any public component. Avoid commands like `Import-Module PSComputerManagementZp`.
 - Ensure that private components are independently viable.
 - Ensure that all functionalities of private components are not affected by what is defined in each testing scope.
- 
