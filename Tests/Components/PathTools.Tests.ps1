@@ -2,22 +2,22 @@ BeforeAll {
     . "${PSScriptRoot}\..\..\Module\Config.ps1"
 
     $guid = [guid]::NewGuid()
-    $test_path = "${Home}\$guid"
+    $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
     
-    $test_dir = "${test_path}\test_dir"
-    $test_file = "${test_path}\test.txt"
+    $test_dir = "${test_path}/test_dir"
+    $test_file = "${test_path}/test.txt"
     New-Item -Path $test_dir -ItemType Directory -Force
     New-Item -Path $test_file -ItemType File -Force
 
-    New-Item -Path "$test_path\file_for_hardlink.txt" -ItemType File
-    New-Item -Path "$test_path\hardlink" -ItemType HardLink -Target "$test_path\file_for_hardlink.txt"
-    New-Item -Path "$test_path\test_for_junction" -ItemType Directory
-    New-Item -Path "$test_path\junction" -ItemType Junction -Target "$test_path\test_for_junction"
-    New-Item -Path "$test_path\test_for_symbolick_dir" -ItemType Directory
-    New-Item -Path "$test_path\symbolick_dir" -ItemType SymbolicLink -Target "$test_path\test_for_symbolick_dir"
-    New-Item -Path "$test_path\test_for_symbolick_file" -ItemType File
-    New-Item -Path "$test_path\symbolick_file" -ItemType SymbolicLink -Target "$test_path\test_for_symbolick_file"
+    New-Item -Path "$test_path/file_for_hardlink.txt" -ItemType File
+    New-Item -Path "$test_path/hardlink" -ItemType HardLink -Target "$test_path/file_for_hardlink.txt"
+    New-Item -Path "$test_path/test_for_junction" -ItemType Directory
+    New-Item -Path "$test_path/junction" -ItemType Junction -Target "$test_path/test_for_junction"
+    New-Item -Path "$test_path/test_for_symbolick_dir" -ItemType Directory
+    New-Item -Path "$test_path/symbolick_dir" -ItemType SymbolicLink -Target "$test_path/test_for_symbolick_dir"
+    New-Item -Path "$test_path/test_for_symbolick_file" -ItemType File
+    New-Item -Path "$test_path/symbolick_file" -ItemType SymbolicLink -Target "$test_path/test_for_symbolick_file"
         
 }
 

@@ -75,28 +75,28 @@
 #>  
     [ValidateNotNullOrEmpty()][string] $LiteralPath
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform 
-    [ValidateNotNullOrEmpty()][string] $Attributes
-    [string] $Linktype
-    [string] $LinkTarget
+    [AllowNull()][string] $Attributes
+    [AllowNull()][string] $Linktype = $null
+    [AllowNull()][string] $LinkTarget = $null
     [ValidateNotNullOrEmpty()][string] $Qualifier
     [ValidateNotNullOrEmpty()][string] $QualifierRoot
-    [ValidateNotNullOrEmpty()][bool] $IsContainer = $null
-    [ValidateNotNullOrEmpty()][bool] $IsInFileSystem = $null
-    [string] $DriveFormat = $null
-    [ValidateNotNullOrEmpty()][bool] $IsDir = $null
-    [ValidateNotNullOrEmpty()][bool] $IsFile = $null
-    [ValidateNotNullOrEmpty()][bool] $IsInSystemDrive = $null
-    [ValidateNotNullOrEmpty()][bool] $IsDriveRoot = $null
-    [ValidateNotNullOrEmpty()][bool] $IsInHome = $null
-    [ValidateNotNullOrEmpty()][bool] $IsHome = $null
-    [ValidateNotNullOrEmpty()][bool] $IsDesktopINI = $null
-    [ValidateNotNullOrEmpty()][bool] $IsSystemVolumeInfo = $null
-    [ValidateNotNullOrEmpty()][bool] $IsInSystemVolumeInfo = $null
-    [ValidateNotNullOrEmpty()][bool] $IsRecycleBin = $null
-    [ValidateNotNullOrEmpty()][bool] $IsInRecycleBin = $null
-    [ValidateNotNullOrEmpty()][bool] $IsSymbolicLink = $null
-    [ValidateNotNullOrEmpty()][bool] $IsJunction = $null
-    [ValidateNotNullOrEmpty()][bool] $IsHardLink = $null
+    [ValidateNotNullOrEmpty()][bool] $IsContainer
+    [ValidateNotNullOrEmpty()][bool] $IsInFileSystem 
+    [AllowNull()][string] $DriveFormat = $null
+    [ValidateNotNullOrEmpty()][bool] $IsDir
+    [ValidateNotNullOrEmpty()][bool] $IsFile
+    [ValidateNotNullOrEmpty()][bool] $IsInSystemDrive
+    [ValidateNotNullOrEmpty()][bool] $IsDriveRoot
+    [ValidateNotNullOrEmpty()][bool] $IsInHome
+    [ValidateNotNullOrEmpty()][bool] $IsHome 
+    [Nullable[bool]] $IsDesktopINI = $null
+    [Nullable[bool]] $IsSystemVolumeInfo = $null
+    [Nullable[bool]] $IsInSystemVolumeInfo = $null
+    [Nullable[bool]] $IsRecycleBin = $null
+    [Nullable[bool]] $IsInRecycleBin = $null
+    [ValidateNotNullOrEmpty()][bool] $IsSymbolicLink
+    [ValidateNotNullOrEmpty()][bool] $IsJunction
+    [ValidateNotNullOrEmpty()][bool] $IsHardLink
 
     FormattedPath([string] $Path) {
         
@@ -251,12 +251,12 @@
             }
         }
         $resolvedPath = Resolve-Path -LiteralPath $Path
-        $item = Get-ItemProperty -LiteralPath $resolvedPath
-        if (Test-Path -LiteralPath $item -PathType Container){
-            $output += (join-Path $item '')
+        # $item = Get-ItemProperty -LiteralPath $resolvedPath
+        if (Test-Path -LiteralPath $resolvedPath -PathType Container){
+            $output += (join-Path $resolvedPath '')
         }
         else{
-            $output += $item.FullName
+            $output += $resolvedPath.FullName
         }
         return $output
     }
