@@ -8,6 +8,7 @@ BeforeAll {
     New-Item -Path "$test_path\file_for_symboliclink2.txt" -ItemType File
     New-Item -Path "$test_path\file_for_hardlink1.txt" -ItemType File
     New-Item -Path "$test_path\file_for_hardlink2.txt" -ItemType File
+    New-Item -Path "$test_path\test_junction" -ItemType Directory
     New-Item -Path "$test_path\test_junction\dir3" -ItemType Directory
     New-Item -Path "$test_path\test_junction\dir3\file3.txt" -ItemType File
     New-Item -Path "$test_path\test_junction\dir3\dir3" -ItemType Directory
@@ -16,6 +17,7 @@ BeforeAll {
     New-Item -Path "$test_path\test_junction\dir4\file4.txt" -ItemType File
     New-Item -Path "$test_path\test_junction\dir4\dir4" -ItemType Directory
     New-Item -Path "$test_path\test_junction\dir4\dir4\file44.txt" -ItemType File
+    New-Item -Path "$test_path\test_symbolick_dir" -ItemType Directory
     New-Item -Path "$test_path\test_symbolick_dir\dir1" -ItemType Directory
     New-Item -Path "$test_path\test_symbolick_dir\dir1\file1.txt" -ItemType File
     New-Item -Path "$test_path\test_symbolick_dir\dir1\dir1" -ItemType Directory
