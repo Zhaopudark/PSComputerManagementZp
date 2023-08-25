@@ -29,7 +29,7 @@ $script:ModuleInfo = @{
 # see https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope
 # https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3
 
-. "${PSScriptRoot}/Private/Base/PlatformTools.ps1"
+. "${PSScriptRoot}\Private\Base\PlatformTools.ps1"
 
 if (Test-Platform 'Windows'){
     $script:ModuleInfo.InstallPath = "$(Split-Path -Path $PROFILE -Parent)\Modules\$($script:ModuleInfo.ModuleName)"
