@@ -29,7 +29,7 @@ $script:ModuleInfo = @{
 # see https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope
 # https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3
 
-. "${PSScriptRoot}\Private\Base\PlatformTools.ps1"
+. "${PSScriptRoot}/Private/Base/PlatformTools.ps1"
 
 if (Test-Platform 'Windows'){
     $script:ModuleInfo.InstallPath = "$(Split-Path -Path $PROFILE -Parent)\Modules\$($script:ModuleInfo.ModuleName)"
@@ -42,12 +42,12 @@ if (Test-Platform 'Windows'){
     exit -1
 }
 
-. "${PSScriptRoot}\Private\Base\LoggerTools.ps1" -InstallPath $script:ModuleInfo.InstallPath -ModuleVersion $script:ModuleInfo.ModuleVersion -LogDir $ModuleInfo.LogDir
+. "${PSScriptRoot}/Private/Base/LoggerTools.ps1" -InstallPath $script:ModuleInfo.InstallPath -ModuleVersion $script:ModuleInfo.ModuleVersion -LogDir $ModuleInfo.LogDir
 
-. "${PSScriptRoot}\Private\EnvTools.ps1"
-. "${PSScriptRoot}\Private\LinkTools.ps1"
-. "${PSScriptRoot}\Private\PathTools.ps1"
-. "${PSScriptRoot}\Private\ProxyTools.ps1"
+. "${PSScriptRoot}/Private/EnvTools.ps1"
+. "${PSScriptRoot}/Private/LinkTools.ps1"
+. "${PSScriptRoot}/Private/PathTools.ps1"
+. "${PSScriptRoot}/Private/ProxyTools.ps1"
 function Get-ModuleInfo {
 
     return $script:ModuleInfo
