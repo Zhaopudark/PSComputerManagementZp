@@ -42,12 +42,12 @@ if (Test-Platform 'Windows'){
     exit -1
 }
 
-. "${PSScriptRoot}/Private/Base/LoggerTools.ps1" -InstallPath $script:ModuleInfo.InstallPath -ModuleVersion $script:ModuleInfo.ModuleVersion -LogDir $ModuleInfo.LogDir
+. "${PSScriptRoot}\Private\Base\LoggerTools.ps1" -InstallPath $script:ModuleInfo.InstallPath -ModuleVersion $script:ModuleInfo.ModuleVersion -LogDir $ModuleInfo.LogDir
 
-. "${PSScriptRoot}/Private/EnvTools.ps1"
-. "${PSScriptRoot}/Private/LinkTools.ps1"
-. "${PSScriptRoot}/Private/PathTools.ps1"
-. "${PSScriptRoot}/Private/ProxyTools.ps1"
+. "${PSScriptRoot}\Private\EnvTools.ps1"
+. "${PSScriptRoot}\Private\LinkTools.ps1"
+. "${PSScriptRoot}\Private\PathTools.ps1"
+. "${PSScriptRoot}\Private\ProxyTools.ps1"
 function Get-ModuleInfo {
 
     return $script:ModuleInfo
