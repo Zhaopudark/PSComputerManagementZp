@@ -296,6 +296,7 @@
         return $Path
     }
     [string] FormatPath([string] $Path){
+        Write-Warning "$Path FormatPath0"
     
         try {
             $parent = Split-Path $Path -Parent
@@ -310,7 +311,7 @@
             $leaf = ''
         }
         if ($parent -and $leaf){
-            Write-Warning "$Path FormatPath $parent 'and' $leaf"
+            Write-Warning "$Path FormatPath1 $parent 'and' $leaf"
             $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
         }else{
             $item = $null
