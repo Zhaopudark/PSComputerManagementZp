@@ -47,3 +47,14 @@ jobs:
       run: | 
         ./install.ps1
         Import-Module PSComputerManagementZp
+    
+  tests-on-windows2:
+    runs-on: windows-latest  
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: install module 
+      shell: pwsh
+      run: | 
+        $Env:PATH -split ':'
