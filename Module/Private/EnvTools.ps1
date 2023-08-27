@@ -113,6 +113,7 @@ function Format-EnvPath{
     foreach ($item in $env_paths)
     {
         if (Test-EnvPathExist -Level $Level -Path $item){
+            Write-Warning $item
             $item = [FormattedFileSystemPath]::new($item)
             # Format-LiteralPath $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
