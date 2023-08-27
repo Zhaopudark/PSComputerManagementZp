@@ -271,7 +271,7 @@ BeforeAll {
                 
             }
             [string] PreProcess([string] $Path){
-                return [FormattedFileSystemPath]::FormatLiteralPath($Path,$this.Slash)
+                return [FormattedFileSystemPathX]::FormatLiteralPath($Path,$this.Slash)
             }
             static [string] FormatLiteralPath([string] $Path, [string] $Slash){
                 # format $Path on Literal level, without any check or validation through file system
