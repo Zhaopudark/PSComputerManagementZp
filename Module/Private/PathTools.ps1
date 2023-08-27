@@ -12,6 +12,7 @@
         - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
         - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
         - Reduce any consecutive colons to a single `:`
+        - Strip any trailing slashs. 
         - According to the platform, append a single '\' or '/' if the path ends with a colon.
         - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
         - Convert the drive name to initial capital letter.
@@ -28,9 +29,9 @@
             - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
             - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
             - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
-        - Append a slash `\` on Windows or `/` on Unix dynamically to a directory path, if it is not ended with a slash. We hold the view that:
-            - Let as much information as possible be included in the path string.
-            - It is a decoupling and simplification that is good for whatever computational tasks ensue.
+        # - Append a slash `\` on Windows or `/` on Unix dynamically to a directory path, if it is not ended with a slash. We hold the view that:
+        #     - Let as much information as possible be included in the path string.
+        #     - It is a decoupling and simplification that is good for whatever computational tasks ensue.
     
 .EXAMPLE
     (Not usage examples, but a demonstration about the path formatting)
@@ -294,19 +295,31 @@
     }
     [string] FormatPath([string] $Path){
     
-
-        $parent = Split-Path $Path -Parent
-        $leaf = Split-Path $Path -Leaf
-
-        $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
+        try {
+            $parent = Split-Path $Path -Parent
+        }
+        catch {
+            $parent = ''
+        }
+        try {
+            $leaf = Split-Path $Path -Leaf
+        }
+        catch {
+            $leaf = ''
+        }
+        if ($parent -and $leaf){
+            $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
+        }else{
+            $item = $null
+        }
         
         if ($item){
-            if (Test-Path -LiteralPath $item -PathType Container){
-                return (join-Path $item.FullName '')
-            }
-            else{
-                return $item.FullName
-            }
+            # if (Test-Path -LiteralPath $item -PathType Container){
+            #     return (join-Path $item.FullName '')
+            # }
+            # else{
+            return $item.FullName
+            # }
             
         }else{
             return $Path
