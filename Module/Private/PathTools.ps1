@@ -308,6 +308,7 @@
             $leaf = ''
         }
         if ($parent -and $leaf){
+            Write-Warning "$parent 'and' $leaf"
             $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
         }else{
             $item = $null
