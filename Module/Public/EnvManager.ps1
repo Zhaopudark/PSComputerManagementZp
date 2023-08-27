@@ -101,7 +101,7 @@ function Add-EnvPathToCurrentProcess{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [FormattedPath]$Path
+        [FormattedFileSystemPath]$Path
     )
     Format-EnvPath -Level 'Process'
 
@@ -185,7 +185,7 @@ function Remove-EnvPathByTargetPath{
         $counter = 0
         if (Test-EnvPathExist -Level $Level -Path $TargetPath){
 
-            $TargetPath = [FormattedPath]::new($TargetPath)
+            $TargetPath = [FormattedFileSystemPath]::new($TargetPath)
             foreach ($item in $env_paths)
             {
                 if ($item -ne $TargetPath){

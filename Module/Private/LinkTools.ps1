@@ -2,7 +2,7 @@ function Assert-ValidPath4LinkTools{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
-        [FormattedPath]$Path,
+        [FormattedFileSystemPath]$Path,
         [switch]$File
     )
     if($File){
@@ -34,13 +34,13 @@ function Merge-DirectoryWithBackup{
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_})]
-        [FormattedPath]$Source,
+        [FormattedFileSystemPath]$Source,
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_})]
-        [FormattedPath]$Destination,
+        [FormattedFileSystemPath]$Destination,
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_})]
-        [FormattedPath]$Backuppath
+        [FormattedFileSystemPath]$Backuppath
     )
 
     $guid = [guid]::NewGuid()
@@ -74,13 +74,13 @@ function Move-FileWithBackup{
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_ -File})]
-        [FormattedPath]$Source,
+        [FormattedFileSystemPath]$Source,
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_ -File})]
-        [FormattedPath]$Destination,
+        [FormattedFileSystemPath]$Destination,
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_})]
-        [FormattedPath]$Backuppath
+        [FormattedFileSystemPath]$Backuppath
     )
     $guid = [guid]::NewGuid()
     $source_name = $Source.ToShortName()
@@ -126,10 +126,10 @@ function Merge-BeforeSetDirLink{
         [string]$Target2,
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_})]
-        [FormattedPath]$Backuppath
+        [FormattedFileSystemPath]$Backuppath
     )
     try {
-        $_target1 = [FormattedPath]::new($Target1)
+        $_target1 = [FormattedFileSystemPath]::new($Target1)
         $_target1_exist = $true
     }
     catch [System.Management.Automation.ItemNotFoundException]{
@@ -145,7 +145,7 @@ function Merge-BeforeSetDirLink{
     }
 
     try {
-        $_target2 = [FormattedPath]::new($Target2)
+        $_target2 = [FormattedFileSystemPath]::new($Target2)
         $_target2_exist = $true
     }
     catch [System.Management.Automation.ItemNotFoundException]{
@@ -240,11 +240,11 @@ function Move-BeforeSetFileLink{
         [string]$Target2,
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4LinkTools $_})]
-        [FormattedPath]$Backuppath
+        [FormattedFileSystemPath]$Backuppath
     )
 
     try {
-        $_target1 = [FormattedPath]::new($Target1)
+        $_target1 = [FormattedFileSystemPath]::new($Target1)
         $_target1_exist = $true
     }
     catch [System.Management.Automation.ItemNotFoundException]{
@@ -260,7 +260,7 @@ function Move-BeforeSetFileLink{
     }
     
     try {
-        $_target2 = [FormattedPath]::new($Target2)
+        $_target2 = [FormattedFileSystemPath]::new($Target2)
         $_target2_exist = $true
     }
     catch [System.Management.Automation.ItemNotFoundException]{

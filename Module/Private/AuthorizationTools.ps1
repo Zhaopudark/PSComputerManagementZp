@@ -13,12 +13,12 @@ function Assert-ValidPath4AuthorizationTools{
         4. other path in ${Home}
 #>
     param(
-        [FormattedPath]$Path
+        [FormattedFileSystemPath]$Path
     )
     if (!($Path.IsInFileSystem)){
         throw "The $Path is not in file system."
     }
-    if ($Path.IsInSystemDrive){
+    if ($Path.IsBeOrInSystemDrive){
         if (!($Path.IsInHome) -or !($Path.IsHome)){
             throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}."
         }
@@ -79,7 +79,7 @@ function Reset-PathAttribute{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [ValidateScript({Assert-ValidPath4AuthorizationTools $_})]
-        [FormattedPath]$Path,
+        [FormattedFileSystemPath]$Path,
         [switch]$SkipPlatformCheck
     )
 
@@ -166,7 +166,7 @@ function Get-PathType{
     param(
         [Parameter(Mandatory)]
         [ValidateScript({Assert-ValidPath4AuthorizationTools $_})]
-        [FormattedPath]$Path,
+        [FormattedFileSystemPath]$Path,
         [switch]$SkipPlatformCheck
     )
     if (-not $SkipPlatformCheck){

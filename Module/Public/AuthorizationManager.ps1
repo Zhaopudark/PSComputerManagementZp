@@ -23,7 +23,7 @@ For more information on the motivation, rationale, logic, and usage of this func
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [ValidateScript({Assert-ValidPath4AuthorizationTools $_})]
-        [FormattedPath]$Path,
+        [FormattedFileSystemPath]$Path,
         [switch]$Recurse
     )
     try {
