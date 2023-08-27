@@ -17,6 +17,24 @@ jobs:
       run: | 
         ./install.ps1
         Import-Module PSComputerManagementZp
+  tests-on-linux2:
+    runs-on: ubuntu-latest 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: install module 
+      shell: bash
+      run: | 
+        IFS=":" read -ra path_entries <<< "$PATH"
+
+        echo "Printing PATH Environment Variable Entries:"
+        echo "----------------------------------------"
+
+        # Loop through each path entry and print it
+        for entry in "${path_entries[@]}"; do
+          echo "$entry"
+        done
   
   tests-on-windows:
     runs-on: windows-latest  
