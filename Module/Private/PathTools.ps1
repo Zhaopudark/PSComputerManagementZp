@@ -150,6 +150,8 @@
             throw (New-Object System.Management.Automation.ItemNotFoundException "Path '$Path' not found.")
         }
         if ($this.GetQualifier($Path).Provider.Name -ne 'FileSystem'){
+            # Write-Verbose $Path -Verbose 
+            # Write-Verbose $this.GetQualifier($Path).Provider.Name -Verbose 
             throw "Only FileSystem provider is supported, not $($this.GetQualifier($Path).Provider.Name)."
         } 
         $this.LiteralPath = $this.FormatPath($Path) 
@@ -288,6 +290,11 @@
 
         $Path = $Path -replace '[/\\]+', $Slash
         $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
+
+        if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
+            $Path = $Slash + $Path
+        }
+
         return $Path
     }
     [string] FormatPath([string] $Path){
