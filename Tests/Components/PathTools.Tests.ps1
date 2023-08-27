@@ -248,7 +248,7 @@ Describe '[Test PathTools]' {
             $path.LinkTarget | Should -BeNullOrEmpty
             $path.Qualifier | Should -BeExactly '/'
             $path.QualifierRoot | Should -BeExactly '/'
-            $path.DriveFormat | Should -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs')
+            $path.DriveFormat | Should -BeIn -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs','lofs')
             $path.IsDir | Should -BeTrue
             $path.IsFile | Should -BeFalse
             $path.IsBeOrInSystemDrive | Should -BeTrue
@@ -273,7 +273,7 @@ Describe '[Test PathTools]' {
             $path.LinkTarget | Should -BeNullOrEmpty
             $path.Qualifier | Should -BeExactly '/'
             $path.QualifierRoot | Should -BeExactly '/'
-            $path.DriveFormat | Should -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs')
+            $path.DriveFormat | Should -BeIn -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs','lofs')
             $path.IsDir | Should -BeFalse
             $path.IsFile | Should -BeTrue
             $path.IsBeOrInSystemDrive | Should -BeTrue
@@ -298,7 +298,7 @@ Describe '[Test PathTools]' {
             # $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_junction/"
             # $path.Qualifier | Should -BeExactly '/'
             # $path.QualifierRoot | Should -BeExactly '/'
-            # $path.DriveFormat | Should -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs')
+            # $path.DriveFormat | Should -BeIn -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs','lofs')
             # $path.IsDir | Should -BeTrue
             # $path.IsFile | Should -BeFalse
             # $path.IsBeOrInSystemDrive | Should -BeTrue
@@ -323,7 +323,7 @@ Describe '[Test PathTools]' {
             $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_symbolick_dir"
             $path.Qualifier | Should -BeExactly '/'
             $path.QualifierRoot | Should -BeExactly '/'
-            $path.DriveFormat | Should -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs')
+            $path.DriveFormat | Should -BeIn -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs','lofs')
             $path.IsDir | Should -BeTrue
             $path.IsFile | Should -BeFalse
             $path.IsBeOrInSystemDrive | Should -BeTrue
@@ -347,7 +347,7 @@ Describe '[Test PathTools]' {
             $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_symbolick_file"
             $path.Qualifier | Should -BeExactly '/'
             $path.QualifierRoot | Should -BeExactly '/'
-            $path.DriveFormat | Should -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs')
+            $path.DriveFormat | Should -BeIn -BeIn @('ext2','ext3','ext4','xfx','zfs','f2fs','lofs')
             $path.IsDir | Should -BeFalse
             $path.IsFile | Should -BeTrue
             $path.IsBeOrInSystemDrive | Should -BeTrue
