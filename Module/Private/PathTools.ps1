@@ -275,6 +275,7 @@
     static [string] FormatLiteralPath([string] $Path, [string] $Slash){
         # format $Path on Literal level, without any check or validation through file system
         # can be used as pre-procession of a path before it is passed to $this.FormatPath()
+        Write-Warning "$Path FormatLiteralPath0"
         if ($Path -match '[\*\?\[\]]'){
             throw "Only literal path is supported, not $($Path) with wildcard characters `*`, `?` or `[]`."
         }
@@ -291,6 +292,7 @@
 
         $Path = $Path -replace '[/\\]+', $Slash
         $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
+        Write-Warning "$Path FormatLiteralPath1"
         return $Path
     }
     [string] FormatPath([string] $Path){
@@ -308,7 +310,7 @@
             $leaf = ''
         }
         if ($parent -and $leaf){
-            Write-Warning "$parent 'and' $leaf"
+            Write-Warning "$Path FormatPath $parent 'and' $leaf"
             $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
         }else{
             $item = $null
