@@ -143,9 +143,8 @@
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
-        Write-Warning "$Path FormattedFileSystemPath0"
+      
         $Path = $this.PreProcess($Path)
-        Write-Warning "$Path FormattedFileSystemPath1"
         
         if(!(Test-Path -LiteralPath $Path)){
             throw (New-Object System.Management.Automation.ItemNotFoundException "Path '$Path' not found.")
@@ -153,8 +152,9 @@
         if ($this.GetQualifier($Path).Provider.Name -ne 'FileSystem'){
             throw "Only FileSystem provider is supported, not $($this.GetQualifier($Path).Provider.Name)."
         } 
-
+        Write-Warning "$Path FormatPath0"
         $this.LiteralPath = $this.FormatPath($Path) 
+        Write-Warning "$Path FormatPath1"
         $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
         $this.Linktype = (Get-ItemProperty $this.LiteralPath).Linktype
 
