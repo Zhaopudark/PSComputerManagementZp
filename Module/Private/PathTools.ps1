@@ -134,7 +134,6 @@
     [ValidateNotNullOrEmpty()][bool] $IsHardLink
 
     FormattedFileSystemPath([string] $Path) {
-        Write-Warning "$Path FormattedFileSystemPath"
         if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
             $this.OriginalPlatform = "Win32NT"
             $this.Slash = '\'
@@ -144,9 +143,9 @@
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
-
+        Write-Warning "$Path FormattedFileSystemPath0"
         $Path = $this.PreProcess($Path)
-
+        Write-Warning "$Path FormattedFileSystemPath1"
         
         if(!(Test-Path -LiteralPath $Path)){
             throw (New-Object System.Management.Automation.ItemNotFoundException "Path '$Path' not found.")
