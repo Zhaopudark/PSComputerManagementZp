@@ -154,7 +154,7 @@
         } 
         Write-Warning "$Path FormatPath0"
         $this.LiteralPath = $this.FormatPath($Path) 
-        Write-Warning "$Path FormatPath1"
+        Write-Warning "$($this.FormatPath($Path)) FormatPath1"
         $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
         $this.Linktype = (Get-ItemProperty $this.LiteralPath).Linktype
 
