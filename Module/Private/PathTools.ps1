@@ -152,9 +152,7 @@
         if ($this.GetQualifier($Path).Provider.Name -ne 'FileSystem'){
             throw "Only FileSystem provider is supported, not $($this.GetQualifier($Path).Provider.Name)."
         } 
-        Write-Warning "$Path FormatPath0"
         $this.LiteralPath = $this.FormatPath($Path) 
-        Write-Warning "$($this.FormatPath($Path)) FormatPath1"
         $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
         $this.Linktype = (Get-ItemProperty $this.LiteralPath).Linktype
 
