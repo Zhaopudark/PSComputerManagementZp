@@ -134,7 +134,7 @@
     [ValidateNotNullOrEmpty()][bool] $IsHardLink
 
     FormattedFileSystemPath([string] $Path) {
-
+        Write-Warning "$Path FormattedFileSystemPath"
         if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
             $this.OriginalPlatform = "Win32NT"
             $this.Slash = '\'
@@ -144,7 +144,7 @@
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
-        
+
         $Path = $this.PreProcess($Path)
 
         
@@ -270,13 +270,11 @@
         
     }
     [string] PreProcess([string] $Path){
-        Write-Warning "$Path PreProcess"
         return [FormattedFileSystemPath]::FormatLiteralPath($Path,$this.Slash)
     }
     static [string] FormatLiteralPath([string] $Path, [string] $Slash){
         # format $Path on Literal level, without any check or validation through file system
         # can be used as pre-procession of a path before it is passed to $this.FormatPath()
-        Write-Warning "$Path FormatLiteralPath0"
         if ($Path -match '[\*\?\[\]]'){
             throw "Only literal path is supported, not $($Path) with wildcard characters `*`, `?` or `[]`."
         }
@@ -293,12 +291,9 @@
 
         $Path = $Path -replace '[/\\]+', $Slash
         $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
-        Write-Warning "$Path FormatLiteralPath1"
         return $Path
     }
     [string] FormatPath([string] $Path){
-        Write-Warning "$Path FormatPath0"
-    
         try {
             $parent = Split-Path $Path -Parent
         }
@@ -312,7 +307,6 @@
             $leaf = ''
         }
         if ($parent -and $leaf){
-            Write-Warning "$Path FormatPath1 $parent 'and' $leaf"
             $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
         }else{
             $item = $null
