@@ -1,99 +1,371 @@
 BeforeAll {
-    function Format-LiteralPath{
-        <#
-        .DESCRIPTION
-            mimic the function `Format-LiteralPath` in Private\PathTools.ps1
-        #>  
-        param(
-            [Parameter(Mandatory)]
-            [string]$Path
-        )
-        if ($Path -match ":$") {
-            $Path = $Path + "\"
-        }
-        $resolvedPath = Resolve-Path -LiteralPath $Path
-        $item = Get-ItemProperty -LiteralPath $resolvedPath
-        if (Test-Path -LiteralPath $item -PathType Container){
-            $output += (join-Path $item '')
-        }
-        else{
-            $output += $item.FullName
-        }
-        return $output
-    }
-
-    Import-Module PSComputerManagementZp -Force 
-    $user_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','User')
-    $machine_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Machine')
-    $process_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Process')
+    . "${PSScriptRoot}\..\..\Module\Config.ps1"
 
     $guid = [guid]::NewGuid()
-    $test_path = "${Home}\$guid"
+    $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
+    
+    New-Item -Path "$test_path/test_dir" -ItemType Directory -Force
+    New-Item -Path "$test_path/test.txt" -ItemType File -Force
 
-    $test_path = Format-LiteralPath $test_path
+    New-Item -Path "$test_path/file_for_hardlink.txt" -ItemType File
+    New-Item -Path "$test_path/hardlink" -ItemType HardLink -Target "$test_path/file_for_hardlink.txt"
+    New-Item -Path "$test_path/test_for_junction" -ItemType Directory
+    New-Item -Path "$test_path/junction" -ItemType Junction -Target "$test_path/test_for_junction"
+    New-Item -Path "$test_path/test_for_symbolick_dir" -ItemType Directory
+    New-Item -Path "$test_path/symbolick_dir" -ItemType SymbolicLink -Target "$test_path/test_for_symbolick_dir"
+    New-Item -Path "$test_path/test_for_symbolick_file" -ItemType File
+    New-Item -Path "$test_path/symbolick_file" -ItemType SymbolicLink -Target "$test_path/test_for_symbolick_file"
+        
 }
 
-Describe 'Test EnvTools' {
-    Context 'Symplify non-process level Env:PATH' {
-        It 'Test Merge-RedundantEnvPathFromLocalMachineToCurrentUser' -Skip:(!$IsWindows){
-            Merge-RedundantEnvPathFromLocalMachineToCurrentUser
-            $user_env_paths = Get-EnvPathAsSplit -Level 'User'
-            $user_env_paths += $test_path
-            $machine_env_paths = Get-EnvPathAsSplit -Level 'Machine'
-            $machine_env_paths += $test_path
-            Set-EnvPathBySplit -Level 'User' -Path $user_env_paths
-            Set-EnvPathBySplit -Level 'Machine' -Path $machine_env_paths
-            Merge-RedundantEnvPathFromLocalMachineToCurrentUser
-            $user_env_paths2 = Get-EnvPathAsSplit -Level 'User'
-            $machine_env_paths2 = Get-EnvPathAsSplit -Level 'Machine'
+Describe '[Test PathTools]' {
+    Context '[Test the formatting feature of FormattedFileSystemPath]' {
+        It '[Test on Windows dir]' -Skip:(!$IsWIndows){
+            $path = [FormattedFileSystemPath]::new("${test_path}/tEsT_diR")
+            $path | Should -BeExactly "${Home}\$guid\test_dir"
+        }
+        It '[Test on Windows file]' -Skip:(!$IsWIndows){
+            $path = [FormattedFileSystemPath]::new("${test_path}/teSt.tXt")
+            $path | Should -BeExactly "${Home}\$guid\test.txt"
+        }
+        It '[Test on Linux dir]' -Skip:(!$IsLinux){
+            $path = [FormattedFileSystemPath]::new("${test_path}\test_dir")
+            $path | Should -BeExactly "${Home}/$guid/test_dir"
+        }
+        It '[Test on Linux file]' -Skip:(!$IsLinux){
+            $path = [FormattedFileSystemPath]::new("${test_path}\test.txt")
+            $path | Should -BeExactly "${Home}/$guid/test.txt"
+        }
+        It '[Test on windows drive, single slash]' -Skip:(!$IsWIndows){
 
-            $user_env_paths2 | Should -Contain $test_path
-            $user_env_paths2.count | Should -Be $user_env_paths.count
-            $machine_env_paths2 | Should -Not -Contain $test_path
-            $machine_env_paths2.count | Should -Be ($machine_env_paths.count-1)
+            $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
+            $maybe_c_lower = (Get-ItemProperty ${Home}).PSDrive.Name.ToLower()
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:\")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:/")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c_lower`:\")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c_lower`:/")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c_lower`:")
+            $path | Should -BeExactly "$maybe_c`:\"
+        }
+        It '[Test on windows drive, multiple slashs]' -Skip:(!$IsWIndows){
+
+            $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:\\")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`://")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:\\\\")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:////")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:/\/\/\/\/\/\/\/")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_c`:\/\/\/\/\/\/\/\")
+            $path | Should -BeExactly "$maybe_c`:\"
+
+        }
+        It '[Test on Linux drive, single slash]' -Skip:(!$IsLinux){
+            $maybe_root = (Get-ItemProperty ${Home}).PSDrive.Name # / on Linux and Wsl2, not '/root'
+            $path = [FormattedFileSystemPath]::new("$maybe_root")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root/")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root\")
+            $path | Should -BeExactly "$maybe_root"
+        }
+        It '[Test on Linux drive, multiple slashs]' -Skip:(!$IsLinux){
+            $maybe_root = (Get-ItemProperty ${Home}).PSDrive.Name # / on Linux and Wsl2, not '/root'
+            $path = [FormattedFileSystemPath]::new("$maybe_root\\")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root//")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root\\\\")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root////")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root/\/\/\/\/\/\/\/")
+            $path | Should -BeExactly "$maybe_root"
+
+            $path = [FormattedFileSystemPath]::new("$maybe_root\/\/\/\/\/\/\/\")
+            $path | Should -BeExactly "$maybe_root"
         }
     }
-    Context 'Add items into process level Env:PATH' {
-        It 'Test Add-EnvPathToCurrentProcess' {
-            $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
-            Add-EnvPathToCurrentProcess -Path $test_path
-            $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
+    Context '[Test the attributes of FormattedFileSystemPath]' {
+        It '[Test on Windows]' -Skip:(!$IsWIndows){
+            $path = [FormattedFileSystemPath]::new("${Home}")
+            $path.OriginalPlatform | Should -BeExactly 'Win32NT'
+            $path.Slash | Should -BeExactly '\'
+            $path.Attributes | Should -BeExactly 'Directory'
+            $path.Linktype | Should -BeNullOrEmpty
+            $path.LinkTarget | Should -BeNullOrEmpty
+            $path.Qualifier | Should -BeExactly 'C'
+            $path.QualifierRoot | Should -BeExactly 'C:\'
+            $path.DriveFormat | Should -BeExactly 'NTFS'
+            $path.IsDir | Should -BeTrue
+            $path.IsFile | Should -BeFalse
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsInHome | Should -BeFalse
+            $path.IsHome | Should -BeTrue
+            $path.IsDesktopINI | Should -BeFalse
+            $path.IsSystemVolumeInfo | Should -BeFalse
+            $path.IsInSystemVolumeInfo | Should -BeFalse
+            $path.IsRecycleBin | Should -BeFalse
+            $path.IsInRecycleBin | Should -BeFalse
+            $path.IsSymbolicLink | Should -BeFalse
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeFalse
 
-            $process_env_paths1 | Should -Not -Contain $test_path
-            $process_env_paths2 | Should -Contain $test_path
+
+            $path = [FormattedFileSystemPath]::new("$test_path\hardlink")
+            $path.OriginalPlatform | Should -BeExactly 'Win32NT'
+            $path.Slash | Should -BeExactly '\'
+            $path.Attributes | Should -BeExactly 'Archive'
+            $path.Linktype | Should -BeExactly 'HardLink'
+            $path.LinkTarget | Should -BeNullOrEmpty
+            $path.Qualifier | Should -BeExactly 'C'
+            $path.QualifierRoot | Should -BeExactly 'C:\'
+            $path.DriveFormat | Should -BeExactly 'NTFS'
+            $path.IsDir | Should -BeFalse
+            $path.IsFile | Should -BeTrue
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeFalse
+            $path.IsSystemVolumeInfo | Should -BeFalse
+            $path.IsInSystemVolumeInfo | Should -BeFalse
+            $path.IsRecycleBin | Should -BeFalse
+            $path.IsInRecycleBin | Should -BeFalse
+            $path.IsSymbolicLink | Should -BeFalse
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeTrue
+
+            $path = [FormattedFileSystemPath]::new("$test_path\junction")
+            $path.OriginalPlatform | Should -BeExactly 'Win32NT'
+            $path.Slash | Should -BeExactly '\'
+            $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
+            $path.Linktype | Should -BeExactly 'Junction'
+            $path.LinkTarget | Should -BeExactly "${Home}\$guid\test_for_junction"
+            $path.Qualifier | Should -BeExactly 'C'
+            $path.QualifierRoot | Should -BeExactly 'C:\'
+            $path.DriveFormat | Should -BeExactly 'NTFS'
+            $path.IsDir | Should -BeTrue
+            $path.IsFile | Should -BeFalse
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeFalse
+            $path.IsSystemVolumeInfo | Should -BeFalse
+            $path.IsInSystemVolumeInfo | Should -BeFalse
+            $path.IsRecycleBin | Should -BeFalse
+            $path.IsInRecycleBin | Should -BeFalse
+            $path.IsSymbolicLink | Should -BeFalse
+            $path.IsJunction | Should -BeTrue
+            $path.IsHardLink | Should -BeFalse
+
+
+            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_dir")
+            $path.OriginalPlatform | Should -BeExactly 'Win32NT'
+            $path.Slash | Should -BeExactly '\'
+            $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
+            $path.Linktype | Should -BeExactly 'SymbolicLink'
+            $path.LinkTarget | Should -BeExactly "${Home}\$guid\test_for_symbolick_dir"
+            $path.Qualifier | Should -BeExactly 'C'
+            $path.QualifierRoot | Should -BeExactly 'C:\'
+            $path.DriveFormat | Should -BeExactly 'NTFS'
+            $path.IsDir | Should -BeTrue
+            $path.IsFile | Should -BeFalse
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeFalse
+            $path.IsSystemVolumeInfo | Should -BeFalse
+            $path.IsInSystemVolumeInfo | Should -BeFalse
+            $path.IsRecycleBin | Should -BeFalse
+            $path.IsInRecycleBin | Should -BeFalse
+            $path.IsSymbolicLink | Should -BeTrue
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeFalse
+            
+            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
+            $path.OriginalPlatform | Should -BeExactly 'Win32NT'
+            $path.Slash | Should -BeExactly '\'
+            $path.Attributes | Should -BeExactly 'Archive, ReparsePoint'
+            $path.Linktype | Should -BeExactly 'SymbolicLink'
+            $path.LinkTarget | Should -BeExactly "${Home}\$guid\test_for_symbolick_file"
+            $path.Qualifier | Should -BeExactly 'C'
+            $path.QualifierRoot | Should -BeExactly 'C:\'
+            $path.DriveFormat | Should -BeExactly 'NTFS'
+            $path.IsDir | Should -BeFalse
+            $path.IsFile | Should -BeTrue
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeFalse
+            $path.IsSystemVolumeInfo | Should -BeFalse
+            $path.IsInSystemVolumeInfo | Should -BeFalse
+            $path.IsRecycleBin | Should -BeFalse
+            $path.IsInRecycleBin | Should -BeFalse
+            $path.IsSymbolicLink | Should -BeTrue
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeFalse
         }
+        It '[Test on Linux]' -Skip:(!$IsLinux){
+            $path = [FormattedFileSystemPath]::new("${Home}")
+            $path.OriginalPlatform | Should -BeExactly 'Unix'
+            $path.Slash | Should -BeExactly '/'
+            $path.Attributes | Should -BeExactly 'Directory'
+            $path.Linktype | Should -BeNullOrEmpty
+            $path.LinkTarget | Should -BeNullOrEmpty
+            $path.Qualifier | Should -BeExactly '/'
+            $path.QualifierRoot | Should -BeExactly '/'
+            $path.DriveFormat | Should -BeExactly 'ext2'
+            $path.IsDir | Should -BeTrue
+            $path.IsFile | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsInHome | Should -BeFalse
+            $path.IsHome | Should -BeTrue
+            $path.IsDesktopINI | Should -BeNullOrEmpty
+            $path.IsSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsInSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsRecycleBin | Should -BeNullOrEmpty
+            $path.IsInRecycleBin | Should -BeNullOrEmpty
+            $path.IsSymbolicLink | Should -BeFalse
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeFalse
 
-    }
-    Context 'Remove items from process level Env:PATH' {
-        It 'Test Remove-EnvPathByPattern'{
-            Add-EnvPathToCurrentProcess -Path $test_path
-            $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
-            Remove-EnvPathByPattern -Pattern $guid -Level 'Process'
-            $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
 
-            $process_env_paths1 | Should -Contain $test_path
-            $process_env_paths2 | Should -Not -Contain $test_path
+            $path = [FormattedFileSystemPath]::new("$test_path\hardlink")
+            $path.OriginalPlatform | Should -BeExactly 'Unix'
+            $path.Slash | Should -BeExactly '/'
+            $path.Attributes | Should -BeExactly 'Normal' # different from 'Archive' that in Windows NTFS
+            $path.Linktype | Should -BeExactly 'HardLink'
+            $path.LinkTarget | Should -BeNullOrEmpty
+            $path.Qualifier | Should -BeExactly '/'
+            $path.QualifierRoot | Should -BeExactly '/'
+            $path.DriveFormat | Should -BeExactly 'ext2'
+            $path.IsDir | Should -BeFalse
+            $path.IsFile | Should -BeTrue
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeNullOrEmpty
+            $path.IsSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsInSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsRecycleBin | Should -BeNullOrEmpty
+            $path.IsInRecycleBin | Should -BeNullOrEmpty
+            $path.IsSymbolicLink | Should -BeFalse
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeTrue
 
+            # 'ext2' does not support junction 
+            # $path = [FormattedFileSystemPath]::new("$test_path\junction")
+            # $path.OriginalPlatform | Should -BeExactly 'Unix'
+            # $path.Slash | Should -BeExactly '/'
+            # $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
+            # $path.Linktype | Should -BeExactly 'Junction'
+            # $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_junction/"
+            # $path.Qualifier | Should -BeExactly '/'
+            # $path.QualifierRoot | Should -BeExactly '/'
+            # $path.DriveFormat | Should -BeExactly 'ext2'
+            # $path.IsDir | Should -BeTrue
+            # $path.IsFile | Should -BeFalse
+            # $path.IsBeOrInSystemDrive | Should -BeTrue
+            # $path.IsDriveRoot | Should -BeFalse
+            # $path.IsInHome | Should -BeTrue
+            # $path.IsHome | Should -BeFalse
+            # $path.IsDesktopINI | Should -BeNullOrEmpty
+            # $path.IsSystemVolumeInfo | Should -BeNullOrEmpty
+            # $path.IsInSystemVolumeInfo | Should -BeNullOrEmpty
+            # $path.IsRecycleBin | Should -BeNullOrEmpty
+            # $path.IsInRecycleBin | Should -BeNullOrEmpty
+            # $path.IsSymbolicLink | Should -BeFalse
+            # $path.IsJunction | Should -BeTrue
+            # $path.IsHardLink | Should -BeFalse
+
+
+            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_dir")
+            $path.OriginalPlatform | Should -BeExactly 'Unix'
+            $path.Slash | Should -BeExactly '/'
+            $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
+            $path.Linktype | Should -BeExactly 'SymbolicLink'
+            $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_symbolick_dir"
+            $path.Qualifier | Should -BeExactly '/'
+            $path.QualifierRoot | Should -BeExactly '/'
+            $path.DriveFormat | Should -BeExactly 'ext2'
+            $path.IsDir | Should -BeTrue
+            $path.IsFile | Should -BeFalse
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeFalse
+            $path.IsSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsInSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsRecycleBin | Should -BeNullOrEmpty
+            $path.IsInRecycleBin | Should -BeNullOrEmpty
+            $path.IsSymbolicLink | Should -BeTrue
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeFalse
+            
+            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
+            $path.OriginalPlatform | Should -BeExactly 'Unix'
+            $path.Slash | Should -BeExactly '/'
+            $path.Attributes | Should -BeExactly 'ReparsePoint' # different from 'Archive, ReparsePoint' that in Windows NTFS
+            $path.Linktype | Should -BeExactly 'SymbolicLink'
+            $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_symbolick_file"
+            $path.Qualifier | Should -BeExactly '/'
+            $path.QualifierRoot | Should -BeExactly '/'
+            $path.DriveFormat | Should -BeExactly 'ext2'
+            $path.IsDir | Should -BeFalse
+            $path.IsFile | Should -BeTrue
+            $path.IsBeOrInSystemDrive | Should -BeTrue
+            $path.IsDriveRoot | Should -BeFalse
+            $path.IsInHome | Should -BeTrue
+            $path.IsHome | Should -BeFalse
+            $path.IsDesktopINI | Should -BeNullOrEmpty
+            $path.IsSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsInSystemVolumeInfo | Should -BeNullOrEmpty
+            $path.IsRecycleBin | Should -BeNullOrEmpty
+            $path.IsInRecycleBin | Should -BeNullOrEmpty
+            $path.IsSymbolicLink | Should -BeTrue
+            $path.IsJunction | Should -BeFalse
+            $path.IsHardLink | Should -BeFalse
         }
-        It 'Test Remove-EnvPathByTargetPath'{
-            Add-EnvPathToCurrentProcess -Path $test_path
-            $process_env_paths1 = Get-EnvPathAsSplit -Level 'Process'
-            Remove-EnvPathByTargetPath -TargetPath $test_path -Level 'Process'
-            $process_env_paths2 = Get-EnvPathAsSplit -Level 'Process'
-
-            $process_env_paths1 | Should -Contain $test_path
-            $process_env_paths2 | Should -Not -Contain $test_path
-        }
-    }
-
+    }  
 }
 
 AfterAll {
-    Remove-Item $test_path -Force -Recurse
-    Remove-Module PSComputerManagementZp -Force
-
-    [Environment]::SetEnvironmentVariable('PATH',$user_env_paths_backup ,'User')
-    [Environment]::SetEnvironmentVariable('PATH',$machine_env_paths_backup,'Machine')
-    [Environment]::SetEnvironmentVariable('PATH',$process_env_paths_backup,'Process')
+    Remove-Item -Path $test_path -Force -Recurse
 }
