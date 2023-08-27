@@ -268,7 +268,7 @@ Describe '[Test PathTools]' {
             $path = [FormattedFileSystemPath]::new("$test_path\hardlink")
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
-            $path.Attributes | Should -BeExactly 'Normal' # different from 'Archive' that in Windows
+            $path.Attributes | Should -BeExactly 'Normal' # different from 'Archive' that in Windows NTFS
             $path.Linktype | Should -BeExactly 'HardLink'
             $path.LinkTarget | Should -BeNullOrEmpty
             $path.Qualifier | Should -BeExactly '/'
@@ -342,7 +342,7 @@ Describe '[Test PathTools]' {
             $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
-            $path.Attributes | Should -BeExactly 'ReparsePoint' # different from 'Archive, ReparsePoint' that in Windows
+            $path.Attributes | Should -BeExactly 'ReparsePoint' # different from 'Archive, ReparsePoint' that in Windows NTFS
             $path.Linktype | Should -BeExactly 'SymbolicLink'
             $path.LinkTarget | Should -BeExactly "${Home}/$guid/test_for_symbolick_file"
             $path.Qualifier | Should -BeExactly '/'
