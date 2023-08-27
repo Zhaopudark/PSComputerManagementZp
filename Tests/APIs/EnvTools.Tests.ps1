@@ -1,5 +1,5 @@
 BeforeAll {
-    class FormattedFileSystemPath {
+    class FormattedFileSystemPathX {
         <#
         .SYNOPSIS
             A class that receive a file system path, 
@@ -134,7 +134,7 @@ BeforeAll {
             [ValidateNotNullOrEmpty()][bool] $IsJunction
             [ValidateNotNullOrEmpty()][bool] $IsHardLink
         
-            FormattedFileSystemPath([string] $Path) {
+            FormattedFileSystemPathX([string] $Path) {
         
                 if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
                     $this.OriginalPlatform = "Win32NT"
@@ -370,7 +370,7 @@ BeforeAll {
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
 
-    $test_path = ([FormattedFileSystemPath]::new($test_path)).ToString()
+    $test_path = ([FormattedFileSystemPathX]::new($test_path)).ToString()
 }
 
 Describe 'Test EnvTools' {
