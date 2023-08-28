@@ -16,6 +16,7 @@
         - According to the platform, append a single '\' or '/' if the path ends with a colon.
         - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
         - Convert the drive name to initial capital letter.
+        - If 
     2. Test the preprocessed path with file system access:
         - Check if the path exists in file system. If not, throw an error.
         - Check if the path is with wildcard characters by file system. If so, throw an error.
