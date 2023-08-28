@@ -30,11 +30,11 @@ BeforeAll {
 Describe '[Test PathToolsLight]' {
     Context '[Test the formatting feature of FormattedFileSystemPath]' {
         It '[Test on FormattedFileSystemPath1]'{
-            Write-Verbose ([FormattedFileSystemPath]::new('???')) -Verbose
+            Write-Verbose ([FormattedFileSystemPath1]::new('???')) -Verbose
         }
 
         It '[Test on FormattedFileSystemPath2]'{
-            Write-Verbose ([FormattedFileSystemPath]::new('???')) -Verbose
+            Write-Verbose ([FormattedFileSystemPath2]::new('???')) -Verbose
         }
 
     }  
