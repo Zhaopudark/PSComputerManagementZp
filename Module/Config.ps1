@@ -7,8 +7,6 @@ $script:ModuleInfo = @{
     PowerShellVersion = '7.0'
     FunctionsToExport = @(
         'Reset-Authorization',
-        'Get-EnvPathAsSplit',
-        'Set-EnvPathBySplit',
         'Merge-RedundantEnvPathFromLocalMachineToCurrentUser',
         'Add-EnvPathToCurrentProcess',
         'Remove-EnvPathByPattern',

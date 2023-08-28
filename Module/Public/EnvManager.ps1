@@ -1,53 +1,3 @@
-function Get-EnvPathAsSplit{
-    [CmdletBinding()]
-    [OutputType([System.Object[]])]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
-        [string]$Level
-    )
-    if (Test-Platform 'Windows'){
-        return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
-
-    }elseif (Test-Platform 'Wsl2'){
-
-        return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
-
-    }elseif (Test-Platform 'Linux'){
-        return @([Environment]::GetEnvironmentVariable('PATH',$Level) -Split ':')
-
-    }else{
-        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-        exit -1
-    }
-}
-function Set-EnvPathBySplit{
-<#
-See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
-#>
-    [CmdletBinding(SupportsShouldProcess)]
-    param(
-        [string[]]$Paths,
-        [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
-        [string]$Level
-    )
-    if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","cover `{$Paths}` ")){
-        if (Test-Platform 'Windows'){
-            [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
-
-        }elseif (Test-Platform 'Wsl2'){
-            [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
-
-        }elseif (Test-Platform 'Linux'){
-            [Environment]::SetEnvironmentVariable('PATH',$Paths -join ':',$Level)
-
-        }else{
-            Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-            exit -1
-        }
-    }
-}
 function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
 <#
 .SYNOPSIS
@@ -90,6 +40,8 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
         Write-VerboseLog "$counter duplicated items between Machine level and User level `$Env:PATH have been found. And, they have been merged into User level `$Env:PATH"
     }
 }
+
+
 function Add-EnvPathToCurrentProcess{
 <#
 .DESCRIPTION
