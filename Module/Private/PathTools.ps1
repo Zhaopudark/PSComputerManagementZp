@@ -291,9 +291,9 @@
         $Path = $Path -replace '[/\\]+', $Slash
         $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
 
-        if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
-            $Path = $Slash + $Path
-        }
+        # if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
+        #     $Path = $Slash + $Path
+        # }
 
         return $Path
     }
