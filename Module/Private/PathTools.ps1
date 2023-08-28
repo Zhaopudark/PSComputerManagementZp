@@ -279,7 +279,7 @@
         catch {
             $leaf = ''
         }
-        Write-Verbose "$Path | $parent  | $leaf"  -Verbose
+
         if ($parent -and $leaf){
             $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
         }else{
@@ -287,27 +287,10 @@
         }
         
         if ($item){
-            # if (Test-Path -LiteralPath $item -PathType Container){
-            #     return (join-Path $item.FullName '')
-            # }
-            # else{
-            return $item.FullName
-            # }
-            
+            return $item.FullName  
         }else{
             return $Path
         }
-        
-        # Get-ChildItem (Split-Path $known) | Where-Object Name -eq (Split-Path $known -leaf)).FullName
-        # $resolvedPath = Resolve-Path -LiteralPath $Path
-        # # $item = Get-ItemProperty -LiteralPath $resolvedPath
-        # if (Test-Path -LiteralPath $resolvedPath -PathType Container){
-        #     $output += (join-Path $resolvedPath '')
-        # }
-        # else{
-        #     $output += $resolvedPath.FullName
-        # }
-        # return $output
     }
     [System.Management.Automation.PSDriveInfo] GetQualifier([string]$LiteralPath){
         return (Get-ItemProperty -LiteralPath $LiteralPath -ErrorAction Stop).PSDrive
