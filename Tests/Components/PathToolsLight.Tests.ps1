@@ -23,11 +23,11 @@ BeforeAll {
 Describe '[Test PathToolsLight]' {
     Context '[Test the formatting feature of FormattedFileSystemPath]' {
         It '[Test on FormattedFileSystemPath1]'{
-            Write-Verbose ([FormattedFileSystemPath1]::new('???')) -Verbose | Should -Throw
+            {Write-Verbose ([FormattedFileSystemPath1]::new('???')) -Verbose }| Should -Throw
         }
 
         It '[Test on FormattedFileSystemPath2]'{
-            Write-Verbose ([FormattedFileSystemPath2]::new('???')) -Verbose | Should -Throw
+            {Write-Verbose ([FormattedFileSystemPath2]::new('???')) -Verbose }| Should -Throw
         }
 
     }  
