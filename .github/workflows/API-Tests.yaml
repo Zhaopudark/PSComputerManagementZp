@@ -15,6 +15,7 @@ jobs:
     - name: Apply pester tests 
       shell: pwsh
       run: | 
+        $PSVersionTable.PSVersion
         ./install.ps1
         Invoke-Pester './Tests/APIs/'  -Passthru
         
@@ -27,5 +28,6 @@ jobs:
     - name: Apply pester tests 
       shell: pwsh
       run: | 
+        $PSVersionTable.PSVersion
         ./install.ps1
         Invoke-Pester './Tests/APIs/'  -Passthru

@@ -15,6 +15,7 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
+        $PSVersionTable.PSVersion
         ./install.ps1
         Import-Module PSComputerManagementZp
   
@@ -27,5 +28,6 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
+        $PSVersionTable.PSVersion
         ./install.ps1
         Import-Module PSComputerManagementZp
