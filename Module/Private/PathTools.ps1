@@ -16,7 +16,8 @@
         - According to the platform, append a single '\' or '/' if the path ends with a colon.
         - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
         - Convert the drive name to initial capital letter.
-        - If 
+        - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash '\' or '/',
+            according to the platform will be added at the head.
     2. Test the preprocessed path with file system access:
         - Check if the path exists in file system. If not, throw an error.
         - Check if the path is with wildcard characters by file system. If so, throw an error.
@@ -30,22 +31,39 @@
             - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
             - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
             - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
-        # - Append a slash `\` on Windows or `/` on Unix dynamically to a directory path, if it is not ended with a slash. We hold the view that:
-        #     - Let as much information as possible be included in the path string.
-        #     - It is a decoupling and simplification that is good for whatever computational tasks ensue.
-    
+    #TODO
+        Cross-platform support.
+        Currently, this class is only adapative on each single platform, but not cross-platform. 
+        But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
+
+    Some properties of the path are also provided:
+        1. LiteralPath: The formatted path.
+        2. OriginalPlatform: The platform of the source path.
+        3. Slash: The slash of the path.
+        4. Attributes: The attributes of the path.
+        5. Linktype: The link type of the path.
+        6. LinkTarget: The link target of the path.
+        7. Qualifier: The qualifier of the path.
+        8. QualifierRoot: The root of the qualifier of the path.
+        9. DriveFormat: The format of the drive of the path.
+        10. IsDir: If the path is a directory.
+        11. IsFile: If the path is a file.
+        12. IsDriveRoot: If the path is the root of a drive.
+        13. IsBeOrInSystemDrive: If the path is in the system drive.
+        14. IsInHome: If the path is in the home directory.
+        15. IsHome: If the path is the home directory.
+        16. IsDesktopINI: If the path is a desktop.ini file.
+        (Windows only):
+            17. IsSystemVolumeInfo: If the path is the System Volume Information directory.
+            18. IsInSystemVolumeInfo: If the path is in the System Volume Information directory.
+            19. IsRecycleBin: If the path is the Recycle Bin directory.
+        20. IsInRecycleBin: If the path is in the Recycle Bin directory.
+        21. IsSymbolicLink: If the path is a symbolic link.
+        22. IsJunction: If the path is a junction.
+        23. IsHardLink: If the path is a hard link.
+
 .EXAMPLE
-    (Not usage examples, but a demonstration about the path formatting)
-
-    (Windows)
-    Given:
-    c:\uSeRs            ->will be formatted as->    C:\Users\
-    c:                  ->will be formatted as->    C:\
-    If ` C:\Users\test.txt` exits 
-
-    c:\uSeRs\test.txt   ->will be formatted as->    C:\Users\test.txt
-    (Unix)
-    /home/uSer          ->will be formatted as->    /home/uSer/
+    Not usage examples, but a demonstration about the path formatting:
 
     | (Windows) Existent Path   | Given(Input) Path         | Formatted Path    |
     | ------------------------- | ------------------------- | ----------------- |
@@ -57,58 +75,6 @@
     | (Unix) Existent Path      | Given(Input) Path         | Formatted Path    |
     | ------------------------- | ------------------------- | ----------------- |
     | /home/uSer                | /home/uSer                | /home/uSer/       |
-
-    #TODO
-        Cross-platform support.
-        Currently, this class is only adapative on each single platform, but not cross-platform. 
-        But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
-
-
-    Some properties of the path are also provided:
-        1. LiteralPath: The formatted path.
-        2. OriginalPlatform: The platform of the source path.
-        3. Attributes: The attributes of the path.
-        4. Linktype: The link type of the path.
-        5. LinkTarget: The link target of the path.
-        6. Qualifier: The qualifier of the path.
-        7. QualifierRoot: The root of the qualifier of the path.
-        8. IsContainer: If the path is a container.
-        9. IsInFileSystem: If the path is in file system.
-        10. DriveFormat: The format of the drive that contain the path.
-        11. IsDir: If the path is a directory.
-        12. IsFile: If the path is a file.
-        13. IsBeOrInSystemDrive: If the path is in system drive.
-        14. IsDriveRoot: If the path is a drive root.
-        15. IsInHome: If the path is in home directory.
-        16. IsHome: If the path is home directory.
-        Windows-exclusive:
-            17. IsDesktopINI: If the path is desktop.ini.
-            18. IsSystemVolumeInfo: If the path is System Volume Information.
-            19. IsInSystemVolumeInfo: If the path is in System Volume Information.
-
-        20. IsRecycleBin: If the path is Recycle Bin.
-        21. IsInRecycleBin: If the path is in Recycle Bin.
-        22. IsSymbolicLink: If the path is symbolic link.
-        23. IsJunction: If the path is junction.
-        24. IsHardLink: If the path is hard link.
-
-.COMPONENT
-    Resolve-Path $some_path
-    (Get-ItemProperty $some_path).FullName
-    Test-Path -LiteralPath $Path -PathType Container
-    Join-Path $some_path ''
-
-.NOTES
-    To support wildcard characters, we use `Resolve-Path` to realize
-        points `1,2,3` in the above description.
-    To realize point `4`, we use `Get-ItemProperty` to get path-object's `FullName`.
-    To realize point `5`, we use `Test-Path -LiteralPath $Path -PathType Container` to check if it is a directory, and use `join-Path $item ''` to append `\` to a directory path.
-
-.INPUTS
-    String. This function is only for literal path, and it does not support wildcard characters.
-
-.OUTPUTS
-    String
 #>  
     [ValidateNotNullOrEmpty()][string] $LiteralPath
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform
@@ -293,9 +259,9 @@
         $Path = $Path -replace '[/\\]+', $Slash
         $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
 
-        # if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
-        #     $Path = $Slash + $Path
-        # }
+        if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
+            $Path = $Slash + $Path
+        }
 
         return $Path
     }
@@ -360,9 +326,6 @@
         return ($this.LiteralPath -replace '[/\\:]+', '-').Trim('-')
     }
 }
-
-
-
 
 
 function Format-LiteralPath{
