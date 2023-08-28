@@ -118,6 +118,7 @@ function Get-EnvPathAsSplit{
         exit -1
     }
 }
+
 function Set-EnvPathBySplit{
 <#
 See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.

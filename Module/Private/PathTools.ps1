@@ -154,6 +154,7 @@
             # Write-Verbose $this.GetQualifier($Path).Provider.Name -Verbose 
             throw "Only FileSystem provider is supported, not $($this.GetQualifier($Path).Provider.Name)."
         } 
+        Write-Verbose "$Path | FormattedFileSystemPath"  -Verbose
         $this.LiteralPath = $this.FormatPath($Path) 
         $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
         $this.Linktype = (Get-ItemProperty $this.LiteralPath).Linktype
