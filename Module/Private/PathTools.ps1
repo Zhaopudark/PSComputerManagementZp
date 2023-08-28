@@ -298,6 +298,7 @@
         return $Path
     }
     [string] FormatPath([string] $Path){
+
         try {
             $parent = Split-Path $Path -Parent
         }
@@ -310,6 +311,7 @@
         catch {
             $leaf = ''
         }
+        Write-Verbose "$Path | $parent  | $leaf"  -Verbose
         if ($parent -and $leaf){
             $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
         }else{
