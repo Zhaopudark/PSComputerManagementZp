@@ -15,7 +15,6 @@ jobs:
     - name: Apply pester tests 
       shell: pwsh
       run: | 
-        Get-Content $PROFILE
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
@@ -30,7 +29,6 @@ jobs:
     - name: Apply pester tests 
       shell: pwsh
       run: | 
-        Get-Content $PROFILE
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
