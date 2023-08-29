@@ -15,7 +15,8 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
-        $PSVersionTable.PSVersion
+        $PSVersionTable
+        "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
         Import-Module PSComputerManagementZp
   
@@ -28,6 +29,7 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
-        $PSVersionTable.PSVersion
+        $PSVersionTable
+        "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
         Import-Module PSComputerManagementZp
