@@ -15,9 +15,12 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
+        $current_path = $pwd
+        cd /
         Get-ChildItem -Recurse -Include *.ps1,*.psm1 | Select-String -Pattern "ErrorActionPreference"
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
+        cd $current_path
         ./install.ps1
         Import-Module PSComputerManagementZp
   
@@ -30,8 +33,11 @@ jobs:
     - name: install module 
       shell: pwsh
       run: | 
+        $current_path = $pwd
+        cd C:\
         Get-ChildItem -Recurse -Include *.ps1,*.psm1 | Select-String -Pattern "ErrorActionPreference"
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
+        cd $current_path
         ./install.ps1
         Import-Module PSComputerManagementZp
