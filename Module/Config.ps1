@@ -46,6 +46,7 @@ if (Test-Platform 'Windows'){
 . "${PSScriptRoot}\Private\LinkTools.ps1"
 . "${PSScriptRoot}\Private\PathTools.ps1"
 . "${PSScriptRoot}\Private\ProxyTools.ps1"
+. "${PSScriptRoot}\Private\AuthorizationTools.ps1"
 function Get-ModuleInfo {
 
     return $script:ModuleInfo
