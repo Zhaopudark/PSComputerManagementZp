@@ -15,6 +15,8 @@ $script:ModuleInfo = @{
         'Set-FileSymbolicLinkWithSync',
         'Set-DirJunctionWithSync',
         'Set-FileHardLinkWithSync',
+        'Get-GatewayIPV4',
+        'Get-LocalHostIPV4',
         'Set-SystemProxyIPV4ForCurrentUser',
         'Remove-SystemProxyIPV4ForCurrentUser',
         'Set-EnvProxyIPV4ForShellProcess',
@@ -45,7 +47,6 @@ if (Test-Platform 'Windows'){
 . "${PSScriptRoot}\Private\EnvTools.ps1"
 . "${PSScriptRoot}\Private\LinkTools.ps1"
 . "${PSScriptRoot}\Private\PathTools.ps1"
-. "${PSScriptRoot}\Private\ProxyTools.ps1"
 . "${PSScriptRoot}\Private\AuthorizationTools.ps1"
 function Get-ModuleInfo {
 

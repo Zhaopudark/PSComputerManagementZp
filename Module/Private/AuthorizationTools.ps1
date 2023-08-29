@@ -15,14 +15,11 @@ function Assert-ValidPath4AuthorizationTools{
     param(
         [FormattedFileSystemPath]$Path
     )
-    if (!($Path.IsInFileSystem)){
-        throw "The $Path is not in file system."
-    }
     if ($Path.IsBeOrInSystemDrive){
         if (!($Path.IsInHome) -and !($Path.IsHome)){
             throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}."
         }
-        Write-VerboseLog "The $Path is Home on is in Home."
+        Write-VerboseLog "The $Path is Home or is in Home."
     }else{
         Write-VerboseLog "The $Path is not in SystemDisk."
     }
@@ -172,7 +169,7 @@ function Get-PathType{
     if (-not $SkipPlatformCheck){
         Test-Platform -Name 'Windows' -Throw
     }
-    if ($Path.IsInInHome){
+    if ($Path.IsInHome -or $Path.IsHome){
         $header = "Home"
     }
     elseif ($Path.DriveFormat -eq "NTFS"){

@@ -15,14 +15,14 @@ Describe '[Test AuthorizationTools]' {
         It '[Test on Windows dir with symbolik link]' -Skip:(!$IsWIndows){
             (get-item "$test_path/test_dir").Attributes | Should -BeExactly 'Directory'    
             Set-ItemProperty "$test_path/test_dir" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test_dir").Attributes} | Should -Throw
+            {(get-item "$test_path/test_dir" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test_dir" -Force).Attributes | Should -BeExactly 'Hidden, Directory'
             
 
             New-Item -Path "$test_path/test_dir_symbilic_link" -ItemType SymbolicLink -Target "$test_path/test_dir" 
             (get-item "$test_path/test_dir_symbilic_link").Attributes | Should -BeExactly 'Directory, ReparsePoint' 
             Set-ItemProperty "$test_path/test_dir_symbilic_link" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test_dir_symbilic_link").Attributes} | Should -Throw
+            {(get-item "$test_path/test_dir_symbilic_link" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test_dir_symbilic_link" -Force).Attributes | Should -BeExactly 'Hidden, Directory, ReparsePoint'
             Reset-PathAttribute -Path "$test_path/test_dir_symbilic_link"
             (get-item "$test_path/test_dir_symbilic_link").Attributes | Should -BeExactly 'Directory, ReparsePoint' 
@@ -36,14 +36,14 @@ Describe '[Test AuthorizationTools]' {
 
             (get-item "$test_path/test_dir").Attributes | Should -BeExactly 'Directory'    
             Set-ItemProperty "$test_path/test_dir" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test_dir").Attributes} | Should -Throw
+            {(get-item "$test_path/test_dir" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test_dir" -Force).Attributes | Should -BeExactly 'Hidden, Directory'
             
 
             New-Item -Path "$test_path/test_dir_junction" -ItemType Junction -Target "$test_path/test_dir" 
             (get-item "$test_path/test_dir_junction").Attributes | Should -BeExactly 'Directory, ReparsePoint' 
             Set-ItemProperty "$test_path/test_dir_junction" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test_dir_junction").Attributes} | Should -Throw
+            {(get-item "$test_path/test_dir_junction" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test_dir_junction" -Force).Attributes | Should -BeExactly 'Hidden, Directory, ReparsePoint'
             Reset-PathAttribute -Path "$test_path/test_dir_junction"
             (get-item "$test_path/test_dir_junction").Attributes | Should -BeExactly 'Directory, ReparsePoint' 
@@ -57,17 +57,17 @@ Describe '[Test AuthorizationTools]' {
         It '[Test on Windows file with symbolik link]' -Skip:(!$IsWIndows){
             (get-item "$test_path/test.txt").Attributes | Should -BeExactly 'Archive'    
             Set-ItemProperty "$test_path/test.txt" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test.txt").Attributes} | Should -Throw
+            {(get-item "$test_path/test.txt" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test.txt" -Force).Attributes | Should -BeExactly 'Hidden'
             
 
             New-Item -Path "$test_path/test_txt_symbilic_link" -ItemType SymbolicLink -Target "$test_path/test.txt" 
             (get-item "$test_path/test_txt_symbilic_link").Attributes | Should -BeExactly 'Archive, ReparsePoint' 
             Set-ItemProperty "$test_path/test_txt_symbilic_link" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test_txt_symbilic_link").Attributes} | Should -Throw
+            {(get-item "$test_path/test_txt_symbilic_link" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test_txt_symbilic_link" -Force).Attributes | Should -BeExactly 'Hidden, ReparsePoint'
             Reset-PathAttribute -Path "$test_path/test_txt_symbilic_link"
-            (get-item "$test_path/test_txt_symbilic_link").Attributes | Should -BeExactly 'Directory, ReparsePoint' 
+            (get-item "$test_path/test_txt_symbilic_link").Attributes | Should -BeExactly 'Archive, ReparsePoint' 
 
             Set-ItemProperty "$test_path/test.txt" -Name Attributes -Value 'Archive'
             (get-item "$test_path/test.txt").Attributes | Should -BeExactly 'Archive'
@@ -79,12 +79,12 @@ Describe '[Test AuthorizationTools]' {
             # Hardlink
             (get-item "$test_path/test.txt").Attributes | Should -BeExactly 'Archive'    
             Set-ItemProperty "$test_path/test.txt" -Name Attributes -Value 'Hidden'
-            {(get-item "$test_path/test.txt").Attributes} | Should -Throw
+            {(get-item "$test_path/test.txt" -ErrorAction Stop).Attributes} | Should -Throw
             (get-item "$test_path/test.txt" -Force).Attributes | Should -BeExactly 'Hidden'
             
 
             New-Item -Path "$test_path/test_txt_hard_link" -ItemType HardLink -Target "$test_path/test.txt" 
-            {(get-item "$test_path/test_txt_hard_link").Attributes}| Should -Throw
+            {(get-item "$test_path/test_txt_hard_link" -ErrorAction Stop).Attributes}| Should -Throw
             (get-item "$test_path/test_txt_hard_link" -Force).Attributes | Should -BeExactly 'Hidden, Archive' 
             (get-item "$test_path/test.txt" -Force).Attributes | Should -BeExactly 'Hidden, Archive'
 
@@ -99,7 +99,7 @@ Describe '[Test AuthorizationTools]' {
             
             New-Item -Path "$test_path/test_dir_symbilic_link" -ItemType SymbolicLink -Target "$test_path/test_dir" 
            
-            {Reset-PathAttribute -Path "$test_path/test_dir_symbilic_link"} | Should -Throw
+            {Reset-PathAttribute -Path "$test_path/test_dir_symbilic_link" -ErrorAction Stop} | Should -Throw
 
             Remove-Item "$test_path/test_dir_symbilic_link"
         }
@@ -110,7 +110,7 @@ Describe '[Test AuthorizationTools]' {
 
             New-Item -Path "$test_path/test_txt_symbilic_link" -ItemType SymbolicLink -Target "$test_path/test.txt" 
             
-            {Reset-PathAttribute -Path "$test_path/test_txt_symbilic_link"} | Should -Throw
+            {Reset-PathAttribute -Path "$test_path/test_txt_symbilic_link" -ErrorAction Stop} | Should -Throw
 
             Remove-Item "$test_path/test_txt_symbilic_link" 
 
@@ -119,7 +119,7 @@ Describe '[Test AuthorizationTools]' {
             # Hardlink
             New-Item -Path "$test_path/test_txt_hard_link" -ItemType HardLink -Target "$test_path/test.txt" 
         
-            {Reset-PathAttribute -Path "$test_path/test_txt_hard_link" } | Should -Throw          
+            {Reset-PathAttribute -Path "$test_path/test_txt_hard_link" -ErrorAction Stop} | Should -Throw          
         
             Remove-Item "$test_path/test_txt_hard_link" 
         }
@@ -150,9 +150,10 @@ Describe '[Test AuthorizationTools]' {
             Get-PathType "${Home}" | Should -BeExactly 'Home\Root'
 
             $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
-            Get-PathType "$maybe_c`:\" | Should -Throw "If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}."
-            Get-PathType "$maybe_c`:\System Volume Information" | Should -Throw "If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}."
-            Get-PathType "$maybe_c`:\`$Recycle.Bin" | Should -Throw "If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}."
+            
+            {Get-PathType "$maybe_c`:\" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\ is in SystemDisk, it has to be or in `${Home}: ${Home}."
+            {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\System Volume Information is in SystemDisk, it has to be or in `${Home}: ${Home}."
+            {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}."
 
         }
         It '[Test on Linux file]' -Skip:(!$IsLinux){
