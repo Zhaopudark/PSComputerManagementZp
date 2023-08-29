@@ -150,14 +150,14 @@ Describe '[Test AuthorizationTools]' {
             Get-PathType "${Home}" | Should -BeExactly 'Home\Root'
 
             $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
-            
+
             {Get-PathType "$maybe_c`:\" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\ is in SystemDisk, it has to be or in `${Home}: ${Home}."
             {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\System Volume Information is in SystemDisk, it has to be or in `${Home}: ${Home}."
             {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}."
 
         }
         It '[Test on Linux file]' -Skip:(!$IsLinux){
-            Get-PathType "$test_path/test_dir" | Should -Throw
+            {Get-PathType "$test_path/test_dir" }| Should -Throw
         }
     }
 }
