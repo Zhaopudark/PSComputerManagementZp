@@ -19,10 +19,10 @@ function Assert-ValidPath4AuthorizationTools{
         throw "The $Path is not in file system."
     }
     if ($Path.IsBeOrInSystemDrive){
-        if (!($Path.IsInHome) -or !($Path.IsHome)){
+        if (!($Path.IsInHome) -and !($Path.IsHome)){
             throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}."
         }
-        throw "The $Path is not in SystemDisk."
+        Write-VerboseLog "The $Path is Home on is in Home."
     }else{
         Write-VerboseLog "The $Path is not in SystemDisk."
     }
