@@ -17,7 +17,10 @@ jobs:
       run: | 
         $current_path = $pwd
         cd /
+        $current_ErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'continue'
         Get-ChildItem -Recurse -Include *.ps1,*.psm1 | Select-String -Pattern "ErrorActionPreference"
+        $ErrorActionPreference = $current_ErrorActionPreference
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
         cd $current_path
@@ -35,9 +38,12 @@ jobs:
       run: | 
         $current_path = $pwd
         cd C:\
+        $current_ErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'continue'
         Get-ChildItem -Recurse -Include *.ps1,*.psm1 | Select-String -Pattern "ErrorActionPreference"
+        $ErrorActionPreference = $current_ErrorActionPreference
+        cd $current_path
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
-        cd $current_path
         ./install.ps1
         Import-Module PSComputerManagementZp
