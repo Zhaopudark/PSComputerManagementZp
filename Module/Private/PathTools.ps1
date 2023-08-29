@@ -278,7 +278,7 @@
         }
 
         if ($parent -and $leaf){
-            $item = (Get-ChildItem $parent | Where-Object Name -eq $leaf)
+            $item = (Get-ChildItem $parent -ErrorAction Stop| Where-Object Name -eq $leaf)
         }else{
             $item = $null
         }
