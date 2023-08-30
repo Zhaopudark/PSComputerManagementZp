@@ -52,3 +52,5 @@ function Get-ModuleInfo {
 
     return $script:ModuleInfo
 }
+
+$ErrorActionPreference = 'Stop'

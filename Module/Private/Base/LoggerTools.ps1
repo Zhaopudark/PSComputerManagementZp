@@ -6,6 +6,10 @@ param (
     [Parameter(Mandatory)]
     [string]$LogDir
 )
+
+$script:InstallPath = $InstallPath
+$script:ModuleVersion = $ModuleVersion
+$script:LogDir = $LogDir
 function Get-LogFileName{
     param(
         [string]$KeyInfo
