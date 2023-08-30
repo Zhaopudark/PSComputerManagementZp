@@ -237,8 +237,9 @@
         return [FormattedFileSystemPath]::FormatLiteralPath($Path,$this.Slash)
     }
     static [string] FormatLiteralPath([string] $Path, [string] $Slash){
-        # format $Path on Literal level, without any check or validation through file system
-        # can be used as pre-procession of a path before it is passed to $this.FormatPath()
+        # Format $Path on Literal level, without any check or validation through file system.
+        # See .DESCRIPTION-1 of this class for the details of the formatting rules.
+        # It can be used as pre-procession of a path before it is passed to $this.FormatPath().
         if ($Path -match '[\*\?\[\]]'){
             throw "Only literal path is supported, not $($Path) with wildcard characters `*`, `?` or `[]`."
         }
@@ -324,16 +325,7 @@ function Format-FileSystemPath{
 function Format-LiteralPath{
 <#
 .DESCRIPTION
-    Automatically format a path to standard format by the following rules:
-        1. Reduce any consecutive colons to a single `:`
-        2. According to the platform, append a single '\' or '/' if the path ends with a colon.
-        3. Reduce any consecutive slashes to a single '\' or '/', according to the platform.
     It is the same to class [FormattedFileSystemPath]::FormatLiteralPath().
-.INPUTS
-    String. This function is only for literal path, and it does not support wildcard characters.
-
-.OUTPUTS
-    String
 #>  
     param(
         [Parameter(Mandatory)]

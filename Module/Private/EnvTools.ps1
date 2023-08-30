@@ -153,7 +153,7 @@ function Format-EnvPath{
 .DESCRIPTION
     Format all paths of `$Env:PATH in $Level Level:
         1. Remove the invalid (non-existent or empty or duplicated) items.
-        2. Format the content of all items by `Format-LiteralPath` function.
+        2. Format the content of all items by `Format-FileSystemPath` function.
 #>
     [CmdletBinding()]
     param(
@@ -168,7 +168,7 @@ function Format-EnvPath{
     {
         if (Test-EnvPathExist -Level $Level -Path $item){
             Write-Verbose $item -Verbose
-            $item = [FormattedFileSystemPath]::new($item)
+            $item = Format-FileSystemPath -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
                 $out_buf += $item
             }
