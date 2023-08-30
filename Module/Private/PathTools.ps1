@@ -307,6 +307,19 @@
     }
 }
 
+function Format-FileSystemPath{
+<#
+.DESCRIPTION
+    A function to apply the class FormattedFileSystemPath on a path.
+    Return the formatted liiteral path.
+#>  
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+    return ([FormattedFileSystemPath]::new($Path)).LiteralPath
+}
+
 
 function Format-LiteralPath{
 <#
