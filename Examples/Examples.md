@@ -13,9 +13,12 @@ Please run PowerShell with `Administrator` privilege.
 Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of localhost and then set system proxy by as 'localhost:7890':
 
 ```powershell
-$module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
-& $script_path -ServerType 'localhost' -PortNumber 7890
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+Import-Module PSComputerManagementZp -Scope Local -Force
+$server_ip = Get-LocalHostIPV4
+Set-SystemProxyIPV4ForCurrentUser -ServerIP $server_ip -PortNumber 7890
+Remove-Module PSComputerManagementZp
 ```
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
@@ -29,7 +32,7 @@ This case can be useful when you want to set your `Virtual Machine`'s system pro
 - `Host Machine` is running and has been proxied.
 - `Host Machine` has detect the `Virtual Machine`'s  `Network Adapter`, such as `vEthernet (Default Switch)`
 - `Host Machine` has enable `LAN proxy`.
-- `Virtual Machine`'s gateway IP address is the above adapter' IP address.
+- `Virtual Machine`'s gateway IP address is just the above adapter' IP address.
 
 Then, by following settings on the `Virtual Machine`, it can through its gateway to use `Host Machine`'s system proxy.
 
@@ -40,27 +43,34 @@ Please run PowerShell with `Administrator` privilege.
 Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of gateway and then set system proxy by as 'gateway:7890':
 
 ```powershell
-$module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
-& $script_path -ServerType 'gateway' -PortNumber 7890
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+Import-Module PSComputerManagementZp -Scope Local -Force
+$server_ip = Get-GatewayIPV4
+Set-SystemProxyIPV4ForCurrentUser -ServerIP $server_ip -PortNumber 7890
+Remove-Module PSComputerManagementZp
 ```
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 <img src="./../Assets/Examples.assets/image-20230703160317798.png" alt="image-20230703160317798" style="zoom:67%;" />
 
-Optional: To inject this script `SetSystemProxy.ps1` into the the `virtual Windows` as a scheduled task `SetProxy`, setting proxy automatically when `logon` or `startup` , you can take the following further commands (Please run PowerShell with `Administrator` privilege.) :
+Optional: To inject these commands into the the `virtual Windows` as a scheduled task `SetProxy`, setting proxy automatically when `logon` or `startup` , you can take the following further commands (Please run PowerShell with `Administrator` privilege.) :
 
 ```powershell
-Set-ExecutionPolicy RemoteSigned
-$module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
-
-Stop-ScheduledTask -TaskName "SetProxy"
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+$commands = {
 Import-Module PSComputerManagementZp -Scope Local -Force
-Register-PS1ToScheduledTask -TaskName "SetProxy" -ScriptPath $script_path -ScriptArgs "-ServerType Gateway -PortNumber 7890" -AtLogon -AtStartup
-Start-ScheduledTask -TaskName "SetProxy"
+$server_ip = Get-GatewayIPV4
+Set-SystemProxyIPV4ForCurrentUser -ServerIP $server_ip -PortNumber 7890
 Remove-Module PSComputerManagementZp
+}
+$triggers = @((New-ScheduledTaskTrigger -AtLogon), (New-ScheduledTaskTrigger -AtStartup))
+$actions = @((New-ScheduledTaskAction -Execute "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Hidden -Command $commands"))
+Register-ScheduledTask -TaskName "SetProxy" -Trigger $triggers -Action $actions -RunLevel Highest -Force
+Stop-ScheduledTask -TaskName "SetProxy" 
+Start-ScheduledTask -TaskName "SetProxy"
 ```
 
 Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->SetProxy` for checking:
@@ -136,9 +146,11 @@ Please run PowerShell with `Administrator` privilege.
 Supposing  you have run the above commands to set system proxy, you can do the following to revoke the settings:
 
 ```powershell
-$module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\RemoveSystemProxy.ps1"
-& $script_path
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+Import-Module PSComputerManagementZp -Scope Local -Force
+Remove-SystemProxyIPV4ForCurrentUser
+Remove-Module PSComputerManagementZp
 ```
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:

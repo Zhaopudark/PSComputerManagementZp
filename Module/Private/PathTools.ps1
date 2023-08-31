@@ -249,6 +249,8 @@
         }
 
         $Path = $Path -replace '[:]+', ':'
+
+        $Path = $Path.TrimEnd('\/')
         
         if ($Path -match ":$") {
             $Path = $Path + $Slash
@@ -279,7 +281,7 @@
         }
 
         if ($parent -and $leaf){
-            $item = (Get-ChildItem $parent -ErrorAction Stop| Where-Object Name -eq $leaf)
+            $item = (Get-ChildItem $parent -Force| Where-Object Name -eq $leaf)
         }else{
             $item = $null
         }
@@ -291,7 +293,7 @@
         }
     }
     [System.Management.Automation.PSDriveInfo] GetQualifier([string]$LiteralPath){
-        return (Get-ItemProperty -LiteralPath $LiteralPath -ErrorAction Stop).PSDrive
+        return (Get-ItemProperty -LiteralPath $LiteralPath).PSDrive
     }
     # [string] GetQualifierWithFirstDir(){
 

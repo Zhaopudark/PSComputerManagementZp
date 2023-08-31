@@ -17,11 +17,11 @@ function Assert-ValidPath4AuthorizationTools{
     )
     if ($Path.IsBeOrInSystemDrive){
         if (!($Path.IsInHome) -and !($Path.IsHome)){
-            throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}."
+            throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
         }
-        Write-VerboseLog "The $Path is Home or is in Home."
+        Write-VerboseLog "The $Path is Home or is in Home. But it is also supported."
     }else{
-        Write-VerboseLog "The $Path is not in SystemDisk."
+        Write-VerboseLog "The $Path is not in SystemDisk. But it is also supported."
     }
     return $true
 }
@@ -75,7 +75,7 @@ function Reset-PathAttribute{
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
-        [ValidateScript({Assert-ValidPath4AuthorizationTools $_})]
+        # [ValidateScript({Assert-ValidPath4AuthorizationTools $_})] #only need to be checked once by public function `Reset-Authorization`
         [FormattedFileSystemPath]$Path,
         [switch]$SkipPlatformCheck
     )
@@ -87,7 +87,7 @@ function Reset-PathAttribute{
     if($PSCmdlet.ShouldProcess("$Path",'reset the attributes')){
         if($Path.IsDir){
             if($Path.IsDriveRoot -or $Path.IsSystemVolumeInfo -or $Path.IsRecycleBin){
-                Set-ItemProperty $Path -Name Attributes -Value "Hidden, System"
+                Set-ItemProperty $Path -Name Attributes -Value "Hidden, System" -ErrorAction Continue # becasuse there usually some strange original privileges
             }elseif($Path.IsSymbolicLink -or $Path.IsJunction){
                 Set-ItemProperty $Path -Name Attributes -Value "Normal"
             }else{
@@ -162,7 +162,7 @@ function Get-PathType{
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4AuthorizationTools $_})]
+        # [ValidateScript({Assert-ValidPath4AuthorizationTools $_})] #only need to be checked once by public function `Reset-Authorization`
         [FormattedFileSystemPath]$Path,
         [switch]$SkipPlatformCheck
     )
@@ -403,7 +403,7 @@ function Get-DefaultSddl{
             break
         }
         Default {
-            Write-VerboseLog "`$Path: $Path has unsupported `$PathType: $PathType"
+            Write-VerboseLog "The $Path has unsupported `$PathType: $PathType"
             $Sddl = $null
         }
     }

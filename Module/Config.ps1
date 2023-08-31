@@ -20,8 +20,7 @@ $script:ModuleInfo = @{
         'Set-SystemProxyIPV4ForCurrentUser',
         'Remove-SystemProxyIPV4ForCurrentUser',
         'Set-EnvProxyIPV4ForShellProcess',
-        'Remove-EnvProxyIPV4ForShellProcess',
-        'Register-PS1ToScheduledTask'
+        'Remove-EnvProxyIPV4ForShellProcess'
     )
 }
 

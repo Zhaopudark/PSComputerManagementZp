@@ -27,7 +27,7 @@ For more information on the motivation, rationale, logic, and usage of this func
         [switch]$Recurse
     )
     try {
-        Assert-IsWindows
+        Assert-IsWindowsAndAdmin
         $PathType = Get-PathType $Path -SkipPlatformCheck
         $Sddl = Get-DefaultSddl -PathType $PathType
         $NewAcl = Get-Acl -LiteralPath $Path
@@ -50,11 +50,26 @@ For more information on the motivation, rationale, logic, and usage of this func
                     Write-VerboseLog  "`$Path is too long: '$Path'"
                 }
             }
-            if ($Recurse -and !$Path.IsFile -and !$Path.IsInSystemVolumeInfo -and !$Path.IsInRecycleBin -and !$Path.IsSymbolicLink -and !$Path.IsJunction){
+            if ($Recurse){
+                if ($Path.IsFile){
+                    throw "Cannot use `-Recurse` on a file: $Path"
+                }
+                if ($Path.IsSymbolicLink){
+                    throw "Cannot use `Recurse` on a symbolic link: $Path"
+                }
+                if ($Path.IsJunction){
+                    throw "Cannot use `-Recurse` on a junction: $Path"
+                }
+                if ($Path.IsInSystemVolumeInfo){
+                    throw "Cannot use `-Recurse` on a path in System Volume Information: $Path"
+                }
+                if ($Path.IsInRecycleBin){
+                    throw "Cannot use `-Recurse` on a path in Recycle Bin: $Path"
+                }
 
                 # Recurse bypass: files, symbolic link directories, junctions, System Volume Information, `$Recycle.Bin
 
-                $Paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint
+                $Paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint -ErrorAction Continue
                 # The progress bar is refer to Chat-Gpt
                 $total = $Paths.Count
                 $current = 0
