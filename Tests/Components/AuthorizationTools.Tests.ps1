@@ -151,9 +151,9 @@ Describe '[Test AuthorizationTools]' {
 
             $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
 
-            {Get-PathType "$maybe_c`:\" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\ is in SystemDisk, it has to be or in `${Home}: ${Home}."
-            {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\System Volume Information is in SystemDisk, it has to be or in `${Home}: ${Home}."
-            {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}."
+            {Get-PathType "$maybe_c`:\" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\ is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
+            {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\System Volume Information is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
+            {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw "Cannot validate argument on parameter 'Path'. If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
 
         }
         It '[Test on Linux file]' -Skip:(!$IsLinux){
