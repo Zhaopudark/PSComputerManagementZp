@@ -12,6 +12,26 @@ function Write-EnvModificationLog{
     $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
     Write-VerboseLog $message -Verbose
 }
+# function Assert-ValidLevel4EnvTools{
+#     [CmdletBinding()]
+#     [OutputType([System.Boolean])]
+#     param(
+#         [string]$Level
+#     )
+#     if ($Level -notin @('User','Process','Machine')){
+#         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
+#     }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
+#         Assert-AdminPermission
+#         return $true
+#     }else{
+#         if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
+#             -and ($Level -in @('User','Machine'))){
+#             Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+#         }
+#         return $true
+#     }
+# }
+
 function Assert-ValidLevel4EnvTools{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
@@ -22,20 +42,20 @@ function Assert-ValidLevel4EnvTools{
         throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
     }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
         Assert-AdminPermission
-        return $true
     }else{
         if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
             -and ($Level -in @('User','Machine'))){
             Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
         }
-        return $true
     }
 }
+
 function Test-EnvPathExist{
 <#
 .DESCRIPTION
     Test if the `Path` is `existing` or not `empty` or not `$null`.
     Show corresonding logs.
+
 .OUTPUTS
     $true: if the `Path` is `existing` and not `empty` and not `$null`.
     $false: if the `Path` is not `existing` or is `empty` or `$null`.
@@ -44,13 +64,16 @@ function Test-EnvPathExist{
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level,
         [Parameter(Mandatory)]
         [AllowEmptyString()]
         [AllowNull()]
-        [string]$Path
+        [string]$Path,
+        [switch]$SkipLevelCheck
     )
+    if (-not $SkipLevelCheck){
+        Assert-ValidLevel4EnvTools $Level
+    }
     if ($Path -eq $null){
         Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is `$null."
         return $false
@@ -65,27 +88,30 @@ function Test-EnvPathExist{
     }
 }
 function Test-EnvPathNotDuplicated{
-    <#
-    .DESCRIPTION
-        Test if the `Path` is `duplicated` in the `$Container`.
-        Show corresonding logs.
-    .OUTPUTS
-        $true: if the `Path` is not `duplicated` in the `$Container`.
-        $false: if the `Path` is `duplicated` in the `$Container`.
+<#
+.DESCRIPTION
+    Test if the `Path` is `duplicated` in the `$Container`.
+    Show corresonding logs.
+.OUTPUTS
+    $true: if the `Path` is not `duplicated` in the `$Container`.
+    $false: if the `Path` is `duplicated` in the `$Container`.
 
-    #>
+#>
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
         [string]$Level,
         [Parameter(Mandatory)]
         [string]$Path,
         [Parameter(Mandatory)]
         [AllowEmptyCollection()]
-        [string[]]$Container
+        [string[]]$Container,
+        [switch]$SkipLevelCheck
     )
+    if (-not $SkipLevelCheck){
+        Assert-ValidLevel4EnvTools $Level
+    }
     if ($Path -in $Container){
         Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
         return $false
@@ -94,15 +120,17 @@ function Test-EnvPathNotDuplicated{
     }
 }
 
-
 function Get-EnvPathAsSplit{
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
-        [string]$Level
+        [string]$Level,
+        [switch]$SkipLevelCheck
     )
+    if (-not $SkipLevelCheck){
+        Assert-ValidLevel4EnvTools $Level
+    }
     if (Test-Platform 'Windows'){
         return @([Environment]::GetEnvironmentVariable('Path',$Level) -Split ';')
 
@@ -127,9 +155,13 @@ See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/ever
     param(
         [string[]]$Paths,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
-        [string]$Level
+        [string]$Level,
+        [switch]$SkipLevelCheck
     )
+    if (-not $SkipLevelCheck){
+        Assert-ValidLevel4EnvTools $Level
+    }
+
     if($PSCmdlet.ShouldProcess("$Level level `$Env:PATH","cover `{$Paths}` ")){
         if (Test-Platform 'Windows'){
             [Environment]::SetEnvironmentVariable('Path',$Paths -join ';',$Level)
@@ -158,18 +190,20 @@ function Format-EnvPath{
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidLevel4EnvTools $_})]
-        [string]$Level
+        [string]$Level,
+        [switch]$SkipLevelCheck
     )
-    $env_paths = Get-EnvPathAsSplit -Level $Level
+    if (-not $SkipLevelCheck){
+        Assert-ValidLevel4EnvTools $Level
+    }
+    $env_paths = Get-EnvPathAsSplit -Level $Level -SkipLevelCheck
     $out_buf = @()
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $env_paths)
     {
-        if (Test-EnvPathExist -Level $Level -Path $item){
-            Write-Verbose $item -Verbose
+        if (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck){
             $item = Format-FileSystemPath -Path $item
-            if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf ){
+            if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf -SkipLevelCheck){
                 $out_buf += $item
             }
             else{
@@ -182,6 +216,6 @@ function Format-EnvPath{
         }
 
     }
-    Set-EnvPathBySplit -Paths $out_buf -Level $Level
+    Set-EnvPathBySplit -Paths $out_buf -Level $Level -SkipLevelCheck
     Write-VerboseLog "Formating $Level level `$Env:PATH, $counter invalid(non-existent or empty or duplicated) items have been found and merged."
 }

@@ -1,4 +1,33 @@
 ﻿    
+# function Assert-ValidPath4AuthorizationTools{
+# <#
+# .SYNOPSIS
+#     Check if a path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
+
+# .DESCRIPTION
+#     Check if $Path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
+#     Only the following 4 types of paths are valid:
+#         1. root path of Non-system disk 
+#         2. other path in Non-system disk
+#         3. path of ${Home} 
+#         4. other path in ${Home}
+# #>
+#     param(
+#         [FormattedFileSystemPath]$Path
+#     )
+#     if ($Path.IsBeOrInSystemDrive){
+#         if (!($Path.IsInHome) -and !($Path.IsHome)){
+#             throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
+#         }
+#         Write-VerboseLog "The $Path is Home or is in Home. But it is also supported."
+#     }else{
+#         Write-VerboseLog "The $Path is not in SystemDisk. But it is also supported."
+#     }
+#     return $true
+# }
+    
+
+
 function Assert-ValidPath4AuthorizationTools{
 <#
 .SYNOPSIS
@@ -23,9 +52,8 @@ function Assert-ValidPath4AuthorizationTools{
     }else{
         Write-VerboseLog "The $Path is not in SystemDisk. But it is also supported."
     }
-    return $true
 }
-    
+
 function Reset-PathAttribute{
 <#
 .SYNOPSIS
@@ -72,16 +100,22 @@ function Reset-PathAttribute{
 .PARAMETER SkipPlatformCheck
     Switch to disable platform check at the beginning.
     If true(given), the platform will not be checked at the beginning.
+.PARAMETER SkipPathCheck
+    Switch to disable path check at the beginning.
+    If true(given), the path will not be checked at the beginning.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
-        # [ValidateScript({Assert-ValidPath4AuthorizationTools $_})] #only need to be checked once by public function `Reset-Authorization`
         [FormattedFileSystemPath]$Path,
-        [switch]$SkipPlatformCheck
+        [switch]$SkipPlatformCheck,
+        [switch]$SkipPathCheck
     )
 
     if (-not $SkipPlatformCheck){
         Test-Platform -Name 'Windows' -Throw
+    }
+    if (-not $SkipPathCheck){
+        Assert-ValidPath4AuthorizationTools $Path
     }
 
     if($PSCmdlet.ShouldProcess("$Path",'reset the attributes')){
@@ -154,6 +188,10 @@ function Get-PathType{
     Switch to disable platform check at the beginning.
     If true(given), the platform will not be checked at the beginning.
 
+.PARAMETER SkipPathCheck
+    Switch to disable path check at the beginning.
+    If true(given), the path will not be checked at the beginning.
+
 .OUTPUTS
     System.String if `$Path` can be recognized as a customized path type.
     $null when error or the`$Path` cannot be recognized as a customized path type.
@@ -162,12 +200,15 @@ function Get-PathType{
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory)]
-        # [ValidateScript({Assert-ValidPath4AuthorizationTools $_})] #only need to be checked once by public function `Reset-Authorization`
         [FormattedFileSystemPath]$Path,
-        [switch]$SkipPlatformCheck
+        [switch]$SkipPlatformCheck,
+        [switch]$SkipPathCheck
     )
     if (-not $SkipPlatformCheck){
         Test-Platform -Name 'Windows' -Throw
+    }
+    if (-not $SkipPathCheck){
+        Assert-ValidPath4AuthorizationTools $Path
     }
     if ($Path.IsInHome -or $Path.IsHome){
         $header = "Home"

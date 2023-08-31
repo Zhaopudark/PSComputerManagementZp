@@ -28,12 +28,13 @@ For more information on the motivation, rationale, logic, and usage of this func
     )
     try {
         Assert-IsWindowsAndAdmin
-        $PathType = Get-PathType $Path -SkipPlatformCheck
+        Assert-ValidPath4AuthorizationTools $Path
+        $PathType = Get-PathType $Path -SkipPlatformCheck -SkipPathCheck
         $Sddl = Get-DefaultSddl -PathType $PathType
         $NewAcl = Get-Acl -LiteralPath $Path
 
         if($PSCmdlet.ShouldProcess("$Path",'set the original ACL')){
-            Reset-PathAttribute $Path -SkipPlatformCheck
+            Reset-PathAttribute $Path -SkipPlatformCheck -SkipPathCheck
             if ($NewAcl.Sddl -ne $Sddl){
                 try {
                     Write-VerboseLog  "`$Path is:`n`t $Path"
