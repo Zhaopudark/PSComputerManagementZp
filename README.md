@@ -4,12 +4,9 @@
 # Navigation
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue)](https://learn.microsoft.com/en-us/powershell/)
 [![PSComputerManagementZp-Home](https://img.shields.io/badge/PSComputerManagementZp-Home-yellow)](README.md)
-[![PSComputerManagementZp-AIPs](https://img.shields.io/badge/PSComputerManagementZp-AIPs-green)](README.md)
-[![PSComputerManagementZp-Examples](https://img.shields.io/badge/PSComputerManagementZp-Examples-red)](README.md)
+[![PSComputerManagementZp-AIPs](https://img.shields.io/badge/PSComputerManagementZp-AIPs-green)](Tests/APIs/APIs.md)
+[![PSComputerManagementZp-Examples](https://img.shields.io/badge/PSComputerManagementZp-Examples-red)](Examples/Examples.md)
 
-- [Home](README.md)
-- [AIPs](Tests/APIs/APIs.md)
-- [Examples](Examples/Examples.md) 
 
 # Backgrounds
 
@@ -49,25 +46,12 @@ cd PSComputerManagementZp
 
 # APIs
 
-For all reachable functions, see [AIPs](APIs.md). The following are some useful examples:
-
-- `Get-GatewayIPV4`
-- `Get-LocalHostIPV4`
-- `Set-SystemProxyIPV4ForCurrentUser`
-- `Register-PS1ToScheduledTask`
-- `Remove-SystemProxyIPV4ForCurrentUser`
-- `Set-EnvProxyIPV4ForShellProcess`
-- `Remove-EnvProxyIPV4ForShellProcess`
-- `Merge-RedundantEnvPathFromLocalMachineToCurrentUser`
-- `Add-EnvPathToCurrentProcess`
-- `Remove-EnvPathByPattern`
-- `Remove-EnvPathByTargetPath`
+For all reachable functions, see [AIPs](APIs.md). 
 
 # Risks
 
 - May not be compatible with other software or CLI tools or CLI commands or PowerShell Modules. Such as, if you have enabled `system proxy` in `clash`, there is no need to use the case [Set IPV4 system proxy by `Localhost` with `PortNumber`](#Set-system-proxy-IPV4-by-Localhost-with-PortNumber).
 - This module will modify registry items in some cases. So, to reduce the potential conflicts with other software, tools, or commands, you have better backup all registry items before using the module. 
-- [ ] #TODO: make automatic registry backup for risk operations. 
 
 # Usage
 
@@ -89,9 +73,12 @@ Please run PowerShell with `Administrator` privilege.
 Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of localhost and then set system proxy by as 'localhost:7890':
 
 ```powershell
-$module = Get-Module -ListAvailable | Where-Object {$_.Name -eq 'PSComputerManagementZp'}
-$script_path = "$($module.Path | Split-Path -Parent)\samples\SetSystemProxy.ps1"
-& $script_path -ServerType 'localhost' -PortNumber 7890
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+Import-Module PSComputerManagementZp -Scope Local -Force
+$server_ip = Get-LocalHostIPV4
+Set-SystemProxyIPV4ForCurrentUser -ServerIP $server_ip -PortNumber 7890
+Remove-Module PSComputerManagementZp
 ```
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
