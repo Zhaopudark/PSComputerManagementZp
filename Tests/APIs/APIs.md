@@ -1,7 +1,124 @@
 # Proxy Tools
+# Authorization Management
 
+## Reset-Authorization
+```powershell
+<#
+.SYNOPSIS
+Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
+For more information on the motivation, rationale, logic, and usage of this function, see https://little-train.com/posts/7fdde8eb.html
+
+.DESCRIPTION
+    Reset ACL of `$Path` to its default state by 3 steps:
+        1. Get path type by `Get-PathType`
+        2. Get default SDDL of `$Path` by `Get-DefaultSddl` according to `$PathType`
+        3. Set SDDL of `$Path` to default SDDL by `Set-Acl`
+    
+    Only for window system
+    Only for single user account on window system, i.e. totoally Personal Computer
+
+.COMPONENT
+    $NewAcl = Get-Acl -LiteralPath $Path
+    $Sddl = ... # Get default SDDL of `$Path`
+    $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
+    Set-Acl -LiteralPath $Path -AclObject $NewAcl
+
+#>
+```
+# Environment Variables Management
+## Merge-RedundantEnvPathFromLocalMachineToCurrentUser
+
+```powershell
+<#
+.SYNOPSIS
+    Merge redundant items form Machine Level env PATH to User Level Env PATH.
+.DESCRIPTION
+    Sometimes, we may find some redundant items that both
+    in Machine Level $Env:PATH and User Level $Env:PATH.
+    This may because we have installed some software in different privileges.
+
+    This function will help us to merge the redundant items from Machine Level $Env:PATH to User Level $Env:PATH.
+    The operation will symplify the `$Env:PATH`.
+
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.NOTES
+    Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
+#>
+```
+## Add-EnvPathToCurrentProcess
+```powershell
+<#
+.DESCRIPTION
+    Add the `Path` to the `$Env:PATH` in `Process` level.
+    Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
+.EXAMPLE
+    Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
+#>
+```
+## Remove-EnvPathByPattern
+```powershell
+<#
+.DESCRIPTION
+    Remove the paths that match the pattern in `$Env:PATH` in the specified level.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:PATH`.
+    Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
+#>
+```
+## Remove-EnvPathByTargetPath
+
+```powershell
+<#
+.DESCRIPTION
+    Remove the target path in `$Env:PATH` in the specified level.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
+    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
+#>
+```
+# Link Management
+## Set-DirSymbolicLinkWithSync
+```powershell
+<#
+.DESCRIPTION
+    Set a directory symbolic link from $Path to $Source
+    Then, we will get a result as $Path->$Target, which means $Path is a symbolic link to $Target
+#>
+```
+
+## Set-FileSymbolicLinkWithSync
+```powershell
+<#
+.DESCRIPTION
+    Set a file symbolic link from $Path to $Source.
+    Then, we will get a result as $Path->$Target,
+    which means $Path is a symbolic link to $Target.
+#>
+```
+
+## Set-DirJunctionWithSync
+```powershell
+<#
+.DESCRIPTION
+    Set a junction point from $Path to $Source.
+    Then, we will get a result as $Path->$Target,
+    which means $Path is a junction point to $Target.
+#>
+```
+## Set-FileHardLinkWithSync
+```powershell
+<#
+.DESCRIPTION
+    Set a file hard link from $Path to $Source.
+    Then, we will get a result as $Path->$Target,
+    which means $Path is a hard link to $Target.
+#>
+```
+
+# Proxy Management
 ## Get-GatewayIPV4
-
 ```powershell
 <#
 .DESCRIPTION
@@ -14,7 +131,6 @@
     It only support IPV4.
 #> 
 ```
-
 ## Get-LocalHostIPV4
 
 ```powershell
@@ -29,7 +145,6 @@
     It only support IPV4.
 #> 
 ```
-
 ## Set-SystemProxyIPV4ForCurrentUser
 
 ```powershell
@@ -47,7 +162,7 @@
 .PARAMETER ServerIP
     The server IP address for proxy.
 
-.PARAMETER Port
+.PARAMETER PortNumber
     The port number for proxy.
 
 .EXAMPLE
@@ -56,9 +171,8 @@
 .NOTES
     Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that hosted
     by a Windows 11 `Virtual Machine` `Host Machine`.
-#>   
+#> 
 ```
-
 ## Remove-SystemProxyIPV4ForCurrentUser
 
 ```powershell
@@ -71,7 +185,6 @@
     None 
 #> 
 ```
-
 ## Set-EnvProxyIPV4ForShellProcess
 
 ```powershell
@@ -90,9 +203,8 @@
 .EXAMPLE
     Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890.
 
-#> 
+#>
 ```
-
 ## Remove-EnvProxyIPV4ForShellProcess
 
 ```powershell
@@ -103,13 +215,10 @@
     None
 .OUTPUTS
     None
-#>  
+#>
 ```
-
 # Scheduled Tasks Tools
-
 ## Register-PS1ToScheduledTask
-
 ```powershell
 <#
 .SYNOPSIS
@@ -146,61 +255,3 @@
         5. At least one flag (switch) of AtLogon and AtStartup is given.
 #>
 ```
-
-# Env Tools
-
-## Merge-RedundantEnvPathFromLocalMachineToCurrentUser
-
-```powershell
-<#
-.SYNOPSIS
-    Merge redundant items form Machine Level $Env:PATH to User Level $Env:PATH.
-
-.DESCRIPTION
-    Sometimes, we may find some redundant items that both 
-    in Machine Level $Env:PATH and User Level $Env:PATH.
-    This may because we have installed some software in different privileges.
-
-    This function will help us to merge the redundant items from Machine Level $Env:PATH to User Level $Env:PATH.
-    The operation will symplify the `$Env:PATH`.
-.NOTES
-    Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
-#>
-```
-
-## Add-EnvPathToCurrentProcess
-
-```powershell
-<#
-.DESCRIPTION
-    Add the `Path` to the `$Env:PATH` in `Process` level.
-    Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
-.EXAMPLE
-    Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
-#>
-```
-
-## Remove-EnvPathByPattern
-
-```powershell
-<#
-.DESCRIPTION
-    Remove the paths that match the pattern in `$Env:PATH` in the specified level.
-.EXAMPLE
-    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:PATH`.
-    Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
-#>
-```
-
-## Remove-EnvPathByTargetPath
-
-```powershell
-<#
-.DESCRIPTION
-    Remove the target path in `$Env:PATH` in the specified level.
-.EXAMPLE
-    Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
-    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
-#>
-```
-
