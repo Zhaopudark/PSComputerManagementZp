@@ -17,7 +17,7 @@ function Set-DirSymbolicLinkWithSync{
 
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
         Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
-        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
+        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target
         Write-VerboseLog ($link | Select-Object LinkType, FullName, Target)
     }
 }
@@ -40,7 +40,7 @@ function Set-FileSymbolicLinkWithSync{
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
         Move-BeforeSetFileLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
-        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target -ErrorAction Stop
+        $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target
         Write-VerboseLog ($link | Select-Object LinkType, FullName, Target)
     }
 }
@@ -64,7 +64,7 @@ function Set-DirJunctionWithSync{
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a junction point from $Path to $Source, as $Path->$Target",'','')){
         Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
-        $link = New-Item -ItemType Junction -Path $Path -Target $Target -ErrorAction Stop
+        $link = New-Item -ItemType Junction -Path $Path -Target $Target
         Write-VerboseLog ($link | Select-Object LinkType, FullName, Target)
     }
 }
@@ -88,7 +88,7 @@ function Set-FileHardLinkWithSync{
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
         Move-BeforeSetFileLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
-        $link = New-Item -ItemType HardLink -Path $Path -Target $Target -ErrorAction Stop
+        $link = New-Item -ItemType HardLink -Path $Path -Target $Target
         Write-VerboseLog ($link | Select-Object LinkType, FullName, Target)
     }
 }

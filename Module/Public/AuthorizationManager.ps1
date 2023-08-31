@@ -43,7 +43,7 @@ For more information on the motivation, rationale, logic, and usage of this func
                     $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
                     Write-VerboseLog  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
     
-                    Set-Acl -LiteralPath $Path -AclObject $NewAcl -ErrorAction Stop
+                    Set-Acl -LiteralPath $Path -AclObject $NewAcl
                     Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
                 }
                 catch [System.ArgumentException]{
