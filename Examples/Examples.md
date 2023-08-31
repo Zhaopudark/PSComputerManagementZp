@@ -156,3 +156,35 @@ Remove-Module PSComputerManagementZp
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 <img src="./../Assets/Examples.assets/image-20230703161050758.png" alt="image-20230703161050758" style="zoom:67%;" />
+
+# About Reset Authorization on Windows
+
+For more information on the motivation, rationale, logic, and usage of function `Reset-Authorization`, see the [post here](https://little-train.com/posts/7fdde8eb.html)
+
+Please run PowerShell with `Administrator` privilege. 
+
+Supposing  you have re-installed Windows system on drive `C:\`, and you have remained old items, such as user data but established in the last system, in drive  `D:\`,  you can run the following commands to reset authorization of all items in `D:\` to get access to all of then automatically, instead of manual operations:
+
+```powershell
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+Import-Module PSComputerManagementZp -Scope Local -Force
+Reset-Authorization 'D:\'
+Remove-Module PSComputerManagementZp
+```
+
+For more safety, you can add `try-catch` syntax as:
+
+```powershell
+#Requires -Version 7.0
+#Requires -RunAsAdministrator
+try {    
+    Import-Module PSComputerManagementZp -Scope Local -Force
+    Reset-Authorization 'D:\'
+    Remove-Module PSComputerManagementZp
+}
+catch {
+    Write-VerboseLog  "Set-Authorization Exception: $PSItem"
+    Write-VerboseLog  "Operation has been skipped on $Path."
+}
+```
