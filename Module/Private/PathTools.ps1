@@ -250,8 +250,8 @@
 
         $Path = $Path -replace '[:]+', ':'
 
-        $Path = $Path.TrimEnd('\/')
-        
+        $Path = $Path -replace '([^\\\/])([\\\/])+$', { $_.Groups[1].Value.ToUpper()} # Trim the end '\/' but remain the former characters.
+
         if ($Path -match ":$") {
             $Path = $Path + $Slash
         }
