@@ -1,4 +1,11 @@
+
+
+
 # Navigation
+[![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue)](https://learn.microsoft.com/en-us/powershell/)
+[![PSComputerManagementZp-Home](https://img.shields.io/badge/PSComputerManagementZp-Home-yellow)](README.md)
+[![PSComputerManagementZp-AIPs](https://img.shields.io/badge/PSComputerManagementZp-AIPs-green)](README.md)
+[![PSComputerManagementZp-Examples](https://img.shields.io/badge/PSComputerManagementZp-Examples-red)](README.md)
 
 - [Home](README.md)
 - [AIPs](Tests/APIs/APIs.md)
