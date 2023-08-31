@@ -8,7 +8,7 @@
 [![PSComputerManagementZp-Examples](https://img.shields.io/badge/PSComputerManagementZp-Examples-red)](Examples/Examples.md)
 
 
-[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)]
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)
 
 [![Windows-11](https://img.shields.io/badge/Windows--11-Passing-green)](Examples/Examples.md)
 [![Ubuntu|WSL2](https://img.shields.io/badge/Ubuntu|WSL2-Passing-green)](Examples/Examples.md)
