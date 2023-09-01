@@ -33,7 +33,7 @@ This customized PowerShell Module, `PSComputerManagementZp`, derives from my sce
 - [x] Set/unset environment variables.
 - [x] Format path for both Windows and WSL2.
 - [x] Deal with authorization problems on Windows file system.
-- [ ] Set DDNS 
+- [ ] Set DDNS.
 - [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
 
 # Installation
