@@ -2,7 +2,7 @@
 <#
 .SYNOPSIS
 Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
-For more information on the motivation, rationale, logic, and usage of this function, see https://little-train.com/posts/7fdde8eb.html
+For more information on the motivations, rationale, logic, limitations and usage of this function, see https://little-train.com/posts/7fdde8eb.html
 
 .DESCRIPTION
     Reset ACL of `$Path` to its default state by 3 steps:
