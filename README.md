@@ -1,11 +1,17 @@
 # ![logo](https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg?sanitize=true) PSComputerManagementZp
-[![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)[![PSComputerManagementZp-Home](https://img.shields.io/badge/PSComputerManagementZp-Home-yellow)](README.md)
-[![PSComputerManagementZp-AIPs](https://img.shields.io/badge/PSComputerManagementZp-AIPs-orange)](Tests/APIs/APIs.md)[![PSComputerManagementZp-Examples](https://img.shields.io/badge/PSComputerManagementZp-Examples-red)](Examples/Examples.md)
+[![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
+
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
-[![Intsallation-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions)
-[![Components-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions)
-[![APIs-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/APIs-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions)
+
 [![ReleaseDownloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total.svg?style=flat-square)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
+
+| Tests                                                        | Documentations                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [![Intsallation-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md) |
+| [![Components-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Public-AIPs](https://img.shields.io/badge/Public-AIPs-orange)](Tests/APIs/APIs.md) |
+| [![APIs-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/APIs-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Public-Examples](https://img.shields.io/badge/Public-Examples-red)](Examples/Examples.md) |
+
+
 
 # Backgrounds
 
@@ -42,10 +48,6 @@ git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
 cd PSComputerManagementZp
 ./install.ps1
 ```
-
-# APIs
-
-For all reachable functions, see [AIPs](APIs.md). 
 
 # Risks
 
