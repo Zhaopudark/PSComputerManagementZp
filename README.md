@@ -7,7 +7,6 @@
 [![APIs-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/APIs-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions)
 [![ReleaseDownloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total.svg?style=flat-square)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
 
-
 # Backgrounds
 
 I'm a researcher on Machine Learning, especially Deep Learning. In addition, I also do some software development. 
