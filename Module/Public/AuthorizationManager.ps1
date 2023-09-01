@@ -22,7 +22,6 @@ For more information on the motivations, rationale, logic, limitations and usage
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
-        [ValidateScript({Assert-ValidPath4AuthorizationTools $_})]
         [FormattedFileSystemPath]$Path,
         [switch]$Recurse
     )
