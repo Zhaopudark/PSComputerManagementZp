@@ -1,8 +1,6 @@
 # ![logo](https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg?sanitize=true) PSComputerManagementZp
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
-
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
-
 [![ReleaseDownloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total.svg?style=flat-square)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
 
 | Tests                                                        | Documentations                                               |
