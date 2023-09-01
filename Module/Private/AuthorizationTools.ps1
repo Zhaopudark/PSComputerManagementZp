@@ -21,7 +21,6 @@
         throw "[Unsupported path] The $Path should not in `$Recycle.Bin."
     }
     if (($Path.IsBeOrInSystemDrive)-and !($Path.IsInHome) -and !($Path.IsHome)) {
-       
         throw "[Unsupported path] If $Path is in SystemDisk, it should be or in `${Home}: ${Home}."
     }
     Write-VerboseLog "[Supported path] $Path"
