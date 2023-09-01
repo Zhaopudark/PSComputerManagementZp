@@ -7,17 +7,17 @@ For more information on the motivation, rationale, logic, and usage of this func
 .DESCRIPTION
     Reset ACL of `$Path` to its default state by 3 steps:
         1. Get path type by `Get-PathType`
-        2. Get default SDDL of `$Path` by `Get-DefaultSddl` according to `$PathType`
+        2. Get default SDDL of `$Path` by `Get-DefaultSddl` according to `$path_type`
         3. Set SDDL of `$Path` to default SDDL by `Set-Acl`
 
     Only for window system
     Only for single user account on window system, i.e. totoally Personal Computer
 
 .COMPONENT
-    $NewAcl = Get-Acl -LiteralPath $Path
-    $Sddl = ... # Get default SDDL of `$Path`
-    $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
-    Set-Acl -LiteralPath $Path -AclObject $NewAcl
+    $new_acl = Get-Acl -LiteralPath $Path
+    $sddl = ... # Get default SDDL of `$Path`
+    $new_acl.SetSecurityDescriptorSddlForm($sddl)
+    Set-Acl -LiteralPath $Path -AclObject $new_acl
 
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -29,22 +29,22 @@ For more information on the motivation, rationale, logic, and usage of this func
     try {
         Assert-IsWindowsAndAdmin
         Assert-ValidPath4AuthorizationTools $Path
-        $PathType = Get-PathType $Path -SkipPlatformCheck -SkipPathCheck
-        $Sddl = Get-DefaultSddl -PathType $PathType
-        $NewAcl = Get-Acl -LiteralPath $Path
+        $path_type = Get-PathType $Path -SkipPlatformCheck -SkipPathCheck
+        $sddl = Get-DefaultSddl -PathType $path_type
+        $new_acl = Get-Acl -LiteralPath $Path
 
         if($PSCmdlet.ShouldProcess("$Path",'set the original ACL')){
             Reset-PathAttribute $Path -SkipPlatformCheck -SkipPathCheck
-            if ($NewAcl.Sddl -ne $Sddl){
+            if ($new_acl.Sddl -ne $sddl){
                 try {
                     Write-VerboseLog  "`$Path is:`n`t $Path"
-                    Write-VerboseLog  "Current Sddl is:`n`t $($NewAcl.Sddl)"
-                    Write-VerboseLog  "Target Sddl is:`n`t $($Sddl)"
+                    Write-VerboseLog  "Current Sddl is:`n`t $($new_acl.Sddl)"
+                    Write-VerboseLog  "Target Sddl is:`n`t $($sddl)"
 
-                    $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
-                    Write-VerboseLog  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
+                    $new_acl.SetSecurityDescriptorSddlForm($sddl)
+                    Write-VerboseLog  "After dry-run, the sddl is:`n`t $($new_acl.Sddl)"
 
-                    Set-Acl -LiteralPath $Path -AclObject $NewAcl
+                    Set-Acl -LiteralPath $Path -AclObject $new_acl
                     Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
                 }
                 catch [System.ArgumentException]{
@@ -70,11 +70,11 @@ For more information on the motivation, rationale, logic, and usage of this func
 
                 # Recurse bypass: files, symbolic link directories, junctions, System Volume Information, `$Recycle.Bin
 
-                $Paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint -ErrorAction Continue
+                $paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint -ErrorAction Continue
                 # The progress bar is refer to Chat-Gpt
-                $total = $Paths.Count
+                $total = $paths.Count
                 $current = 0
-                foreach ($item in $Paths) {
+                foreach ($item in $paths) {
                     $current++
                     $progressPercentage = ($current / $total) * 100
                     $progressStatus = "Processing file $current of $total"
