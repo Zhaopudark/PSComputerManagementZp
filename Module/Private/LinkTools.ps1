@@ -222,7 +222,7 @@ function Move-BeforeSetFileLink{
 
     Move the file $Target1 to $Target2 by the following rules:
         $Target1------------------------| $Target2----------------------| Opeartion
-        non-existent                    | non-existent                  | pass(do nothing) 
+        non-existent                    | non-existent                  | pass(do nothing)
         non-existent                    | file-symbolic-or-hardlink     | throw error
         non-existent                    | file-non-symbolic-or-hardlink | pass(do nothing)
         file-symbolic-or-hardlink       | non-existent                  | throw error
@@ -258,7 +258,7 @@ function Move-BeforeSetFileLink{
             throw "The $_target1 should be a file."
         }
     }
-    
+
     try {
         $_target2 = [FormattedFileSystemPath]::new($Target2)
         $_target2_exist = $true
@@ -274,8 +274,6 @@ function Move-BeforeSetFileLink{
             throw "The $_target2 should be a file."
         }
     }
-
-
 
     if($PSCmdlet.ShouldProcess("Move the content in $_target1 to $_target2, and backup essential items in $Backuppath",'','')){
         if ($_target1_exist){

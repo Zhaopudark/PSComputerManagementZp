@@ -11,20 +11,20 @@ BeforeAll {
     .DESCRIPTION
     Test link's ACL beahvior, i.e., check the ACL info whether be syncronized
     between Link and Source  on `SymbolicLink` `Junction` or `HardLink`
-    
+
     We use `Owner` info to test.
     #>
         $LinkAcl =  Get-Acl -Path $Link
         $LinkAcl_bak =  Get-Acl -Path $Link
         $SourceAcl =  Get-Acl -Path $Source
         $SourceAcl_bak =  Get-Acl -Path $Source
-    
+
         # unify Owner
         $LinkAcl.SetOwner((new-object System.Security.Principal.NTAccount("NT AUTHORITY\SYSTEM")))
         $SourceAcl.SetOwner((new-object System.Security.Principal.NTAccount("NT AUTHORITY\SYSTEM")))
         Set-Acl $Link -AclObject $LinkAcl
         Set-Acl $Source -AclObject $SourceAcl
-    
+
         # make Owner different
         $LinkAcl =  Get-Acl -Path $Link
         $SourceAcl =  Get-Acl -Path $Source
@@ -32,18 +32,18 @@ BeforeAll {
         $SourceAcl.SetOwner((new-object System.Security.Principal.NTAccount("NT AUTHORITY\SYSTEM")))
         Set-Acl $Link -AclObject $LinkAcl
         Set-Acl $Source -AclObject $SourceAcl
-    
+
         # test sync
         $LinkAcl =  Get-Acl -Path $Link
         $SourceAcl =  Get-Acl -Path $Source
         # Write-Output $LinkAcl.Owner
         # Write-Output $SourceAcl.Owner
         $output = ($LinkAcl.Owner -eq $SourceAcl.Owner)
-    
+
         # restore
         Set-Acl $Link -AclObject $LinkAcl_bak
         Set-Acl $Source -AclObject $SourceAcl_bak
-    
+
         return $output
     }
     function New-AllItem {

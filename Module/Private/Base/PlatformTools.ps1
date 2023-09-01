@@ -18,7 +18,6 @@ function Test-Platform{
         [ValidateNotNullOrEmpty()]
         [string]$Name,
         [switch]$Throw
-        
     )
     # if ($IsWindows){
     #     Write-Verbose "Windows"

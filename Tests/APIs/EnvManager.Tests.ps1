@@ -1,8 +1,7 @@
 BeforeAll {
-    
     Import-Module "${PSScriptRoot}\Mimic.psm1" -Prefix 'x'
 
-    Import-Module PSComputerManagementZp -Force 
+    Import-Module PSComputerManagementZp -Force
     $user_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','User')
     $machine_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Machine')
     $process_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Process')

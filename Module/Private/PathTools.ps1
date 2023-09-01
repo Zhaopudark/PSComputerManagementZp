@@ -1,9 +1,9 @@
 ﻿class FormattedFileSystemPath {
 <#
 .SYNOPSIS
-    A class that receive a file system path, 
-        automatically formatted the path, 
-        hold the formatted path, 
+    A class that receive a file system path,
+        automatically formatted the path,
+        hold the formatted path,
         provides some useful attributes(properties) simultaneously for quick check.
     #NOTE Support file system paths only!
 .DESCRIPTION
@@ -12,7 +12,7 @@
         - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
         - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
         - Reduce any consecutive colons to a single `:`
-        - Strip any trailing slashs. 
+        - Strip any trailing slashs.
         - According to the platform, append a single '\' or '/' if the path ends with a colon.
         - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
         - Convert the drive name to initial capital letter.
@@ -25,7 +25,7 @@
     3. Format the path with file system access:
         - Convert it to an absolute one.
         - Convert it to an original-case one.
-            - Even though, by default(https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity), 
+            - Even though, by default(https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity),
                 items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
             - And, in NTFS of Windows, two paths with only case differences can represent the same item, i.g., `c:\uSeRs\usER\TesT.tXt` and `C:\Users\User\test.txt`.
             - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
@@ -33,7 +33,7 @@
             - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
     #TODO
         Cross-platform support.
-        Currently, this class is only adapative on each single platform, but not cross-platform. 
+        Currently, this class is only adapative on each single platform, but not cross-platform.
         But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
 
     Some properties of the path are also provided:
@@ -75,7 +75,7 @@
     | (Unix) Existent Path      | Given(Input) Path         | Formatted Path    |
     | ------------------------- | ------------------------- | ----------------- |
     | /home/uSer                | /home/uSer                | /home/uSer/       |
-#>  
+#>
     [ValidateNotNullOrEmpty()][string] $LiteralPath
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform
     [ValidateSet('\','/')][string] $Slash
@@ -90,7 +90,7 @@
     [ValidateNotNullOrEmpty()][bool] $IsDriveRoot
     [ValidateNotNullOrEmpty()][bool] $IsBeOrInSystemDrive
     [ValidateNotNullOrEmpty()][bool] $IsInHome
-    [ValidateNotNullOrEmpty()][bool] $IsHome 
+    [ValidateNotNullOrEmpty()][bool] $IsHome
     [Nullable[bool]] $IsDesktopINI = $null
     [Nullable[bool]] $IsSystemVolumeInfo = $null
     [Nullable[bool]] $IsInSystemVolumeInfo = $null
@@ -110,16 +110,16 @@
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
-      
+
         $Path = $this.PreProcess($Path)
-        
+
         if(!(Test-Path -LiteralPath $Path)){
             throw (New-Object System.Management.Automation.ItemNotFoundException "Path '$Path' not found.")
         }
         if ($this.GetQualifier($Path).Provider.Name -ne 'FileSystem'){
             throw "Only FileSystem provider is supported, not $($this.GetQualifier($Path).Provider.Name)."
-        } 
-        $this.LiteralPath = $this.FormatPath($Path) 
+        }
+        $this.LiteralPath = $this.FormatPath($Path)
         $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
         $this.Linktype = (Get-ItemProperty $this.LiteralPath).Linktype
 
@@ -169,7 +169,7 @@
             $this.IsHome = $false
             $this.IsInHome = $false
         }
-                
+
         if ($this.OriginalPlatform -eq "Win32NT"){
             if ($this.IsFile -and ((Split-Path $this.LiteralPath -Leaf) -eq "desktop.ini")){
                 $this.IsDesktopINI = $true
@@ -190,8 +190,7 @@
                 $this.IsSystemVolumeInfo = $false
                 $this.IsInSystemVolumeInfo = $false
             }
-            
-            
+
             $recycle_bin_path = $this.FormatPath("$($this.QualifierRoot)`$RECYCLE.BIN")
             if ($this.LiteralPath.StartsWith($recycle_bin_path)){
                 if ($this.LiteralPath.EndsWith($recycle_bin_path)){
@@ -205,7 +204,7 @@
                 $this.IsRecycleBin = $false
                 $this.IsInRecycleBin = $false
             }
-        } 
+        }
         if ([bool]($this.Attributes -band [System.IO.FileAttributes]::ReparsePoint)){
             if ($this.Linktype -eq 'SymbolicLink'){
                 $this.IsSymbolicLink = $true
@@ -231,7 +230,7 @@
             $this.IsJunction = $false
             $this.IsHardLink = $false
         }
-        
+
     }
     [string] PreProcess([string] $Path){
         return [FormattedFileSystemPath]::FormatLiteralPath($Path,$this.Slash)
@@ -285,9 +284,9 @@
         }else{
             $item = $null
         }
-        
+
         if ($item){
-            return $item.FullName  
+            return $item.FullName
         }else{
             return $Path
         }
@@ -315,7 +314,7 @@ function Format-FileSystemPath{
 .DESCRIPTION
     A function to apply the class FormattedFileSystemPath on a path.
     Return the formatted liiteral path.
-#>  
+#>
     param(
         [Parameter(Mandatory)]
         [string]$Path
@@ -323,17 +322,16 @@ function Format-FileSystemPath{
     return ([FormattedFileSystemPath]::new($Path)).LiteralPath
 }
 
-
 function Format-LiteralPath{
 <#
 .DESCRIPTION
     It is the same to class [FormattedFileSystemPath]::FormatLiteralPath().
-#>  
+#>
     param(
         [Parameter(Mandatory)]
         [string]$Path
     )
-    
+
     if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
         $slash =  '\'
     }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {

@@ -1,34 +1,4 @@
-﻿    
-# function Assert-ValidPath4AuthorizationTools{
-# <#
-# .SYNOPSIS
-#     Check if a path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
-
-# .DESCRIPTION
-#     Check if $Path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
-#     Only the following 4 types of paths are valid:
-#         1. root path of Non-system disk 
-#         2. other path in Non-system disk
-#         3. path of ${Home} 
-#         4. other path in ${Home}
-# #>
-#     param(
-#         [FormattedFileSystemPath]$Path
-#     )
-#     if ($Path.IsBeOrInSystemDrive){
-#         if (!($Path.IsInHome) -and !($Path.IsHome)){
-#             throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
-#         }
-#         Write-VerboseLog "The $Path is Home or is in Home. But it is also supported."
-#     }else{
-#         Write-VerboseLog "The $Path is not in SystemDisk. But it is also supported."
-#     }
-#     return $true
-# }
-    
-
-
-function Assert-ValidPath4AuthorizationTools{
+﻿function Assert-ValidPath4AuthorizationTools{
 <#
 .SYNOPSIS
     Check if a path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
@@ -36,9 +6,9 @@ function Assert-ValidPath4AuthorizationTools{
 .DESCRIPTION
     Check if $Path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
     Only the following 4 types of paths are valid:
-        1. root path of Non-system disk 
+        1. root path of Non-system disk
         2. other path in Non-system disk
-        3. path of ${Home} 
+        3. path of ${Home}
         4. other path in ${Home}
 #>
     param(
@@ -57,7 +27,7 @@ function Assert-ValidPath4AuthorizationTools{
 function Reset-PathAttribute{
 <#
 .SYNOPSIS
-    Reset the attributes of a path to the original status, when the path matches one of 
+    Reset the attributes of a path to the original status, when the path matches one of
     the special path types that are defined in this function.
 
 .DESCRIPTION
@@ -73,7 +43,7 @@ function Reset-PathAttribute{
         X:\*desktop.ini                 Hidden, System, Archive
         X:\*some_symbolic_link_file     Archive, ReparsePoint
         X:\*some_hardlink               Archive
-    Here the `X` represents any drive disk letter. 
+    Here the `X` represents any drive disk letter.
     And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
     Other directories' attriibuts will not be reset.
     Other files' attriibuts will not be reset.
@@ -89,7 +59,6 @@ function Reset-PathAttribute{
     So, to reset the attributes to standard status, we cannot directly give the
     target attributes, but use a specific `$some_attributes`.
 
-    
 .COMPONENT
     To set the attriibuts of $Path:
         Set-ItemProperty $Path -Name Attributes -Value $some_attributes
@@ -148,7 +117,7 @@ function Get-PathType{
     Get a customized path type of a fileSystem path(disk, directory, file, link, etc.),
     according to the `Types of Items` described in https://little-train.com/posts/7fdde8eb.html.
 .DESCRIPTION
-    Basing on `New-Item -ItemType`, see 
+    Basing on `New-Item -ItemType`, see
     https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype,
     this function defines 38 types of items, including the 28 types of items that defined in https://little-train.com/posts/7fdde8eb.html.
 
@@ -244,7 +213,6 @@ function Get-PathType{
         elseif($Path.IsInRecycleBin){
             Write-VerboseLog "The $Path should not be in `$Recycle.Bin."
             return $null
-            
         }
         elseif ($Path.IsSymbolicLink) {
             return "$header\SymbolicLinkDirectory"
@@ -276,15 +244,12 @@ function Get-PathType{
     }
 }
 
-
-
-
 function Get-DefaultSddl{
 <#
 .SYNOPSIS
     Get the default SDDL of a specific path type that defined in `Get-PathType`.
 .DESCRIPTION
-    Get the default SDDL of the `$PathType`. 
+    Get the default SDDL of the `$PathType`.
     The relationship between the `$PathType` and its default SDDL are the following mappings:
         | `NonSystemDisk[NTFS]\Root`                      | `O:SYG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;;FA;;;SY)(A;OICIIO;GA;;;SY)(A;OICIIO;GA;;;BA)(A;;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
         | `NonSystemDisk[ReFS]\Root`                      | `O:BAG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
@@ -318,7 +283,7 @@ function Get-DefaultSddl{
     All `SDDLs`s are from a origin installed native system, so we can ensure it is in the default state.
 
 .PARAMETER PathType
-    The path type to be checked. 
+    The path type to be checked.
 
 .OUTPUTS
     System.String to represtent a SDDL if the `$PathType` is involved in above mappings.

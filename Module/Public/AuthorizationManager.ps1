@@ -9,7 +9,7 @@ For more information on the motivation, rationale, logic, and usage of this func
         1. Get path type by `Get-PathType`
         2. Get default SDDL of `$Path` by `Get-DefaultSddl` according to `$PathType`
         3. Set SDDL of `$Path` to default SDDL by `Set-Acl`
-    
+
     Only for window system
     Only for single user account on window system, i.e. totoally Personal Computer
 
@@ -40,10 +40,10 @@ For more information on the motivation, rationale, logic, and usage of this func
                     Write-VerboseLog  "`$Path is:`n`t $Path"
                     Write-VerboseLog  "Current Sddl is:`n`t $($NewAcl.Sddl)"
                     Write-VerboseLog  "Target Sddl is:`n`t $($Sddl)"
-    
+
                     $NewAcl.SetSecurityDescriptorSddlForm($Sddl)
                     Write-VerboseLog  "After dry-run, the sddl is:`n`t $($NewAcl.Sddl)"
-    
+
                     Set-Acl -LiteralPath $Path -AclObject $NewAcl
                     Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
                 }
@@ -78,25 +78,22 @@ For more information on the motivation, rationale, logic, and usage of this func
                     $current++
                     $progressPercentage = ($current / $total) * 100
                     $progressStatus = "Processing file $current of $total"
-    
+
                     Write-Progress -Activity "Traversing Directory" -Status $progressStatus -PercentComplete $progressPercentage
-    
+
                     # Do your personal jobs, such as: $file.FullName
                     Reset-Authorization -Path $item.FullName
-    
+
                 }
-    
+
                 Write-Progress -Activity "Traversing Directory" -Completed
             }
 
         }
-        
+
     }
     catch {
         Write-VerboseLog  "Reset-Authorization Exception: $PSItem"
         Write-VerboseLog  "Operation has been skipped on $Path."
     }
 }
-    
-    
-    

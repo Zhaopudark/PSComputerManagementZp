@@ -4,7 +4,7 @@ BeforeAll {
     $guid = [guid]::NewGuid()
     $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
-    
+
     New-Item -Path "$test_path/test_dir" -ItemType Directory -Force
     New-Item -Path "$test_path/test.txt" -ItemType File -Force
 
@@ -16,7 +16,6 @@ BeforeAll {
     New-Item -Path "$test_path/symbolick_dir" -ItemType SymbolicLink -Target "$test_path/test_for_symbolick_dir"
     New-Item -Path "$test_path/test_for_symbolick_file" -ItemType File
     New-Item -Path "$test_path/symbolick_file" -ItemType SymbolicLink -Target "$test_path/test_for_symbolick_file"
-        
 }
 
 Describe '[Test PathTools]' {
@@ -214,7 +213,7 @@ Describe '[Test PathTools]' {
             $path.IsSymbolicLink | Should -BeTrue
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeFalse
-            
+
             $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
             $path.OriginalPlatform | Should -BeExactly 'Win32NT'
             $path.Slash | Should -BeExactly '\'
@@ -289,7 +288,7 @@ Describe '[Test PathTools]' {
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeTrue
 
-            # 'ext2' does not support junction 
+            # 'ext2' does not support junction
             # $path = [FormattedFileSystemPath]::new("$test_path\junction")
             # $path.OriginalPlatform | Should -BeExactly 'Unix'
             # $path.Slash | Should -BeExactly '/'
@@ -338,7 +337,7 @@ Describe '[Test PathTools]' {
             $path.IsSymbolicLink | Should -BeTrue
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeFalse
-            
+
             $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
@@ -363,7 +362,7 @@ Describe '[Test PathTools]' {
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeFalse
         }
-    }  
+    }
 }
 
 AfterAll {
