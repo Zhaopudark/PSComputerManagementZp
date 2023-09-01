@@ -1,6 +1,6 @@
-The PowerShell module `PSComputerManagementZp` can help users to realize many common management operations easily on Windows PCs. 
+The PowerShell module `PSComputerManagementZp` can help users realize many common management operations easily on Windows PCs.
 
-In this page, there are some perhaps useful samples or usages with the module `PSComputerManagementZp`.
+On this page, there are some perhaps useful samples or usages with the module `PSComputerManagementZp`.
 
 # About Windows or WSL2 System Proxy
 
@@ -10,7 +10,7 @@ In this page, there are some perhaps useful samples or usages with the module `P
 
 Please run PowerShell with `Administrator` privilege. 
 
-Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of localhost and then set system proxy by as 'localhost:7890':
+Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of localhost and then set the system proxy as 'localhost:7890':
 
 ```powershell
 #Requires -Version 7.0
@@ -29,18 +29,18 @@ Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 This case can be useful when you want to set your `Virtual Machine`'s system proxy and your `Host Machine` has already been proxied. The specific situations are as follows:
 
-- `Host Machine` is running and has been proxied.
-- `Host Machine` has detect the `Virtual Machine`'s  `Network Adapter`, such as `vEthernet (Default Switch)`
-- `Host Machine` has enable `LAN proxy`.
-- `Virtual Machine`'s gateway IP address is just the above adapter' IP address.
+- The `Host Machine` is running and has been proxied.
+- The `Host Machine` has detected the `Virtual Machine`'s  `Network Adapter`, such as `vEthernet (Default Switch)`.
+- The `Host Machine` has enabled `LAN proxy`.
+- The `Virtual Machine`'s gateway IP address is just the above adapter's IP address.
 
-Then, by following settings on the `Virtual Machine`, it can through its gateway to use `Host Machine`'s system proxy.
+Then, by following the settings on the `Virtual Machine`, it can through its gateway use `Host` Machine`'s system proxy.
 
 ### On virtual Windows
 
 Please run PowerShell with `Administrator` privilege.  
 
-Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of gateway and then set system proxy by as 'gateway:7890':
+Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of the gateway and then set the system proxy as 'gateway:7890':
 
 ```powershell
 #Requires -Version 7.0
@@ -55,7 +55,7 @@ Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 <img src="./../Assets/Examples.assets/image-20230703160317798.png" alt="image-20230703160317798" style="zoom:67%;" />
 
-Optional: To inject these commands into the the `virtual Windows` as a scheduled task `SetProxy`, setting proxy automatically when `logon` or `startup` , you can take the following further commands (Please run PowerShell with `Administrator` privilege.) :
+Optional: To inject these commands into the `virtual Windows` as a scheduled task `SetProxy`, setting proxy automatically when `logon` or `startup`, you can take the following further commands (Please run PowerShell with `Administrator` privilege.) :
 
 ```powershell
 #Requires -Version 7.0
@@ -79,9 +79,9 @@ Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Li
 
 ### On WSL2
 
-Just set env level proxy. But first, installation of PowerShell and this module is also need on Wsl2.
+Just set the env level proxy. But first, installation of PowerShell and this module is also needed on Wsl2.
 
-- Install PowerShell on WSL2, see the [official tutorials (install PowerShell on Ubuntu)](https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.3#installation-via-package-repository) as:
+- Install PowerShell on WSL2, see the [official tutorials (install PowerShell on Ubuntu)](https://learn.microsoft.com/en-us/powershell/scripting/install/install-ubuntu?view=powershell-7.3#installation-via-package-repository):
 
   ```bash
   # Update the list of packages
@@ -111,7 +111,7 @@ Just set env level proxy. But first, installation of PowerShell and this module 
   pwsh -f ./install.ps1
   ```
 
-- Set env level proxy. Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of gateway and then set env  proxy by as 'gateway:7890':
+- Set env level proxy. Supposing the port number is `7890`, the following commands will automatically detect the IPV4 of the gateway and then set the env proxy as 'gateway:7890':
 
   ```powershell
   # if has call pwsh from bash
@@ -126,11 +126,11 @@ Just set env level proxy. But first, installation of PowerShell and this module 
   Get-ChildItem -Path "Env:*proxy*"
   ```
 
-  And the results can be as:
+  The results can be as:
 
   ![image-20230704021135547](./../Assets/Examples.assets/image-20230704021135547.png)
 
-- If want to remove these env proxy, you can do as:
+- If want to remove these env proxy settings, you can do as:
 
   ```powershell
   # if has call pwsh from bash
@@ -139,11 +139,11 @@ Just set env level proxy. But first, installation of PowerShell and this module 
   Remove-Module PSComputerManagementZp
   ```
 
-## Remove the settings for system proxy
+## Remove the settings for the system proxy
 
 Please run PowerShell with `Administrator` privilege. 
 
-Supposing  you have run the above commands to set system proxy, you can do the following to revoke the settings:
+Supposing  you have run the above commands to set the system proxy, you can do the following to revoke the settings:
 
 ```powershell
 #Requires -Version 7.0
@@ -163,7 +163,7 @@ For more information on the motivation, rationale, logic, and usage of function 
 
 Please run PowerShell with `Administrator` privilege. 
 
-Supposing  you have re-installed Windows system on drive `C:\`, and you have remained old items, such as user data but established in the last system, in drive  `D:\`,  you can run the following commands to reset authorization of all items in `D:\` to get access to all of then automatically, instead of manual operations:
+Supposing  you have re-installed the Windows system on drive `C:\`, and you have remained old items, such as user data but established in the last system, in drive  `D:\`,  you can run the following commands to reset authorization of all items in `D:\` to get access to all of then automatically, instead of manual operations:
 
 ```powershell
 #Requires -Version 7.0
