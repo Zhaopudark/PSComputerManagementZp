@@ -1,4 +1,5 @@
 # ![logo](https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg?sanitize=true) PSComputerManagementZp
+
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
 [![ReleaseDownloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total.svg?style=flat-square)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
@@ -25,15 +26,15 @@ Referring to some examples of `Linux and Bash`-based operations, I tried to migr
 
 # Introduction
 
-This customized PowerShell Module, `PSComputerManagementZp`, derives from my scenarios, which can help users configure their Windows PCs easily to realize many useful operations, such as:
+This customized PowerShell Module, `PSComputerManagementZp`, derives from my scenarios, which can help users configure their Windows PCs easily to realize many useful operations.  The main features that have supported(opted) or todo(non-opted) are as:
 
-- Set system-level proxy
-- Set shell (process) level proxy
-- Set/unset environment variables.
-- Format path for both Windows and WSL2
-- Set DDNS (#TODO)
-- Deal with authorization problems on NTFS/ReFS
-- ...
+- [x] Set system-level proxy.
+- [x] Set shell (process) level proxy.
+- [x] Set/unset environment variables.
+- [x] Format path for both Windows and WSL2.
+- [x] Deal with authorization problems on Windows file system.
+- [ ] Set DDNS 
+- [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
 
 # Installation
 
