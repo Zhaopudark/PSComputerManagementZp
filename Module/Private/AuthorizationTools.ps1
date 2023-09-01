@@ -14,14 +14,17 @@
     param(
         [FormattedFileSystemPath]$Path
     )
-    if ($Path.IsBeOrInSystemDrive){
-        if (!($Path.IsInHome) -and !($Path.IsHome)){
-            throw "If $Path is in SystemDisk, it has to be or in `${Home}: ${Home}, unless it will not be supported."
-        }
-        Write-VerboseLog "The $Path is Home or is in Home. But it is also supported."
-    }else{
-        Write-VerboseLog "The $Path is not in SystemDisk. But it is also supported."
+    if ($Path.IsInSystemVolumeInfo){
+        throw "[Unsupported path] The $Path should not in System Volume Information."
     }
+    if ($Path.IsInRecycleBin){
+        throw "[Unsupported path] The $Path should not in `$Recycle.Bin."
+    }
+    if (($Path.IsBeOrInSystemDrive)-and !($Path.IsInHome) -and !($Path.IsHome)) {
+       
+        throw "[Unsupported path] If $Path is in SystemDisk, it should be or in `${Home}: ${Home}."
+    }
+    Write-VerboseLog "[Supported path] $Path"
 }
 
 function Reset-PathAttribute{
