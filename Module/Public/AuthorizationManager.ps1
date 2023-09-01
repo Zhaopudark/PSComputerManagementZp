@@ -1,4 +1,4 @@
- function Reset-Authorization{
+function Reset-Authorization{
 <#
 .SYNOPSIS
 Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
