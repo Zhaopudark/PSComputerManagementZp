@@ -1,6 +1,6 @@
 BeforeAll {
+    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.BeforeAll.ps1" 
 
-    Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
@@ -120,5 +120,6 @@ Describe 'Link EnvTools' {
 
 AfterAll {
     Remove-Item -Path $test_path -Force -Recurse
-    Remove-Module PSComputerManagementZp -Force
+
+    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.AfterAll.ps1" 
 }

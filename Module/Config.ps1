@@ -1,5 +1,4 @@
 $script:ModuleInfo = @{
-    LogDir = 'Logs'
     ModuleName = 'PSComputerManagementZp'
     RootModule = 'PSComputerManagementZp.psm1'
     ModuleVersion = '0.0.2'
@@ -25,7 +24,7 @@ $script:ModuleInfo = @{
     )
     LicenseUri = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE'
     ProjectUri = 'https://github.com/Zhaopudark/PSComputerManagementZp'
-    IconUri = 
+    IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/av_colors_128.svg'
     HelpInfoURI = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/README.md'
 
 }
@@ -35,31 +34,12 @@ $script:ModuleInfo = @{
 # https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3
 
 . "${PSScriptRoot}\Private\Base\PlatformTools.ps1"
-
-if (Test-Platform 'Windows'){
-    $script:ModuleInfo.InstallPath = "$(Split-Path -Path $PROFILE -Parent)\Modules\$($script:ModuleInfo.ModuleName)"
-    $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
-    $script:ModuleInfo.BuildPath = "$maybe_c`:\temp\$($script:ModuleInfo.ModuleName)"
-}elseif (Test-Platform 'Wsl2'){
-    $script:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($script:ModuleInfo.ModuleName)"
-    $script:ModuleInfo.BuildPath = "/tmp/$($script:ModuleInfo.ModuleName)"
-}elseif (Test-Platform 'Linux'){
-    $script:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($script:ModuleInfo.ModuleName)"
-    $script:ModuleInfo.BuildPath = "/tmp/$($script:ModuleInfo.ModuleName)"
-}else{
-    Write-Error "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-    exit -1
-}
-
-. "${PSScriptRoot}\Private\Base\LoggerTools.ps1" -InstallPath $script:ModuleInfo.InstallPath -ModuleVersion $script:ModuleInfo.ModuleVersion -LogDir $ModuleInfo.LogDir
-
+. "${PSScriptRoot}\Private\Base\LoggerTools.ps1" -LoggingPath "${Home}\.log\$($script:ModuleInfo.ModuleName)" -ModuleVersion $script:ModuleInfo.ModuleVersion
+. "${PSScriptRoot}\Private\AuthorizationTools.ps1"
 . "${PSScriptRoot}\Private\EnvTools.ps1"
 . "${PSScriptRoot}\Private\LinkTools.ps1"
 . "${PSScriptRoot}\Private\PathTools.ps1"
-. "${PSScriptRoot}\Private\AuthorizationTools.ps1"
-function Get-ModuleInfo {
 
+function Get-ModuleInfo {
     return $script:ModuleInfo
 }
-
-$ErrorActionPreference = 'Stop'

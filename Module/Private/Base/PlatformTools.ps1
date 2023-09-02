@@ -121,5 +121,4 @@ function Assert-IsWindowsAndAdmin{
     param()
     Test-Platform -Name 'Windows' -Throw
     Assert-AdminPermission
-}
-
+} 

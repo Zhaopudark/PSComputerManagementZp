@@ -1,5 +1,5 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\..\Module\Config.ps1"
+    . "${PSScriptRoot}\..\Configs\Components.Tests.Config.BeforeAll.ps1" 
 
     $guid = [guid]::NewGuid()
     $test_path = "${Home}/$guid"
@@ -7,7 +7,6 @@ BeforeAll {
 
     New-Item -Path "$test_path/test_dir" -ItemType Directory -Force
     New-Item -Path "$test_path/test.txt" -ItemType File -Force
-
 }
 
 Describe '[Test AuthorizationTools]' {
@@ -148,4 +147,6 @@ Describe '[Test AuthorizationTools]' {
 
 AfterAll {
     Remove-Item -Path $test_path -Force -Recurse
+
+    . "${PSScriptRoot}\..\Configs\Components.Tests.Config.AfterAll.ps1" 
 }

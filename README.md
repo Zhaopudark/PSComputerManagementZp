@@ -94,4 +94,4 @@ A formative rule is, for the variable's name, `snake_case` is used to indicate p
 
 Another formative rule is that almost all components deal only with existent and accessible paths. If a path is nonexistent or not accessible, errors or warnings will be thrown. This rule is to avoid unexpected operations and can be seen in almost all components of this module.
 
-On comments, `.SYNOPSIS` and `.DESCRIPTION` may have been used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with principles and ideas. And, `.SYNOPSIS` may use more normal language than `.DESCRIPTION`.
+On comments, the `.SYNOPSIS` and the `.DESCRIPTION` may have been used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with principles and ideas. And, the `.SYNOPSIS` may use more normal language than `.DESCRIPTION`.
