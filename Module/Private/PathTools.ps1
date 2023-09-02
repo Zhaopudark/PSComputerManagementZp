@@ -239,7 +239,6 @@
         # Format $Path on Literal level, without any check or validation through file system.
         # See .DESCRIPTION-1 of this class for the details of the formatting rules.
         # It can be used as pre-procession of a path before it is passed to $this.FormatPath().
-        write-warning $Path
         if ($Path -match '[\*\?\[\]]'){
             throw "Only literal path is supported, not $($Path) with wildcard characters `*`, `?` or `[]`."
         }
@@ -255,7 +254,6 @@
         if ($Path -match ":$") {
             $Path = $Path + $Slash
         }
-        
 
         $Path = $Path -replace '[/\\]+', $Slash
         $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
@@ -263,7 +261,7 @@
         if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
             $Path = $Slash + $Path
         }
-        write-warning $Path
+
         return $Path
     }
     [string] FormatPath([string] $Path){
