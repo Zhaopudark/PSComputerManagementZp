@@ -28,8 +28,8 @@ $script:ModuleInfo = @{
     LicenseUri = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE'
     ProjectUri = 'https://github.com/Zhaopudark/PSComputerManagementZp'
     IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/av_colors_128.svg'
+    ReleaseNotes = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/RELEASE.md'
     HelpInfoURI = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/README.md'
-
 }
 
 # NOTE: should use `.` not `&` to add items into current scope

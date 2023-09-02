@@ -58,7 +58,7 @@ There are two ways to install and use this module. Make sure your PowerShell ver
 # Limitations or Risks
 
 - May not be compatible with other software, CLI tools, CLI commands or PowerShell Modules. Such as, if you have enabled `system proxy` in `Clash`, there is no need to use the case [Set IPV4 system proxy by `Localhost` with `PortNumber`](#Set-system-proxy-IPV4-by-Localhost-with-PortNumber).
-- This module can modify `User` and `Machine` level environment variables in some cases, which should be noticed.
+- This module can modify the `User` and `Machine` level environment variables in some cases, which should be noticed.
 
 # Usage
 
@@ -102,4 +102,4 @@ A formative rule is, for the variable's name, `snake_case` is used to indicate p
 
 Another formative rule is that almost all components deal only with existent and accessible paths. If a path is nonexistent or not accessible, errors or warnings will be thrown. This rule is to avoid unexpected operations and can be seen in almost all components of this module.
 
-On comments, the `.SYNOPSIS` and the `.DESCRIPTION` may have been used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with principles and ideas. And, the `.SYNOPSIS` may use more normal language than `.DESCRIPTION`.
+In comments, `.SYNOPSIS` and `.DESCRIPTION` may have been used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with principles and ideas. And, `.SYNOPSIS` may use more normal language than `.DESCRIPTION`.
