@@ -180,8 +180,8 @@ function Format-EnvPath{
     foreach ($item in $env_paths)
     {
         Write-Verbose ($item) -Verbose
-        Write-Verbose (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck) -Verbose
-        Write-Verbose (Test-Path $item) -Verbose
+        Write-Verbose (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck).ToString() -Verbose
+        Write-Verbose (Test-Path $item).ToString() -Verbose
         if (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck){
             $item = Format-FileSystemPath -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf -SkipLevelCheck){
