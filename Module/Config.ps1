@@ -35,10 +35,14 @@ $script:ModuleInfo = @{
 
 if (Test-Platform 'Windows'){
     $script:ModuleInfo.InstallPath = "$(Split-Path -Path $PROFILE -Parent)\Modules\$($script:ModuleInfo.ModuleName)"
+    $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
+    $script:ModuleInfo.BuildPath = "$maybe_c`:\temp\$($script:ModuleInfo.ModuleName)"
 }elseif (Test-Platform 'Wsl2'){
     $script:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($script:ModuleInfo.ModuleName)"
+    $script:ModuleInfo.BuildPath = "/tmp/$($script:ModuleInfo.ModuleName)"
 }elseif (Test-Platform 'Linux'){
     $script:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($script:ModuleInfo.ModuleName)"
+    $script:ModuleInfo.BuildPath = "/tmp/$($script:ModuleInfo.ModuleName)"
 }else{
     Write-Error "The current platform, $($PSVersionTable.Platform), has not been supported yet."
     exit -1
