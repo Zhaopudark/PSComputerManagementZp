@@ -22,7 +22,9 @@ $script:ModuleInfo = @{
         'Set-EnvProxyIPV4ForShellProcess',
         'Remove-EnvProxyIPV4ForShellProcess'
     )
+    LicenseUri = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE'
     ProjectUri = 'https://github.com/Zhaopudark/PSComputerManagementZp'
+    HelpInfoURI = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/README.md'
 }
 
 # NOTE: should use `.` not `&` to add items into current scope

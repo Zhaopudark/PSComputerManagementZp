@@ -32,4 +32,7 @@ New-ModuleManifest -Path "$($ModuleInfo.InstallPath)\$($ModuleInfo.ModuleVersion
     -FunctionsToExport $ModuleInfo.FunctionsToExport`
     -CmdletsToExport @()`
     -VariablesToExport @()`
-    -AliasesToExport @()
+    -AliasesToExport @()`
+    -LicenseUri $ModuleInfo.LicenseUri`
+    -ProjectUri $ModuleInfo.ProjectUri`
+    -HelpInfoURI $ModuleInfo.HelpInfoURI
