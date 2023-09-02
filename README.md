@@ -36,21 +36,29 @@ This customized PowerShell Module, `PSComputerManagementZp`, derives from my sce
 - [ ] Set DDNS.
 - [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
 
+Some features are also available on WSL2 and Linux.
+
 # Installation
-There are two ways to install this module.
+There are two ways to install and use this module. Make sure your PowerShell version is 7.0 or later.
 
-Make sure your PowerShell version is 7.0 or later.
+- From source:
 
-```powershell
-git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
-cd PSComputerManagementZp
-./install.ps1
-```
+  ```powershell
+  git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
+  cd PSComputerManagementZp
+  ./install.ps1
+  ```
 
-# Risks
+- From [PowerShell Gallery](https://www.powershellgallery.com/)
+
+  ```powershell
+  Install-Module -Name PSComputerManagementZp
+  ```
+
+# Limitations or Risks
 
 - May not be compatible with other software, CLI tools, CLI commands or PowerShell Modules. Such as, if you have enabled `system proxy` in `Clash`, there is no need to use the case [Set IPV4 system proxy by `Localhost` with `PortNumber`](#Set-system-proxy-IPV4-by-Localhost-with-PortNumber).
-- This module will modify registry items in some cases. So, to reduce the potential conflicts with other software, tools, or commands, you have better backup all registry items before using the module. 
+- This module can modify `User` and `Machine` level environment variables in some cases, which should be noticed.
 
 # Usage
 
@@ -61,7 +69,7 @@ Generally, the prerequisites are:
 - Make sure your PowerShell version is 7.0 or later.
 - Some cases need `Administrator` privilege.
 
-The following is an example of this module:
+The following is an example:
 
 ## Set system proxy IPV4 by `Localhost` with `PortNumber`
 

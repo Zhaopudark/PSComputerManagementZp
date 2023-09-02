@@ -10,8 +10,7 @@
 
 # Release v0.0.1
 
-- It supports Windows, Linux and WSL2. 
-- It derives from personal scenarios, which can help users configure their Windows PCs easily to realize many useful operations. 
+A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2 and Linux.
 
 ## Features
 The main features that have been supported(opted) or remained to do(non-opted) are as:

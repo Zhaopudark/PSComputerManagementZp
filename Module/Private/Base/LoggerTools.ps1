@@ -2,7 +2,7 @@ param (
     [Parameter(Mandatory)]
     [string]$LoggingPath,
     [Parameter(Mandatory)]
-    [string]$ModuleVersion,
+    [string]$ModuleVersion
 )
 
 $script:LoggingPath = $LoggingPath
