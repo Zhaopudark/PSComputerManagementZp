@@ -29,6 +29,7 @@ function Merge-RedundantEnvPathFromLocalMachineToCurrentUser{
         }
         else{
             $log_buf += $item
+            Write-VerboseLog "The $Path in in Machine level `$Env:PATH is duplicated."
             Write-EnvModificationLog -Type 'Remove' -Path $item -Level 'Machine'
         }
     }
@@ -68,6 +69,7 @@ function Add-EnvPathToCurrentProcess{
             Write-VerboseLog "The path '$Path' has been added into Process level `$Env:PATH."
         }
         else{
+            Write-VerboseLog "The $Path in in Process level `$Env:PATH is duplicated."
             Write-EnvModificationLog -Level 'Process' -Type 'Maintain' -Path $Path
         }
     }else{

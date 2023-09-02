@@ -30,39 +30,6 @@ function Assert-ValidLevel4EnvTools{
     }
 }
 
-function Test-EnvPathNotDuplicated{
-<#
-.DESCRIPTION
-    Test if the `Path` is `duplicated` in the `$Container`.
-    Show corresonding logs.
-.OUTPUTS
-    $true: if the `Path` is not `duplicated` in the `$Container`.
-    $false: if the `Path` is `duplicated` in the `$Container`.
-
-#>
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Level,
-        [Parameter(Mandatory)]
-        [string]$Path,
-        [Parameter(Mandatory)]
-        [AllowEmptyCollection()]
-        [string[]]$Container,
-        [switch]$SkipLevelCheck
-    )
-    if (-not $SkipLevelCheck){
-        Assert-ValidLevel4EnvTools $Level
-    }
-    if ($Path -in $Container){
-        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
-        return $false
-    }else{
-        return $true
-    }
-}
-
 function Get-EnvPathAsSplit{
     [CmdletBinding()]
     [OutputType([System.Object[]])]
@@ -148,6 +115,7 @@ function Format-EnvPath{
                 $out_buf += $item
             }
             else{
+                Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
                 Write-EnvModificationLog -Level $Level -Type 'Remove' -Path $item
                 $counter += 1
             }
