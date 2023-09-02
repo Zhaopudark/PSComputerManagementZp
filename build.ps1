@@ -28,6 +28,7 @@ New-ModuleManifest -Path "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)\
     -ModuleVersion $ModuleInfo.ModuleVersion `
     -RootModule $ModuleInfo.RootModule `
     -Author $ModuleInfo.Author`
+    -Description $ModuleInfo.Description`
     -PowerShellVersion $ModuleInfo.PowerShellVersion`
     -FunctionsToExport $ModuleInfo.FunctionsToExport`
     -CmdletsToExport @()`

@@ -4,6 +4,7 @@ $script:ModuleInfo = @{
     RootModule = 'PSComputerManagementZp.psm1'
     ModuleVersion = '0.0.1'
     Author = 'Pu Zhao'
+    Description = 'A PowerShell module for computer management on Windows, WSL2 and Linux.'
     PowerShellVersion = '7.0'
     FunctionsToExport = @(
         'Reset-Authorization',
