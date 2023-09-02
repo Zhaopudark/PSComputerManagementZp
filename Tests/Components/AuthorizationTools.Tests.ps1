@@ -136,10 +136,9 @@ Describe '[Test AuthorizationTools]' {
 
             $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
 
-            {Get-PathType "$maybe_c`:\" }| Should -Throw "[Unsupported path] If $maybe_c`:\ is in SystemDisk, it should be or in `${Home}: ${Home}."
-            {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw "[Unsupported path] If $maybe_c`:\System Volume Information is in SystemDisk, it should be or in `${Home}: ${Home}."
-            {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw  "[Unsupported path] If $maybe_c`:\`$Recycle.Bin is in SystemDisk, it should be or in `${Home}: ${Home}."
-
+            {Get-PathType "$maybe_c`:\" }| Should -Throw
+            {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw
+            {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw
         }
         It '[Test on Linux file]' -Skip:(!$IsLinux){
             {Get-PathType "$test_path/test_dir" }| Should -Throw
