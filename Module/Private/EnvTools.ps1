@@ -30,43 +30,6 @@ function Assert-ValidLevel4EnvTools{
     }
 }
 
-function Test-EnvPathExist{
-<#
-.DESCRIPTION
-    Test if the `Path` is `existing` or not `empty` or not `$null`.
-    Show corresonding logs.
-
-.OUTPUTS
-    $true: if the `Path` is `existing` and not `empty` and not `$null`.
-    $false: if the `Path` is not `existing` or is `empty` or `$null`.
-#>
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [Parameter(Mandatory)]
-        [string]$Level,
-        [Parameter(Mandatory)]
-        [AllowEmptyString()]
-        [AllowNull()]
-        [string]$Path,
-        [switch]$SkipLevelCheck
-    )
-    if (-not $SkipLevelCheck){
-        Assert-ValidLevel4EnvTools $Level
-    }
-    if ($Path -eq $null){
-        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is `$null."
-        return $false
-    }elseif ($Path -eq '') {
-        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is empty."
-        return $false
-    }elseif (-not (Test-Path -LiteralPath $Path)){
-        Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is not exiting."
-        return $false
-    }else{
-        return $true
-    }
-}
 function Test-EnvPathNotDuplicated{
 <#
 .DESCRIPTION
@@ -179,7 +142,7 @@ function Format-EnvPath{
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $env_paths)
     {
-        if (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck){
+        if (Test-Path -LiteralPath $item){
             $item = Format-FileSystemPath -Path $item
             if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf -SkipLevelCheck){
                 $out_buf += $item

@@ -59,7 +59,7 @@ function Add-EnvPathToCurrentProcess{
     # User Machine Process[Default]
     $env_paths = Get-EnvPathAsSplit -Level 'Process' -SkipLevelCheck
 
-    if (Test-EnvPathExist -Level 'Process' -Path $Path -SkipLevelCheck){
+    if (Test-Path -LiteralPath $Path){
 
         if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths -SkipLevelCheck){
             Write-EnvModificationLog -Level 'Process' -Type 'Add' -Path $Path
@@ -134,7 +134,7 @@ function Remove-EnvPathByTargetPath{
         $env_paths = Get-EnvPathAsSplit -Level $Level -SkipLevelCheck
         $out_buf = @()
         $counter = 0
-        if (Test-EnvPathExist -Level $Level -Path $TargetPath -SkipLevelCheck){
+        if (Test-Path -LiteralPath $TargetPath){
 
             $TargetPath = [FormattedFileSystemPath]::new($TargetPath)
             foreach ($item in $env_paths)

@@ -33,7 +33,7 @@ function Write-VerboseLog{
     if ($PSCmdlet.ShouldProcess("$log_file","record logs")){
         $parent_dir = Split-Path -Path $log_file -Parent
         if (!(Test-Path -LiteralPath $parent_dir)){
-            New-Item -Path $parent_dir -ItemType Directory -Force | Out-Null
+            New-Item -Path $parent_dir -ItemType Directory -Force | Out-Null # to avoiding some errors about bool function's return value
         } 
         Add-Content -LiteralPath $log_file -Value $message
         # Out-File -FilePath $log_file -Append
