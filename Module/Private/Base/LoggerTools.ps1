@@ -22,6 +22,7 @@ function Get-LogFileName{
 
 function Write-VerboseLog{
     [CmdletBinding(SupportsShouldProcess)]
+    [OutputType([System.Void])]
     param(
         [string]$Message
     )
