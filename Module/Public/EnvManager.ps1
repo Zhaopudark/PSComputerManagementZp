@@ -61,7 +61,7 @@ function Add-EnvPathToCurrentProcess{
 
     if (Test-Path -LiteralPath $Path){
 
-        if (Test-EnvPathNotDuplicated -Level 'Process' -Path $Path -Container $env_paths -SkipLevelCheck){
+        if ($Path -notin $env_paths){
             Write-EnvModificationLog -Level 'Process' -Type 'Add' -Path $Path
             $env_paths += $Path
             Set-EnvPathBySplit -Paths $env_paths -Level 'Process' -SkipLevelCheck

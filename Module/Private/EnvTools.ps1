@@ -144,7 +144,7 @@ function Format-EnvPath{
     {
         if (Test-Path -LiteralPath $item){
             $item = Format-FileSystemPath -Path $item
-            if (Test-EnvPathNotDuplicated -Level $Level -Path $item -Container $out_buf -SkipLevelCheck){
+            if ($item -notin $out_buf){
                 $out_buf += $item
             }
             else{
