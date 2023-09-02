@@ -1,4 +1,4 @@
-# ![logo](https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/ps_black_64.svg?sanitize=true) PSComputerManagementZp
+# <img src="https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/av_colors_128.svg?sanitize=true" alt="logo" style="zoom:50%;" /> PSComputerManagementZp
 
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
@@ -26,17 +26,18 @@ Referring to some examples of `Linux and Bash`-based operations, I tried to migr
 
 # Introduction
 
-This customized PowerShell Module, `PSComputerManagementZp`, derives from my scenarios, which can help users configure their Windows PCs easily to realize many useful operations.  The main features that have supported(opted) or todo(non-opted) are as:
+This customized PowerShell Module, `PSComputerManagementZp`, derives from my scenarios, which can help users configure their Windows PCs easily to realize many useful operations. The main features that have been supported(opted) or remained to do(non-opted) are as:
 
 - [x] Set system-level proxy.
 - [x] Set shell (process) level proxy.
 - [x] Set/unset environment variables.
 - [x] Format path for both Windows and WSL2.
-- [x] Deal with authorization problems on Windows file system.
+- [x] Deal with authorization problems on the Windows file system.
 - [ ] Set DDNS.
 - [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
 
 # Installation
+There are two ways to install this module.
 
 Make sure your PowerShell version is 7.0 or later.
 

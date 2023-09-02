@@ -32,6 +32,10 @@ function Write-VerboseLog{
     Write-Verbose $message
     $log_file = Get-LogFileName
     if ($PSCmdlet.ShouldProcess("$log_file","record logs")){
+        $parent_dir = Split-Path -Path $log_file -Parent
+        if (!(Test-Path -LiteralPath $parent_dir)){
+            New-Item -Path $parent_dir -ItemType Directory -Force
+        } 
         Add-Content -LiteralPath $log_file -Value $message
         # Out-File -FilePath $log_file -Append
     }

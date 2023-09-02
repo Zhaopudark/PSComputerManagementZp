@@ -36,4 +36,6 @@ New-ModuleManifest -Path "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)\
     -AliasesToExport @()`
     -LicenseUri $ModuleInfo.LicenseUri`
     -ProjectUri $ModuleInfo.ProjectUri`
+    -IconUri $ModuleInfo.IconUri`
+    -ReleaseNotes = $ModuleInfo.ReleaseNotes`
     -HelpInfoURI $ModuleInfo.HelpInfoURI

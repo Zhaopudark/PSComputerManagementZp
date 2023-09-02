@@ -2,9 +2,9 @@ $script:ModuleInfo = @{
     LogDir = 'Logs'
     ModuleName = 'PSComputerManagementZp'
     RootModule = 'PSComputerManagementZp.psm1'
-    ModuleVersion = '0.0.1'
+    ModuleVersion = '0.0.2'
     Author = 'Pu Zhao'
-    Description = 'A PowerShell module for computer management on Windows, WSL2 and Linux.'
+    Description = 'A PowerShell module for computer management on Windows, WSL2 and Linux, involving authorization, env, links, proxy, etc.'
     PowerShellVersion = '7.0'
     FunctionsToExport = @(
         'Reset-Authorization',
@@ -25,7 +25,9 @@ $script:ModuleInfo = @{
     )
     LicenseUri = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE'
     ProjectUri = 'https://github.com/Zhaopudark/PSComputerManagementZp'
+    IconUri = 
     HelpInfoURI = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/README.md'
+
 }
 
 # NOTE: should use `.` not `&` to add items into current scope
