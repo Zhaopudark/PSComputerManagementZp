@@ -179,6 +179,7 @@ function Format-EnvPath{
     $counter = 0  # count the number of invalid path (`non-existent` or `empty` or `duplicated`)
     foreach ($item in $env_paths)
     {
+        Write-Verbose ($item) -Verbose
         Write-Verbose (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck) -Verbose
         Write-Verbose (Test-Path $item) -Verbose
         if (Test-EnvPathExist -Level $Level -Path $item -SkipLevelCheck){
