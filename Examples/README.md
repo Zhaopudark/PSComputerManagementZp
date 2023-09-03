@@ -23,7 +23,7 @@ Remove-Module PSComputerManagementZp
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./../Assets/Examples.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
+<img src="./../Assets/Examples.README.assets/image-20230703160155455.png" alt="image-20230703160155455" style="zoom:67%;" />
 
 ## Set system proxy IPV4 by `Gateway` with `PortNumber`
 
@@ -53,7 +53,7 @@ Remove-Module PSComputerManagementZp
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./../Assets/Examples.assets/image-20230703160317798.png" alt="image-20230703160317798" style="zoom:67%;" />
+<img src="./../Assets/Examples.README.assets/image-20230703160317798.png" alt="image-20230703160317798" style="zoom:67%;" />
 
 Optional: To inject these commands into the `virtual Windows` as a scheduled task `SetProxy`, setting proxy automatically when `logon` or `startup`, you can take the following further commands (Please run PowerShell with `Administrator` privilege.) :
 
@@ -75,7 +75,7 @@ Start-ScheduledTask -TaskName "SetProxy"
 
 Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->SetProxy` for checking:
 
-<img src="./../Assets/Examples.assets/image-20230703170453897.png" alt="image-20230703170453897" style="zoom: 50%;" />
+<img src="./../Assets/Examples.README.assets/image-20230703170453897.png" alt="image-20230703170453897" style="zoom: 50%;" />
 
 ### On WSL2
 
@@ -128,7 +128,7 @@ Just set the env level proxy. But first, installation of PowerShell and this mod
 
   The results can be as:
 
-  ![image-20230704021135547](./../Assets/Examples.assets/image-20230704021135547.png)
+  ![image-20230704021135547](./../Assets/Examples.README.assets/image-20230704021135547.png)
 
 - If want to remove these env proxy settings, you can do as:
 
@@ -155,7 +155,7 @@ Remove-Module PSComputerManagementZp
 
 Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
-<img src="./../Assets/Examples.assets/image-20230703161050758.png" alt="image-20230703161050758" style="zoom:67%;" />
+<img src="./../Assets/Examples.README.assets/image-20230703161050758.png" alt="image-20230703161050758" style="zoom:67%;" />
 
 # About Reset Authorization on Windows
 
