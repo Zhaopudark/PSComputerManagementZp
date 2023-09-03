@@ -98,8 +98,7 @@ Contributions are welcome. But recently, the introduction and documentation are 
 
 A simple way to contribute is to open an issue to report bugs or request new features.
 
-A formative rule is, for the variable's name, `snake_case` is used to indicate private variables while `PascalCase` is used for non-private variables. So, in code style consistency, please consider the above rule.
-
-Another formative rule is that almost all components deal only with existent and accessible paths. If a path is nonexistent or not accessible, errors or warnings will be thrown. This rule is to avoid unexpected operations and can be seen in almost all components of this module.
-
-In comments, `.SYNOPSIS` and `.DESCRIPTION` may have been used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with principles and ideas. And, `.SYNOPSIS` may use more normal language than `.DESCRIPTION`.
+Here a some formative rules of this module's development:
+- **Variable Naming**: `snake_case` is used to indicate private variables while `PascalCase` is used for non-private variables. So, in code style consistency, please consider the above rule.
+- **Paths**: Almost all components deal only with existent and accessible paths. If a path is nonexistent or not accessible, errors or warnings will be thrown. This rule is to avoid unexpected operations and can be seen in almost all components of this module.
+- **Comments** : `.SYNOPSIS` and `.DESCRIPTION` are both used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with rationales and ideas. And, `.SYNOPSIS` may use more normal language than `.DESCRIPTION`. There is no restriction that they must be used together.
