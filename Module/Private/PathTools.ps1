@@ -358,10 +358,10 @@ class EnvPaths{
 
         if ($this.OriginalPlatform -eq "Unix"){
             if ($this.UserLevelEnvPaths.Count -ne 0){
-                throw "In Unix platform, the User level env path should be empty." 
+                throw "In Unix platform, the User level env path should be empty. But it is $($this.UserLevelEnvPaths)." 
             }
             if ($this.MachineLevelEnvPaths.Count -ne 0){
-                throw "In Unix platform, the Machine level env path should be empty." 
+                throw "In Unix platform, the Machine level env path should be empty. But it is $($this.MachineLevelEnvPaths)." 
             }
         }
         $Verbose = $false
