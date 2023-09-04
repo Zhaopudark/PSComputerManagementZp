@@ -25,58 +25,140 @@ For more information on the motivation, rationale, logic, and usage of this func
 #>
 ```
 # Environment Variables Management
-## Merge-RedundantEnvPathFromLocalMachineToCurrentUser
+## Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser
 
 ```powershell
 <#
 .SYNOPSIS
-    Merge redundant items form Machine Level env PATH to User Level Env PATH.
-.DESCRIPTION
-    Sometimes, we may find some redundant items that both
-    in Machine Level $Env:PATH and User Level $Env:PATH.
-    This may because we have installed some software in different privileges.
-
-    This function will help us to merge the redundant items from Machine Level $Env:PATH to User Level $Env:PATH.
-    The operation will symplify the `$Env:PATH`.
-
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    Merge redundant items form the current machine level env paths to the current user level.
+    Before merging, the function will check and de-duplicate the current machine level and the current user level env paths.
 .NOTES
-    Do not check or remove the invalid (non-existent or empty or duplicated) items in each single level as the `Format-EnvPath` function does.
+    Support Windows only.
+    Need Administrator privilege.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.DESCRIPTION
+    Sometimes, we may find some redundant items that both in the machine level and the user level env paths.
+    This may because we have installed some software in different privileges.
+    This function will help us to merge the redundant items from the machine level env paths to the user level.
+    The operation can symplify the `$Env:PATH`.
 #>
 ```
-## Add-EnvPathToCurrentProcess
+## Add-PathToCurrentProcessEnvPaths
 ```powershell
 <#
 .DESCRIPTION
-    Add the `Path` to the `$Env:PATH` in `Process` level.
-    Format the `Process` level `$Env:PATH` by the function `Format-EnvPath` at the same time.
+    Append a path to the current process level env paths.
+    Before appending, the function will check and de-duplicate the current process level env paths.
 .EXAMPLE
-    Add-EnvPathToCurrentProcess -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
 #>
 ```
-## Remove-EnvPathByPattern
+## Add-PathToCurrentUserEnvPaths
 ```powershell
 <#
 .DESCRIPTION
-    Remove the paths that match the pattern in `$Env:PATH` in the specified level.
+    Append a path to the current user level env paths.
+    Before appending, the function will check and de-duplicate the current user level env paths.
+.NOTES
+    Support Windows only.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
-    # It will remove all the paths that match the pattern 'Git' in the Process level `$Env:PATH`.
-    Remove-EnvPathByPattern -Pattern 'Git' -Level 'Process'.
+    Add-PathToCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
 #>
 ```
-## Remove-EnvPathByTargetPath
+## Add-PathToCurrentMachineEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Append a path to the current machine level env paths.
+    Before appending, the function will check and de-duplicate the current machine level env paths.
+.NOTES
+    Support Windows only.
+    Need Administrator privilege.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    Add-PathToCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+#>
+```
+## Remove-PathFromCurrentProcessEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Remove a path from the current process level env paths.
+    Before removing, the function will check and de-duplicate the current process level env paths.
+.EXAMPLE
+    Remove-PathFromCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+#>
+```
+## Remove-PathFromCurrentUserEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Remove a path from the current user level env paths.
+    Before removing, the function will check and de-duplicate the current user level env paths.
+.NOTES
+    Support Windows only.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    Remove-PathFromCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+#>
+```
+## Remove-PathFromCurrentMachineEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Remove a path from the current machine level env paths.
+    Before removing, the function will check and de-duplicate the current machine level env paths.
+.NOTES
+    Support Windows only.
+    Need Administrator privilege.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    Remove-PathFromCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+#>
+```
+## Remove-MatchedPathsFromCurrentProcessEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Remove matched paths from the current process level env paths.
+    Before removing, the function will check and de-duplicate the current process level env paths.
+.EXAMPLE
+    Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the process level env paths.
+#>
+```
+## Remove-MatchedPathsFromCurrentUserEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Remove matched paths from the current user level env paths.
+    Before removing, the function will check and de-duplicate the current user level env paths.
+.NOTES
+    Support Windows only.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    Remove-MatchedPathsFromCurrentUserEnvPaths -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the user level env paths.
+#>
+```
+## Remove-MatchedPathsFromCurrentMachineEnvPaths
+```powershell
+<#
+.DESCRIPTION
+    Remove matched paths from the current machine level env paths.
+    Before removing, the function will check and de-duplicate the current machine level env paths.
+.NOTES
+    Support Windows only.
+    Need Administrator privilege.
+    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+.EXAMPLE
+    Remove-MatchedPathsFromCurrentMachineEnvPaths -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the machine level env paths.
+#>
+```
 
-```powershell
-<#
-.DESCRIPTION
-    Remove the target path in `$Env:PATH` in the specified level.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
-.EXAMPLE
-    Remove-EnvPathByTargetPath -TargetPath 'C:\Program Files\Git\cmd' -Level 'Process'
-    # It will remove the path 'C:\Program Files\Git\cmd' in the Process level `$Env:PATH`.
-#>
-```
+
 # Link Management
 ## Set-DirSymbolicLinkWithSync
 ```powershell

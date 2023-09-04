@@ -159,7 +159,7 @@ function Remove-MatchedPathsFromCurrentProcessEnvPaths{
     Remove matched paths from the current process level env paths.
     Before removing, the function will check and de-duplicate the current process level env paths.
 .EXAMPLE
-    Remove-PathFromCurrentProcessEnvPaths -Pattern 'Git'
+    Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the process level env paths.
 #>
     [CmdletBinding()]
@@ -181,7 +181,7 @@ function Remove-MatchedPathsFromCurrentUserEnvPaths{
     Support Windows only.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
-    Remove-PathFromCurrentUserEnvPaths -Pattern 'Git'
+    Remove-MatchedPathsFromCurrentUserEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the user level env paths.
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -207,7 +207,7 @@ function Remove-MatchedPathsFromCurrentMachineEnvPaths{
     Need Administrator privilege.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
-    Remove-PathFromCurrentMachineEnvPaths -Pattern 'Git'
+    Remove-MatchedPathsFromCurrentMachineEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the machine level env paths.
 #>
     [CmdletBinding(SupportsShouldProcess)]

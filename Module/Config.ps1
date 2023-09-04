@@ -45,7 +45,6 @@ $script:ModuleInfo = @{
 . "${PSScriptRoot}\Private\Base\PlatformTools.ps1"
 . "${PSScriptRoot}\Private\Base\LoggerTools.ps1" -LoggingPath "${Home}\.log\$($script:ModuleInfo.ModuleName)" -ModuleVersion $script:ModuleInfo.ModuleVersion
 . "${PSScriptRoot}\Private\AuthorizationTools.ps1"
-. "${PSScriptRoot}\Private\EnvTools.ps1"
 . "${PSScriptRoot}\Private\LinkTools.ps1"
 . "${PSScriptRoot}\Private\PathTools.ps1"
 
