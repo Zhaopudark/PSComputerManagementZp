@@ -356,20 +356,22 @@ class EnvPaths{
         $this.UserLevelEnvPaths = @([Environment]::GetEnvironmentVariable($this.Indicator,'User') -Split $this.Separator)
         $this.MachineLevelEnvPaths = @([Environment]::GetEnvironmentVariable($this.Indicator,'Machine') -Split $this.Separator)
 
+        $this.ProcessLevelEnvPaths = $this.DeEmpty($this.ProcessLevelEnvPaths)
+        $this.UserLevelEnvPaths = $this.DeEmpty($this.UserLevelEnvPaths)
+        $this.MachineLevelEnvPaths = $this.DeEmpty($this.MachineLevelEnvPaths)
+
         if ($this.OriginalPlatform -eq "Unix"){
             if ($this.UserLevelEnvPaths.Count -ne 0){
-                Write-Verbose "$($this.UserLevelEnvPaths)" -Verbose
-                Write-Verbose "$($this.UserLevelEnvPaths.Count)" -Verbose
                 throw "In Unix platform, the User level env path should be empty. But it is $($this.UserLevelEnvPaths)." 
             }
             if ($this.MachineLevelEnvPaths.Count -ne 0){
                 throw "In Unix platform, the Machine level env path should be empty. But it is $($this.MachineLevelEnvPaths)." 
             }
         }
-        $Verbose = $false
-        $this.DeDuplicatedProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process',$Verbose)
-        $this.DeDuplicatedUserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'Process',$Verbose)
-        $this.DeDuplicatedMachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Process',$Verbose)
+        $verbose = $false
+        $this.DeDuplicatedProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process',$verbose)
+        $this.DeDuplicatedUserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'Process',$verbose)
+        $this.DeDuplicatedMachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Process',$verbose)
     }
     
     [void] FindDuplicatedPaths([string[]] $Paths, [string] $Level,[bool]$Verbose){
@@ -385,6 +387,16 @@ class EnvPaths{
                 Write-VerboseLog "[Env Paths Duplicated] The $($group.Name) in '$Level' level env path exists $($group.Count) times."
             }
         }
+    }
+    [string[]] DeEmpty([string[]] $Paths){
+        $buf = @()
+        foreach ($item in $Paths)
+        {
+            if ($item.Trim()){
+                $buf += $item
+            }
+        }
+        return $buf
     }
     [string[]] DeDuplicate([string[]] $Paths, [string] $Level,[bool]$Verbose){
         $this.FindDuplicatedPaths($Paths,$Level,$Verbose)
