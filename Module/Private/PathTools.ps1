@@ -348,7 +348,7 @@ class EnvPaths{
         }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
             $this.OriginalPlatform = "Unix"
             $this.Indicator = 'PATH'
-            $this.Separator = ':'  
+            $this.Separator = ':'
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
@@ -362,10 +362,10 @@ class EnvPaths{
 
         if ($this.OriginalPlatform -eq "Unix"){
             if ($this.UserLevelEnvPaths.Count -ne 0){
-                throw "In Unix platform, the User level env path should be empty. But it is $($this.UserLevelEnvPaths)." 
+                throw "In Unix platform, the User level env path should be empty. But it is $($this.UserLevelEnvPaths)."
             }
             if ($this.MachineLevelEnvPaths.Count -ne 0){
-                throw "In Unix platform, the Machine level env path should be empty. But it is $($this.MachineLevelEnvPaths)." 
+                throw "In Unix platform, the Machine level env path should be empty. But it is $($this.MachineLevelEnvPaths)."
             }
         }
         $verbose = $false
@@ -373,9 +373,9 @@ class EnvPaths{
         $this.DeDuplicatedUserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'Process',$verbose)
         $this.DeDuplicatedMachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Process',$verbose)
     }
-    
+
     [void] FindDuplicatedPaths([string[]] $Paths, [string] $Level,[bool]$Verbose){
-        $grouped_paths = $Paths | Group-Object 
+        $grouped_paths = $Paths | Group-Object
         $duplicated_groups = $grouped_paths | Where-Object { $_.Count -gt 1 }
 
         if ($Verbose){

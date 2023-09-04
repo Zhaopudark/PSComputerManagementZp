@@ -1,5 +1,5 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.BeforeAll.ps1" 
+    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.BeforeAll.ps1"
 
     $user_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','User')
     $machine_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Machine')
@@ -68,7 +68,7 @@ Describe 'Test Env Management' {
         }
         It 'Test on machine level env paths' -Skip:(!$IsWindows){
             $env_paths = Get-xEnvPaths
-            $count = $env_paths.DeDuplicatedMachineLevelEnvPaths.Count 
+            $count = $env_paths.DeDuplicatedMachineLevelEnvPaths.Count
             $env_paths.DeDuplicatedMachineLevelEnvPaths | Should -Not -Contain $test_path
             Add-PathToCurrentMachineEnvPaths -Path $test_path
             Add-PathToCurrentMachineEnvPaths -Path $test_path
@@ -119,10 +119,10 @@ Describe 'Test Env Management' {
     }
 }
 
-AfterAll {    
+AfterAll {
     [Environment]::SetEnvironmentVariable('PATH',$user_env_paths_backup ,'User')
     [Environment]::SetEnvironmentVariable('PATH',$machine_env_paths_backup,'Machine')
     [Environment]::SetEnvironmentVariable('PATH',$process_env_paths_backup,'Process')
 
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.AfterAll.ps1" 
+    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.AfterAll.ps1"
 }

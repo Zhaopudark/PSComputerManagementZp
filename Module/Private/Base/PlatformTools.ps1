@@ -130,11 +130,12 @@ function Assert-IsWindows{
     [OutputType([bool])]
     param()
     Test-Platform -Name 'Windows' -Throw
-} 
+}
+
 function Assert-IsWindowsAndAdmin{
     [CmdletBinding()]
     [OutputType([bool])]
     param()
     Test-Platform -Name 'Windows' -Throw
     Assert-AdminPermission
-} 
+}

@@ -1,3 +1,5 @@
+# Release v0.0.3
+
 # Release v0.0.2
 
 - Change logging behavior to deal with log file funding problems. 

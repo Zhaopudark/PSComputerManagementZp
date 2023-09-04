@@ -33,7 +33,7 @@ function Write-FileLogs{
     if ($PSCmdlet.ShouldProcess("Write logs to file:$log_file",'','')){
         if (!(Test-Path -LiteralPath $parent_dir)){
             New-Item -Path $parent_dir -ItemType Directory -Force | Out-Null # to avoiding some errors about bool function's return value
-        } 
+        }
         Add-Content -LiteralPath $log_file -Value $message
     }
 }
@@ -50,6 +50,5 @@ function Write-Logs{
     Write-FileLogs $message
     if($ShowVerbose){
         Write-Verbose $message -Verbose
-    }    
+    }
 }
-

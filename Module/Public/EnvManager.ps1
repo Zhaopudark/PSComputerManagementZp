@@ -32,13 +32,15 @@ function Add-PathToCurrentProcessEnvPaths{
 .EXAMPLE
     Add-PathToCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path
     )
     $env_paths = [EnvPaths]::new()
-    $env_paths.AppendProcessLevelEnvPaths($Path)
+    if ($PSCmdlet.ShouldProcess("Append $Path to process level env path",'','')){
+        $env_paths.AppendProcessLevelEnvPaths($Path)
+    }
 }
 function Add-PathToCurrentUserEnvPaths{
 <#
@@ -85,7 +87,7 @@ function Add-PathToCurrentMachineEnvPaths{
     if ($PSCmdlet.ShouldProcess("Append $Path to machine level env path",'','')){
         $env_paths.AppendMachineLevelEnvPaths($Path)
     }
-}  
+}
 
 function Remove-PathFromCurrentProcessEnvPaths{
 <#
@@ -95,14 +97,16 @@ function Remove-PathFromCurrentProcessEnvPaths{
 .EXAMPLE
     Remove-PathFromCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Path
     )
     $env_paths = [EnvPaths]::new()
     $IsPattern = $false
-    $env_paths.RemoveProcessLevelEnvPaths($Path,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove $Path from process level env path",'','')){
+        $env_paths.RemoveProcessLevelEnvPaths($Path,$IsPattern)
+    }
 }
 
 function Remove-PathFromCurrentUserEnvPaths{
@@ -162,14 +166,16 @@ function Remove-MatchedPathsFromCurrentProcessEnvPaths{
     Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the process level env paths.
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
         [string]$Pattern
     )
     $env_paths = [EnvPaths]::new()
     $IsPattern = $true
-    $env_paths.RemoveProcessLevelEnvPaths($Pattern,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from process level env path",'','')){
+        $env_paths.RemoveProcessLevelEnvPaths($Pattern,$IsPattern)
+    }
 }
 
 function Remove-MatchedPathsFromCurrentUserEnvPaths{
