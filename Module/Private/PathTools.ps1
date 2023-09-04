@@ -332,6 +332,7 @@ class EnvPaths{
     Do not check any path's existence or validity.
 #>
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform
+    [ValidateNotNullOrEmpty()][string] $Indicator
     [ValidateNotNullOrEmpty()][string] $Separator
     [ValidateNotNullOrEmpty()][string[]] $ProcessLevelEnvPaths
     [AllowNull()][string[]] $UserLevelEnvPaths
@@ -342,16 +343,18 @@ class EnvPaths{
     EnvPaths() {
         if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
             $this.OriginalPlatform = "Win32NT"
+            $this.Indicator = 'Path'
             $this.Separator = ';'
         }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
             $this.OriginalPlatform = "Unix"
+            $this.Indicator = 'PATH'
             $this.Separator = ':'  
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
-        $this.ProcessLevelEnvPaths = @([Environment]::GetEnvironmentVariable('Path','Process') -Split $this.Separator)
-        $this.UserLevelEnvPaths = @([Environment]::GetEnvironmentVariable('Path','User') -Split $this.Separator)
-        $this.MachineLevelEnvPaths = @([Environment]::GetEnvironmentVariable('Path','Machine') -Split $this.Separator)
+        $this.ProcessLevelEnvPaths = @([Environment]::GetEnvironmentVariable($this.Indicator,'Process') -Split $this.Separator)
+        $this.UserLevelEnvPaths = @([Environment]::GetEnvironmentVariable($this.Indicator,'User') -Split $this.Separator)
+        $this.MachineLevelEnvPaths = @([Environment]::GetEnvironmentVariable($this.Indicator,'Machine') -Split $this.Separator)
 
         if ($this.OriginalPlatform -eq "Unix"){
             if ($this.UserLevelEnvPaths.Count -ne 0){
@@ -393,7 +396,7 @@ class EnvPaths{
         return $buf
     }
     [void] SetEnvPath([string[]] $Paths, [string] $Level){
-        [Environment]::SetEnvironmentVariable('Path',$Paths -join $this.Separator,$Level)
+        [Environment]::SetEnvironmentVariable($this.Indicator,$Paths -join $this.Separator,$Level)
     }
     [void] DeDuplicateProcessLevelEnvPaths(){
         $verbose = $true
