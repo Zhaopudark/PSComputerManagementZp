@@ -381,7 +381,7 @@ class EnvPaths{
             }
         }
     }
-    [string[]] DeDuplicate([string[]] $Paths, [string] $Level,[bool]$Verbose=$true){
+    [string[]] DeDuplicate([string[]] $Paths, [string] $Level,[bool]$Verbose){
         $this.FindDuplicatedPaths($Paths,$Level,$Verbose)
         $buf = @()
         foreach ($item in $Paths)
@@ -396,17 +396,20 @@ class EnvPaths{
         [Environment]::SetEnvironmentVariable('Path',$Paths -join $this.Separator,$Level)
     }
     [void] DeDuplicateProcessLevelEnvPaths(){
-        $this.ProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process')
+        $Verbose = $true
+        $this.ProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process',$Verbose)
         $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
         Write-VerboseLog "[Env Paths Modifed] The 'Process' level env path has been de-duplicated." -Verbose
     }
     [void] DeDuplicateUserLevelEnvPaths(){
-        $this.UserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'User')
+        $Verbose = $true
+        $this.UserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'User',$Verbose)
         $this.SetEnvPath($this.UserLevelEnvPaths,'User')
         Write-VerboseLog "[Env Paths Modifed] The 'User' level env path has been de-duplicated." -Verbose
     }
     [void] DeDuplicateMachineLevelEnvPaths(){
-        $this.MachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Machine')
+        $Verbose = $true
+        $this.MachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Machine',$Verbose)
         $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
         Write-VerboseLog "[Env Paths Modifed] The 'Machine' level env path has been de-duplicated." -Verbose
     }

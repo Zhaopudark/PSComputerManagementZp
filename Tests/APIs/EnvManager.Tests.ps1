@@ -14,7 +14,7 @@ Describe 'Test Env Management' {
     Context 'Merging, appending and removement on $Env:PATH' {
         It 'Test on process level env paths' {
             $env_paths = Get-xEnvPaths
-            $count = $env_paths.DeDuplicatedProcessLevelEnvPaths.Count 
+            $count = $env_paths.DeDuplicatedProcessLevelEnvPaths.Count
             $env_paths.DeDuplicatedProcessLevelEnvPaths | Should -Not -Contain $test_path
             Add-PathToCurrentProcessEnvPaths -Path $test_path
             Add-PathToCurrentProcessEnvPaths -Path $test_path
@@ -41,7 +41,7 @@ Describe 'Test Env Management' {
         }
         It 'Test on user level env paths' -Skip:(!$IsWindows){
             $env_paths = Get-xEnvPaths
-            $count = $env_paths.DeDuplicatedUserLevelEnvPaths.Count 
+            $count = $env_paths.DeDuplicatedUserLevelEnvPaths.Count
             $env_paths.DeDuplicatedUserLevelEnvPaths | Should -Not -Contain $test_path
             Add-PathToCurrentUserEnvPaths -Path $test_path
             Add-PathToCurrentUserEnvPaths -Path $test_path
