@@ -85,19 +85,29 @@ function Test-IsWSL2{
     $output = bash -c "cat /proc/version 2>&1"
     return $output.Contains("WSL2")
 }
-function Assert-AdminPermission {
+
+function Test-AdminPermission {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param()
     $current_user = [Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = New-Object Security.Principal.WindowsPrincipal($current_user)
 
-    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    if ($principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        return $true
+    }else{
+        return $false
+    }
+}
+function Assert-AdminPermission {
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param()
+    if (Test-AdminPermission){
+        Write-Verbose "Current process is in AdminPermission."
+    }else{
         Write-Verbose "Current process is not in AdminPermission."
         throw [System.UnauthorizedAccessException]::new("You must run in administrator privilege.")
-    }else{
-        Write-Verbose "Current process is in in AdminPermission."
-        # return $true
     }
 }
 function Assert-AdminRobocopyAvailable{
@@ -115,6 +125,12 @@ function Assert-AdminRobocopyAvailable{
     Assert-AdminPermission
 }
 
+function Assert-IsWindows{
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param()
+    Test-Platform -Name 'Windows' -Throw
+} 
 function Assert-IsWindowsAndAdmin{
     [CmdletBinding()]
     [OutputType([bool])]

@@ -39,3 +39,4 @@ function Write-VerboseLog{
         # Out-File -FilePath $log_file -Append
     }
 }
+

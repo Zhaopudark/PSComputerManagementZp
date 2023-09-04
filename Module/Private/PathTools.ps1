@@ -1,11 +1,12 @@
 ﻿class FormattedFileSystemPath {
 <#
 .SYNOPSIS
-    A class that receive a file system path,
-        automatically formatted the path,
-        hold the formatted path,
-        provides some useful attributes(properties) simultaneously for quick check.
-    #NOTE Support file system paths only!
+    A class that receives a file system path,
+        formats the path automatically when initialized,
+        holds the formatted path,
+        and provides some useful attributes(properties) simultaneously for a quick check.
+.NOTES
+    Support file system paths only!
 .DESCRIPTION
     Automatically format a path to standard format by the following procedures and rules:
     1. Preprocess a received path with some literal check (string level, without accessing it by file system):
@@ -321,23 +322,186 @@ function Format-FileSystemPath{
     )
     return ([FormattedFileSystemPath]::new($Path)).LiteralPath
 }
+class EnvPaths{
+<#
+.SYNOPSIS
+    A class that maintains the process, user, and machine level env paths,
+        holds the de-duplicated paths,
+        and provides some useful methods for some scenarios that need to modify the env paths.
+.NOTES
+    Do not check any path's existence or validity.
+#>
+    [ValidateNotNullOrEmpty()][string] $OriginalPlatform
+    [ValidateNotNullOrEmpty()][string] $Separator
+    [ValidateNotNullOrEmpty()][string[]] $ProcessLevelEnvPaths
+    [AllowNull()][string[]] $UserLevelEnvPaths
+    [AllowNull()][string[]] $MachineLevelEnvPaths
+    [ValidateNotNullOrEmpty()][string[]] $DeDuplicatedProcessLevelEnvPaths
+    [AllowNull()][string[]] $DeDuplicatedUserLevelEnvPaths
+    [AllowNull()][string[]] $DeDuplicatedMachineLevelEnvPaths
+    EnvPaths() {
+        if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
+            $this.OriginalPlatform = "Win32NT"
+            $this.Separator = ';'
+        }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
+            $this.OriginalPlatform = "Unix"
+            $this.Separator = ':'  
+        }else{
+            throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
+        }
+        $this.ProcessLevelEnvPaths = @([Environment]::GetEnvironmentVariable('Path','Process') -Split $this.Separator)
+        $this.UserLevelEnvPaths = @([Environment]::GetEnvironmentVariable('Path','User') -Split $this.Separator)
+        $this.MachineLevelEnvPaths = @([Environment]::GetEnvironmentVariable('Path','Machine') -Split $this.Separator)
 
-function Format-LiteralPath{
+        if ($this.OriginalPlatform -eq "Unix"){
+            if ($this.UserLevelEnvPaths.Count -ne 0){
+                throw "In Unix platform, the User level env path should be empty." 
+            }
+            if ($this.MachineLevelEnvPaths.Count -ne 0){
+                throw "In Unix platform, the Machine level env path should be empty." 
+            }
+        }
+        $Verbose = $false
+        $this.DeDuplicatedProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process',$Verbose)
+        $this.DeDuplicatedUserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'Process',$Verbose)
+        $this.DeDuplicatedMachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Process',$Verbose)
+    }
+    
+    [void] FindDuplicatedPaths([string[]] $Paths, [string] $Level,[bool]$Verbose){
+        $grouped_paths = $Paths | Group-Object 
+        $duplicated_groups = $grouped_paths | Where-Object { $_.Count -gt 1 }
+
+        if ($Verbose){
+            foreach ($group in $duplicated_groups) {
+                Write-VerboseLog "[Env Paths Duplicated] The $($group.Name) in '$Level' level env path exists $($group.Count) times." -Verbose
+            }
+        }else{
+            foreach ($group in $duplicated_groups) {
+                Write-VerboseLog "[Env Paths Duplicated] The $($group.Name) in '$Level' level env path exists $($group.Count) times."
+            }
+        }
+    }
+    [string[]] DeDuplicate([string[]] $Paths, [string] $Level,[bool]$Verbose=$true){
+        $this.FindDuplicatedPaths($Paths,$Level,$Verbose)
+        $buf = @()
+        foreach ($item in $Paths)
+        {
+            if (-not $buf.Contains($item)){
+                $buf += $item
+            }
+        }
+        return $buf
+    }
+    [void] SetEnvPath([string[]] $Paths, [string] $Level){
+        [Environment]::SetEnvironmentVariable('Path',$Paths -join $this.Separator,$Level)
+    }
+    [void] DeDuplicateProcessLevelEnvPaths(){
+        $this.ProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process')
+        $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
+        Write-VerboseLog "[Env Paths Modifed] The 'Process' level env path has been de-duplicated." -Verbose
+    }
+    [void] DeDuplicateUserLevelEnvPaths(){
+        $this.UserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'User')
+        $this.SetEnvPath($this.UserLevelEnvPaths,'User')
+        Write-VerboseLog "[Env Paths Modifed] The 'User' level env path has been de-duplicated." -Verbose
+    }
+    [void] DeDuplicateMachineLevelEnvPaths(){
+        $this.MachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Machine')
+        $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
+        Write-VerboseLog "[Env Paths Modifed] The 'Machine' level env path has been de-duplicated." -Verbose
+    }
+    [void] MergeDeDuplicatedEnvPathsFromMachineLevelToUserLevel(){
+        $this.DeDuplicateUserLevelEnvPaths()
+        $this.DeDuplicateMachineLevelEnvPaths()
+
+        $buf = $this.UserLevelEnvPaths+$this.MachineLevelEnvPaths
+        $this.FindDuplicatedPaths($buf,'User+Machine')
+        $buf = @()
+        foreach ($item in $this.MachineLevelEnvPaths)
+        {
+            if (-not $this.UserLevelEnvPaths.Contains($item)){
+                $buf += $item
+            }
+        }
+        $this.MachineLevelEnvPaths = $buf
+        $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
+        Write-VerboseLog "[Env Paths Modifed] The items duplicated across 'Machine' level and 'User' level env path have been merged into 'User' level env path." -Verbose
+    }
+    [string[]] Append([string[]] $Paths, [string] $Level,[string] $Path){
+        $buf = $Paths.Clone()
+        if (-not $buf.Contains($Path)){
+            $buf += $Path
+        }else{
+            Write-VerboseLog "[Env Paths Duplicated] The $Path in '$Level' level is existent already." -Verbose
+        }
+        return $buf
+    }
+
+    [void] AppendProcessLevelEnvPaths([string] $Path){
+        $this.DeDuplicateProcessLevelEnvPaths()
+        $this.ProcessLevelEnvPaths = $this.Append($this.ProcessLevelEnvPaths,'Process',$Path)
+        $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
+        Write-VerboseLog "[Env Paths Modifed] The $Path has been appended into 'Process' level env path." -Verbose
+    }
+    [void] AppendUserLevelEnvPaths([string] $Path){
+        $this.DeDuplicateUserLevelEnvPaths()
+        $this.UserLevelEnvPaths = $this.Append($this.UserLevelEnvPaths,'User',$Path)
+        $this.SetEnvPath($this.UserLevelEnvPaths,'User')
+        Write-VerboseLog "[Env Paths Modifed] The $Path has been appended into 'User' level env path." -Verbose
+    }
+    [void] AppendMachineLevelEnvPaths([string] $Path){
+        $this.DeDuplicateMachineLevelEnvPaths()
+        $this.MachineLevelEnvPaths = $this.Append($this.MachineLevelEnvPaths,'Machine',$Path)
+        $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
+        Write-VerboseLog "[Env Paths Modifed] The $Path has been appended into 'Machine' level env path." -Verbose
+    }
+
+    [string[]] Remove([string[]] $Paths, [string] $Level, [string] $Path, [bool] $IsPattern){
+        $buf = @()
+        foreach ($item in $Paths)
+        {
+            if ($IsPattern){
+                if ($item -NotMatch $Path){
+                    $buf += $item
+                }else{
+                    Write-VerboseLog "[Env Paths to Remove] The $item in '$Level' level will be removed." -Verbose
+                }
+            }else{
+                if ($item -ne $Path){
+                    $buf += $item
+                }else{
+                    Write-VerboseLog "[Env Paths to Remove] The $item in '$Level' level will be removed." -Verbose
+                }
+            }
+        }
+        return $buf
+    }
+    [void] RemoveProcessLevelEnvPaths([string] $Target, [bool] $IsPattern){
+        $this.DeDuplicateProcessLevelEnvPaths()
+        $this.ProcessLevelEnvPaths = $this.Remove($this.ProcessLevelEnvPaths,'Process',$Target,$IsPattern)
+        $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
+        Write-VerboseLog "[Env Paths Modifed] The removement has been done on 'Process' level env path." -Verbose
+    }
+    [void] RemoveUserLevelEnvPaths([string] $Target, [bool] $IsPattern){
+        $this.DeDuplicateUserLevelEnvPaths()
+        $this.UserLevelEnvPaths = $this.Remove($this.UserLevelEnvPaths,'User',$Target,$IsPattern)
+        $this.SetEnvPath($this.UserLevelEnvPaths,'User')
+        Write-VerboseLog "[Env Paths Modifed] The removement has been done on 'User' level env path." -Verbose
+    }
+    [void] RemoveMachineLevelEnvPaths([string] $Target, [bool] $IsPattern){
+        $this.DeDuplicateMachineLevelEnvPaths()
+        $this.MachineLevelEnvPaths = $this.Remove($this.MachineLevelEnvPaths,'Machine',$Target,$IsPattern)
+        $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
+        Write-VerboseLog "[Env Paths Modifed] The removement has been done on 'Machine' level env path." -Verbose
+    }
+}
+
+function Get-EnvPaths{
 <#
 .DESCRIPTION
-    It is the same to class [FormattedFileSystemPath]::FormatLiteralPath().
+    A function to apply the class EnvPaths.
+    Return the formatted liiteral path.
 #>
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-
-    if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
-        $slash =  '\'
-    }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
-        $slash = '/'
-    }else{
-        throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
-    }
-    return [FormattedFileSystemPath]::FormatLiteralPath($Path,$slash)
+    param()
+    return [EnvPaths]::new()
 }

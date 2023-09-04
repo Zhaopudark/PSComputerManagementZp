@@ -1,31 +1,22 @@
-function Write-EnvModificationLog{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [ValidateSet('User','Process','Machine')]
-        [string]$Level,
-        [Parameter(Mandatory)]
-        [ValidateSet('Remove','Add','Maintain','Not Add','Not Remove')]
-        [string]$Type,
-        [string]$Path='' # $null will be converted to empty string
-    )
-    $message = "Try to $($Type.ToLower()) '$Path' in '$Level' level `$Env:PATH."
-    Write-VerboseLog $message -Verbose
-}
 function Assert-ValidLevel4EnvTools{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param(
         [string]$Level
     )
-    if ($Level -notin @('User','Process','Machine')){
-        throw "The arg `$Level should be one of 'User','Process','Machine', not $Level."
-    }elseif (($Level -eq 'Machine') -and (Test-Platform 'Windows')){
-        Assert-AdminPermission
-    }else{
-        if (((Test-Platform 'Wsl2') -or (Test-Platform 'Linux'))`
-            -and ($Level -in @('User','Machine'))){
-            Write-VerboseLog  "The 'User' or 'Machine' level `$Env:PATH in current platform, $($PSVersionTable.Platform), are not supported. They can be get or set but this means nothing."
+    if (Test-Platform 'Windows'){
+        if ($Level -notin @('User','Process','Machine')){
+            throw "In current $($PSVersionTable.Platform) system, the arg `$Level should be one of 'User','Process','Machine', not $Level."
+        }
+        if ($Level -in @('User','Machine')){
+            if (!(Test-AdminPermission)){
+                throw "In current $($PSVersionTable.Platform) system, you should have admin permission when the arg `$Level be 'User' or 'Machine'."
+            }
+        }
+    }
+    else{
+        if ($Level -ceq 'Process'){
+            throw "In current $($PSVersionTable.Platform) system, the arg `$Level should be 'Process' only."
         }
     }
 }
@@ -115,7 +106,7 @@ function Format-EnvPath{
                 $out_buf += $item
             }
             else{
-                Write-VerboseLog "The $Path in in '$Level' level `$Env:PATH is duplicated."
+                Write-VerboseLog "The $Path in '$Level' level `$Env:PATH is duplicated."
                 Write-EnvModificationLog -Level $Level -Type 'Remove' -Path $item
                 $counter += 1
             }

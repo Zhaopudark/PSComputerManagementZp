@@ -29,7 +29,7 @@ BeforeAll {
     New-Item -Path "$test_path\backup" -ItemType Directory
 }
 
-Describe 'Link EnvTools' {
+Describe 'Test Link Management' {
     Context 'On Windows' -Skip:(!$IsWindows){
         It 'Test Set-DirSymbolicLinkWithSync' {
             Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -Backuppath "$test_path\backup"

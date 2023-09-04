@@ -6,6 +6,17 @@
         - Now, all logs will be saved in ${Home}/.log/${ModuleName}/ by default.
         - The original logging path, ${ModulePath}/Logs/ has been deprecated.
         - It is recommended to remove the original logging path manually.
+- Re-construct `EnvManagers`. Now the APIs about `Environment Variables Management` have been re-write as:
+    - `Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser`,
+    - `Add-PathToCurrentProcessEnvPaths`,
+    - `Add-PathToCurrentUserEnvPaths`,
+    - `Add-PathToCurrentMachineEnvPaths`,
+    - `Remove-PathFromCurrentProcessEnvPaths`,
+    - `Remove-PathFromCurrentUserEnvPaths`,
+    - `Remove-PathFromCurrentMachineEnvPaths`,
+    - `Remove-MatchedPathsFromCurrentProcessEnvPaths`,
+    - `Remove-MatchedPathsFromCurrentUserEnvPaths`,
+    - `Remove-MatchedPathsFromCurrentMachineEnvPaths`,
     
 
 # Release v0.0.1
@@ -37,7 +48,7 @@ Specifically, all supported public APIs are categorized as follows:
     - `Set-FileSymbolicLinkWithSync`
     - `Set-DirJunctionWithSync`
     - `Set-FileHardLinkWithSync`
-- Path Management
+- Proxy Management
     - `Get-GatewayIPV4`
     - `Get-LocalHostIPV4`
     - `Set-SystemProxyIPV4ForCurrentUser`
