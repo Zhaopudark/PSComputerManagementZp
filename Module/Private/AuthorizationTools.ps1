@@ -23,7 +23,7 @@
     if (($Path.IsBeOrInSystemDrive)-and !($Path.IsInHome) -and !($Path.IsHome)) {
         throw "[Unsupported path] If $Path is in SystemDisk, it should be or in `${Home}: ${Home}."
     }
-    Write-VerboseLog "[Supported path] $Path"
+    Write-Logs "[Supported path] $Path"
 }
 
 function Reset-PathAttribute{
@@ -194,7 +194,7 @@ function Get-PathType{
         $header = "NonSystemDisk[FAT32]"
     }
     else {
-        Write-VerboseLog "The $Path is not in home or has unsupported file system type: $($Path.DriveFormat)."
+        Write-Logs "The $Path is not in home or has unsupported file system type: $($Path.DriveFormat)."
         return $null
     }
 
@@ -209,11 +209,11 @@ function Get-PathType{
             return "$header\`$Recycle.Bin"
         }
         elseif($Path.IsInSystemVolumeInfo){
-            Write-VerboseLog "The $Path should not be in System Volume Information."
+            Write-Logs "The $Path should not be in System Volume Information."
             return $null
         }
         elseif($Path.IsInRecycleBin){
-            Write-VerboseLog "The $Path should not be in `$Recycle.Bin."
+            Write-Logs "The $Path should not be in `$Recycle.Bin."
             return $null
         }
         elseif ($Path.IsSymbolicLink) {
@@ -241,7 +241,7 @@ function Get-PathType{
         }
     }
     else{
-        Write-VerboseLog "The $Path is not supported."
+        Write-Logs "The $Path is not supported."
         return $null
     }
 }
@@ -411,7 +411,7 @@ function Get-DefaultSddl{
             break
         }
         Default {
-            Write-VerboseLog "The $Path has unsupported `$PathType: $PathType"
+            Write-Logs "The $Path has unsupported `$PathType: $PathType"
             $Sddl = $null
         }
     }

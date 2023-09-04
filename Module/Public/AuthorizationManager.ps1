@@ -36,18 +36,18 @@ For more information on the motivations, rationale, logic, limitations and usage
             Reset-PathAttribute $Path -SkipPlatformCheck -SkipPathCheck
             if ($new_acl.Sddl -ne $sddl){
                 try {
-                    Write-VerboseLog  "`$Path is:`n`t $Path"
-                    Write-VerboseLog  "Current Sddl is:`n`t $($new_acl.Sddl)"
-                    Write-VerboseLog  "Target Sddl is:`n`t $($sddl)"
+                    Write-Logs  "`$Path is:`n`t $Path"
+                    Write-Logs  "Current Sddl is:`n`t $($new_acl.Sddl)"
+                    Write-Logs  "Target Sddl is:`n`t $($sddl)"
 
                     $new_acl.SetSecurityDescriptorSddlForm($sddl)
-                    Write-VerboseLog  "After dry-run, the sddl is:`n`t $($new_acl.Sddl)"
+                    Write-Logs  "After dry-run, the sddl is:`n`t $($new_acl.Sddl)"
 
                     Set-Acl -LiteralPath $Path -AclObject $new_acl
-                    Write-VerboseLog  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
+                    Write-Logs  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
                 }
                 catch [System.ArgumentException]{
-                    Write-VerboseLog  "`$Path is too long: '$Path'"
+                    Write-Logs  "`$Path is too long: '$Path'"
                 }
             }
             if ($Recurse){
@@ -92,7 +92,7 @@ For more information on the motivations, rationale, logic, limitations and usage
 
     }
     catch {
-        Write-VerboseLog  "Reset-Authorization Exception: $PSItem"
-        Write-VerboseLog  "Operation has been skipped on $Path."
+        Write-Logs  "Reset-Authorization Exception: $PSItem"
+        Write-Logs  "Operation has been skipped on $Path."
     }
 }

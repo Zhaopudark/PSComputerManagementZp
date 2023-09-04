@@ -184,7 +184,7 @@ try {
     Remove-Module PSComputerManagementZp
 }
 catch {
-    Write-VerboseLog  "Set-Authorization Exception: $PSItem"
-    Write-VerboseLog  "Operation has been skipped on $Path."
+    Write-Logs  "Set-Authorization Exception: $PSItem"
+    Write-Logs  "Operation has been skipped on $Path."
 }
 ```

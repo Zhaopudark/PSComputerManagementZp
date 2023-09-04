@@ -94,9 +94,9 @@ function Move-FileWithBackup{
         "Then, move $Source to $Destination"+[Environment]::NewLine+
         "Record logs to $log_file",'',''))
     {
-        Write-VerboseLog (Copy-Item $Source $backup_source)
-        Write-VerboseLog (Copy-Item $Destination $backup_destination)
-        Write-VerboseLog (Copy-Item $Source $Destination)
+        Write-Logs (Copy-Item $Source $backup_source)
+        Write-Logs (Copy-Item $Destination $backup_destination)
+        Write-Logs (Copy-Item $Source $Destination)
     }
 }
 function Merge-BeforeSetDirLink{
@@ -136,7 +136,7 @@ function Merge-BeforeSetDirLink{
         $_target1_exist = $false
     }
     catch {
-        Write-VerboseLog  "Exception caught: $_"
+        Write-Logs  "Exception caught: $_"
     }
     if ($_target1_exist){
         if (!$_target1.IsDir){
@@ -152,7 +152,7 @@ function Merge-BeforeSetDirLink{
         $_target2_exist = $false
     }
     catch {
-        Write-VerboseLog  "Exception caught: $_"
+        Write-Logs  "Exception caught: $_"
     }
     if ($_target2_exist){
         if (!$_target2.IsDir){
@@ -169,7 +169,7 @@ function Merge-BeforeSetDirLink{
                         throw "Cannot merge $_target1 to $_target2, because $_target1 and $_target2 are both symbolic link or junction point."
                     }else{
                         # dir-symbolic-or-hardlink        | dir-not-symbolic-or-hardlink  | del $Target1
-                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Write-Logs  "Remove-Item $_target1 -Force -Recurse"
                         Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
@@ -184,16 +184,16 @@ function Merge-BeforeSetDirLink{
                     }else{
                         #dir-not-symbolic-or-hardlink    | dir-not-symbolic-or-hardlink  | backup $Target1 and $Target2 to $Backuppath, then merge $Target1 to $Target2, then del $Target1
                         Merge-DirectoryWithBackup -Source $_target1 -Destination $_target2 -Backuppath $Backuppath
-                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Write-Logs  "Remove-Item $_target1 -Force -Recurse"
                         Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
                     Assert-AdminRobocopyAvailable
                     # dir-not-symbolic-or-hardlink    | non-existent          | copy $Target1 to $Target2, del $Target1
-                    Write-VerboseLog  "Robocopy $_target1 $_target2"
+                    Write-Logs  "Robocopy $_target1 $_target2"
                     $log_file = Get-LogFileName "Robocopy Merge-BeforeSetDirLink"
                     Robocopy $_target1 $_target2  /E /copyall /DCOPY:DATE /LOG:"$log_file"
-                    Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                    Write-Logs  "Remove-Item $_target1 -Force -Recurse"
                     Remove-Item $_target1 -Force -Recurse
                 }
             }
@@ -204,11 +204,11 @@ function Merge-BeforeSetDirLink{
                     throw "Cannot merge $_target1 to $_target2, because $_target1 does not exist and $_target2 is symbolic link or junction point."
                 }else{
                     # non-existent            | dir-not-symbolic-or-hardlink  | pass(do nothing)
-                    Write-VerboseLog  "Do nothing."
+                    Write-Logs  "Do nothing."
                 }
             }else{
                 # non-existent            | non-existent          | pass(do nothing)
-                Write-VerboseLog  "Do nothing."
+                Write-Logs  "Do nothing."
             }
         }
     }
@@ -251,7 +251,7 @@ function Move-BeforeSetFileLink{
         $_target1_exist = $false
     }
     catch {
-        Write-VerboseLog  "Exception caught: $_"
+        Write-Logs  "Exception caught: $_"
     }
     if ($_target1_exist){
         if (!$_target1.IsFile){
@@ -267,7 +267,7 @@ function Move-BeforeSetFileLink{
         $_target2_exist = $false
     }
     catch {
-        Write-VerboseLog  "Exception caught: $_"
+        Write-Logs  "Exception caught: $_"
     }
     if ($_target2_exist){
         if (!$_target2.IsFile){
@@ -284,7 +284,7 @@ function Move-BeforeSetFileLink{
                         throw "Cannot move $_target1 to $_target2, because $_target1 and $_target2 are both symbolic link or hard link."
                     }else{
                         # file-symbolic-or-hardlink       | file-non-symbolic-or-hardlink | del $Target1
-                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Write-Logs  "Remove-Item $_target1 -Force -Recurse"
                         Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
@@ -299,16 +299,16 @@ function Move-BeforeSetFileLink{
                     }else{
                         # file-non-symbolic-or-hardlink   | file-non-symbolic-or-hardlink | backup $Target1 and $Target2 to $Backuppath, then del $Target1
                         Move-FileWithBackup -Source $_target1 -Destination $_target2 -Backuppath $Backuppath
-                        Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                        Write-Logs  "Remove-Item $_target1 -Force -Recurse"
                         Remove-Item $_target1 -Force -Recurse
                     }
                 }else{
                     Assert-AdminRobocopyAvailable
                     # file-non-symbolic-or-hardlink   | non-existent          | copy $Target1 to $Target2, del $Target1
-                    Write-VerboseLog  "Robocopy $_target1 $_target2"
+                    Write-Logs  "Robocopy $_target1 $_target2"
                     $log_file = Get-LogFileName "Robocopy Move-BeforeSetFileLink"
                     Robocopy $_target1 $_target2  /copyall /DCOPY:DATE /LOG:"$log_file"
-                    Write-VerboseLog  "Remove-Item $_target1 -Force -Recurse"
+                    Write-Logs  "Remove-Item $_target1 -Force -Recurse"
                     Remove-Item $_target1 -Force -Recurse
                 }
             }
@@ -319,11 +319,11 @@ function Move-BeforeSetFileLink{
                     throw "Cannot move $_target1 to $_target2, because $_target1 does not exist and $_target2 is symbolic link or hard link."
                 }else{
                     # non-existent            | file-non-symbolic-or-hardlink | pass(do nothing)
-                    Write-VerboseLog  "Do nothing."
+                    Write-Logs  "Do nothing."
                 }
             }else{
                 # non-existent            | non-existent          | pass(do nothing)
-                Write-VerboseLog  "Do nothing."
+                Write-Logs  "Do nothing."
             }
         }
     }

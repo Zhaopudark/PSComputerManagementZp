@@ -28,7 +28,7 @@
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip
     }else{
-        Write-VerboseLog  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Logs  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -110,7 +110,7 @@ function Set-SystemProxyIPV4ForCurrentUser{
     }
     # 显示设置后的代理信息
     $proxyInfo = Get-ItemProperty -Path $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
-    Write-VerboseLog $proxyInfo -Verbose
+    Write-Logs $proxyInfo -Verbose
 }
 function Remove-SystemProxyIPV4ForCurrentUser{
 <#
@@ -139,7 +139,7 @@ function Remove-SystemProxyIPV4ForCurrentUser{
 
     # 显示设置后的代理信息
     $proxyInfo = Get-ItemProperty $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
-    Write-VerboseLog $proxyInfo -Verbose
+    Write-Logs $proxyInfo -Verbose
 }
 function Set-EnvProxyIPV4ForShellProcess{
 <#
