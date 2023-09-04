@@ -6,17 +6,21 @@
         - Now, all logs will be saved in ${Home}/.log/${ModuleName}/ by default.
         - The original logging path, ${ModulePath}/Logs/ has been deprecated.
         - It is recommended to remove the original logging path manually.
+- Change logging functions for easier understanding.
+    - The principle is that when making logs, the logs will be written into files anyway. If a log needs to be displayed in the console, it will be done as a `Verbose` message. 
+    - The private function `Write-FileLogs` should only be used in the private function `Write-Logs`, and the latter is the only logging function in all components. Also, the latter is not an API function for normal users.
+
 - Re-construct `EnvManagers`. Now the APIs about `Environment Variables Management` have been re-write as:
-    - `Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser`,
-    - `Add-PathToCurrentProcessEnvPaths`,
-    - `Add-PathToCurrentUserEnvPaths`,
-    - `Add-PathToCurrentMachineEnvPaths`,
-    - `Remove-PathFromCurrentProcessEnvPaths`,
-    - `Remove-PathFromCurrentUserEnvPaths`,
-    - `Remove-PathFromCurrentMachineEnvPaths`,
-    - `Remove-MatchedPathsFromCurrentProcessEnvPaths`,
-    - `Remove-MatchedPathsFromCurrentUserEnvPaths`,
-    - `Remove-MatchedPathsFromCurrentMachineEnvPaths`,
+    - `Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser`
+    - `Add-PathToCurrentProcessEnvPaths`
+    - `Add-PathToCurrentUserEnvPaths`
+    - `Add-PathToCurrentMachineEnvPaths`
+    - `Remove-PathFromCurrentProcessEnvPaths`
+    - `Remove-PathFromCurrentUserEnvPaths`
+    - `Remove-PathFromCurrentMachineEnvPaths`
+    - `Remove-MatchedPathsFromCurrentProcessEnvPaths`
+    - `Remove-MatchedPathsFromCurrentUserEnvPaths`
+    - `Remove-MatchedPathsFromCurrentMachineEnvPaths`
     
 
 # Release v0.0.1
