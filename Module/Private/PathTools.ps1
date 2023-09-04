@@ -380,7 +380,7 @@ class EnvPaths{
 
         if ($Verbose){
             foreach ($group in $duplicated_groups) {
-                Write-Logs "[Env Paths Duplicated] The $($group.Name) in '$Level' level env path exists $($group.Count) times." -IsVerbose
+                Write-Logs "[Env Paths Duplicated] The $($group.Name) in '$Level' level env path exists $($group.Count) times." -ShowVerbose
             }
         }else{
             foreach ($group in $duplicated_groups) {
@@ -416,19 +416,19 @@ class EnvPaths{
         $verbose = $true
         $this.ProcessLevelEnvPaths = $this.DeDuplicate($this.ProcessLevelEnvPaths,'Process',$verbose)
         $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
-        Write-Logs "[Env Paths Modifed] The 'Process' level env path has been de-duplicated." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The 'Process' level env path has been de-duplicated." -ShowVerbose
     }
     [void] DeDuplicateUserLevelEnvPaths(){
         $verbose = $true
         $this.UserLevelEnvPaths = $this.DeDuplicate($this.UserLevelEnvPaths,'User',$verbose)
         $this.SetEnvPath($this.UserLevelEnvPaths,'User')
-        Write-Logs "[Env Paths Modifed] The 'User' level env path has been de-duplicated." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The 'User' level env path has been de-duplicated." -ShowVerbose
     }
     [void] DeDuplicateMachineLevelEnvPaths(){
         $verbose = $true
         $this.MachineLevelEnvPaths = $this.DeDuplicate($this.MachineLevelEnvPaths,'Machine',$verbose)
         $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
-        Write-Logs "[Env Paths Modifed] The 'Machine' level env path has been de-duplicated." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The 'Machine' level env path has been de-duplicated." -ShowVerbose
     }
     [void] MergeDeDuplicatedEnvPathsFromMachineLevelToUserLevel(){
         $this.DeDuplicateUserLevelEnvPaths()
@@ -446,14 +446,14 @@ class EnvPaths{
         }
         $this.MachineLevelEnvPaths = $buf
         $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
-        Write-Logs "[Env Paths Modifed] The items duplicated across 'Machine' level and 'User' level env path have been merged into 'User' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The items duplicated across 'Machine' level and 'User' level env path have been merged into 'User' level env path." -ShowVerbose
     }
     [string[]] Append([string[]] $Paths, [string] $Level,[string] $Path){
         $buf = $Paths.Clone()
         if (-not $buf.Contains($Path)){
             $buf += $Path
         }else{
-            Write-Logs "[Env Paths Duplicated] The $Path in '$Level' level is existent already." -IsVerbose
+            Write-Logs "[Env Paths Duplicated] The $Path in '$Level' level is existent already." -ShowVerbose
         }
         return $buf
     }
@@ -462,19 +462,19 @@ class EnvPaths{
         $this.DeDuplicateProcessLevelEnvPaths()
         $this.ProcessLevelEnvPaths = $this.Append($this.ProcessLevelEnvPaths,'Process',$Path)
         $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
-        Write-Logs "[Env Paths Modifed] The $Path has been appended into 'Process' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The $Path has been appended into 'Process' level env path." -ShowVerbose
     }
     [void] AppendUserLevelEnvPaths([string] $Path){
         $this.DeDuplicateUserLevelEnvPaths()
         $this.UserLevelEnvPaths = $this.Append($this.UserLevelEnvPaths,'User',$Path)
         $this.SetEnvPath($this.UserLevelEnvPaths,'User')
-        Write-Logs "[Env Paths Modifed] The $Path has been appended into 'User' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The $Path has been appended into 'User' level env path." -ShowVerbose
     }
     [void] AppendMachineLevelEnvPaths([string] $Path){
         $this.DeDuplicateMachineLevelEnvPaths()
         $this.MachineLevelEnvPaths = $this.Append($this.MachineLevelEnvPaths,'Machine',$Path)
         $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
-        Write-Logs "[Env Paths Modifed] The $Path has been appended into 'Machine' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The $Path has been appended into 'Machine' level env path." -ShowVerbose
     }
 
     [string[]] Remove([string[]] $Paths, [string] $Level, [string] $Path, [bool] $IsPattern){
@@ -485,13 +485,13 @@ class EnvPaths{
                 if ($item -NotMatch $Path){
                     $buf += $item
                 }else{
-                    Write-Logs "[Env Paths to Remove] The $item in '$Level' level will be removed." -IsVerbose
+                    Write-Logs "[Env Paths to Remove] The $item in '$Level' level will be removed." -ShowVerbose
                 }
             }else{
                 if ($item -ne $Path){
                     $buf += $item
                 }else{
-                    Write-Logs "[Env Paths to Remove] The $item in '$Level' level will be removed." -IsVerbose
+                    Write-Logs "[Env Paths to Remove] The $item in '$Level' level will be removed." -ShowVerbose
                 }
             }
         }
@@ -501,19 +501,19 @@ class EnvPaths{
         $this.DeDuplicateProcessLevelEnvPaths()
         $this.ProcessLevelEnvPaths = $this.Remove($this.ProcessLevelEnvPaths,'Process',$Target,$IsPattern)
         $this.SetEnvPath($this.ProcessLevelEnvPaths,'Process')
-        Write-Logs "[Env Paths Modifed] The removement has been done on 'Process' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The removement has been done on 'Process' level env path." -ShowVerbose
     }
     [void] RemoveUserLevelEnvPaths([string] $Target, [bool] $IsPattern){
         $this.DeDuplicateUserLevelEnvPaths()
         $this.UserLevelEnvPaths = $this.Remove($this.UserLevelEnvPaths,'User',$Target,$IsPattern)
         $this.SetEnvPath($this.UserLevelEnvPaths,'User')
-        Write-Logs "[Env Paths Modifed] The removement has been done on 'User' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The removement has been done on 'User' level env path." -ShowVerbose
     }
     [void] RemoveMachineLevelEnvPaths([string] $Target, [bool] $IsPattern){
         $this.DeDuplicateMachineLevelEnvPaths()
         $this.MachineLevelEnvPaths = $this.Remove($this.MachineLevelEnvPaths,'Machine',$Target,$IsPattern)
         $this.SetEnvPath($this.MachineLevelEnvPaths,'Machine')
-        Write-Logs "[Env Paths Modifed] The removement has been done on 'Machine' level env path." -IsVerbose
+        Write-Logs "[Env Paths Modifed] The removement has been done on 'Machine' level env path." -ShowVerbose
     }
 }
 

@@ -43,12 +43,12 @@ function Write-Logs{
     [OutputType([System.Void])]
     param(
         [string]$Message,
-        [switch]$IsVerbose
+        [switch]$ShowVerbose
     )
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $message = "[${time_stamp}] ${Message}"
     Write-FileLogs $message
-    if($IsVerbose){
+    if($ShowVerbose){
         Write-Verbose $message -Verbose
     }    
 }

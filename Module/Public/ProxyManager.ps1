@@ -110,7 +110,7 @@ function Set-SystemProxyIPV4ForCurrentUser{
     }
     # 显示设置后的代理信息
     $proxyInfo = Get-ItemProperty -Path $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
-    Write-Logs $proxyInfo -IsVerbose
+    Write-Logs $proxyInfo -ShowVerbose
 }
 function Remove-SystemProxyIPV4ForCurrentUser{
 <#
@@ -139,7 +139,7 @@ function Remove-SystemProxyIPV4ForCurrentUser{
 
     # 显示设置后的代理信息
     $proxyInfo = Get-ItemProperty $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
-    Write-Logs $proxyInfo -IsVerbose
+    Write-Logs $proxyInfo -ShowVerbose
 }
 function Set-EnvProxyIPV4ForShellProcess{
 <#
