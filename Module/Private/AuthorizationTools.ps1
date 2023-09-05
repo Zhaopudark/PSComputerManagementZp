@@ -83,7 +83,7 @@ function Reset-PathAttribute{
     )
 
     if (-not $SkipPlatformCheck){
-        Test-Platform -Name 'Windows' -Throw
+        Assert-IsWindows
     }
     if (-not $SkipPathCheck){
         Assert-ValidPath4AuthorizationTools $Path
@@ -168,7 +168,7 @@ function Get-PathType{
     $null when error or the`$Path` cannot be recognized as a customized path type.
 #>
     [CmdletBinding()]
-    [OutputType([System.String])]
+    [OutputType([string])]
     param(
         [Parameter(Mandatory)]
         [FormattedFileSystemPath]$Path,
@@ -176,7 +176,7 @@ function Get-PathType{
         [switch]$SkipPathCheck
     )
     if (-not $SkipPlatformCheck){
-        Test-Platform -Name 'Windows' -Throw
+        Assert-IsWindows
     }
     if (-not $SkipPathCheck){
         Assert-ValidPath4AuthorizationTools $Path

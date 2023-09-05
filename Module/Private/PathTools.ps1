@@ -102,10 +102,10 @@
     [ValidateNotNullOrEmpty()][bool] $IsHardLink
 
     FormattedFileSystemPath([string] $Path) {
-        if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
+        if ([Environment]::OSVersion.Platform -eq "Win32NT"){
             $this.OriginalPlatform = "Win32NT"
             $this.Slash = '\'
-        }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
+        }elseif ([Environment]::OSVersion.Platform -eq "Unix") {
             $this.OriginalPlatform = "Unix"
             $this.Slash = '/'
         }else{
@@ -151,7 +151,7 @@
             $this.IsDriveRoot = $false
         }
 
-        $home_path = $this.FormatPath([System.Environment]::GetFolderPath("UserProfile"))
+        $home_path = $this.FormatPath([Environment]::GetFolderPath("UserProfile"))
         if ($this.Qualifier -eq $this.GetQualifier($home_path).Name){
             $this.IsBeOrInSystemDrive = $true
         }
@@ -341,11 +341,11 @@ class EnvPaths{
     [AllowNull()][string[]] $DeDuplicatedUserLevelEnvPaths
     [AllowNull()][string[]] $DeDuplicatedMachineLevelEnvPaths
     EnvPaths() {
-        if ([System.Environment]::OSVersion.Platform -eq "Win32NT"){
+        if ([Environment]::OSVersion.Platform -eq "Win32NT"){
             $this.OriginalPlatform = "Win32NT"
             $this.Indicator = 'Path'
             $this.Separator = ';'
-        }elseif ([System.Environment]::OSVersion.Platform -eq "Unix") {
+        }elseif ([Environment]::OSVersion.Platform -eq "Unix") {
             $this.OriginalPlatform = "Unix"
             $this.Indicator = 'PATH'
             $this.Separator = ':'

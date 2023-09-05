@@ -1,5 +1,10 @@
 # Release v0.0.3
 
+- Improve the components in `PlatformTools.ps1`. 
+- Make sure all `Assert-` functions return void.
+- Make sure all `Test-` functions return boolean.
+- Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
+
 # Release v0.0.2
 
 - Change logging behavior to deal with log file funding problems. 

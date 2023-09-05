@@ -1,6 +1,6 @@
-function Assert-ValidPath4LinkTools{
+function Test-ValidPath4LinkTools{
     [CmdletBinding()]
-    [OutputType([System.Boolean])]
+    [OutputType([bool])]
     param(
         [FormattedFileSystemPath]$Path,
         [switch]$File
@@ -33,13 +33,13 @@ function Merge-DirectoryWithBackup{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [ValidateScript({Test-ValidPath4LinkTools $_})]
         [FormattedFileSystemPath]$Source,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [ValidateScript({Test-ValidPath4LinkTools $_})]
         [FormattedFileSystemPath]$Destination,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [ValidateScript({Test-ValidPath4LinkTools $_})]
         [FormattedFileSystemPath]$Backuppath
     )
 
@@ -73,13 +73,13 @@ function Move-FileWithBackup{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_ -File})]
+        [ValidateScript({Test-ValidPath4LinkTools $_ -File})]
         [FormattedFileSystemPath]$Source,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_ -File})]
+        [ValidateScript({Test-ValidPath4LinkTools $_ -File})]
         [FormattedFileSystemPath]$Destination,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [ValidateScript({Test-ValidPath4LinkTools $_})]
         [FormattedFileSystemPath]$Backuppath
     )
     $guid = [guid]::NewGuid()
@@ -125,7 +125,7 @@ function Merge-BeforeSetDirLink{
         [Parameter(Mandatory)]
         [string]$Target2,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [ValidateScript({Test-ValidPath4LinkTools $_})]
         [FormattedFileSystemPath]$Backuppath
     )
     try {
@@ -239,7 +239,7 @@ function Move-BeforeSetFileLink{
         [Parameter(Mandatory)]
         [string]$Target2,
         [Parameter(Mandatory)]
-        [ValidateScript({Assert-ValidPath4LinkTools $_})]
+        [ValidateScript({Test-ValidPath4LinkTools $_})]
         [FormattedFileSystemPath]$Backuppath
     )
 

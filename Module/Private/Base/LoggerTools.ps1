@@ -23,7 +23,7 @@ function Get-LogFileName{
 
 function Write-FileLogs{
     [CmdletBinding(SupportsShouldProcess)]
-    [OutputType([System.Void])]
+    [OutputType([void])]
     param(
         [Parameter(Mandatory)]
         [string]$Message
@@ -40,7 +40,7 @@ function Write-FileLogs{
 
 function Write-Logs{
     [CmdletBinding(SupportsShouldProcess)]
-    [OutputType([System.Void])]
+    [OutputType([void])]
     param(
         [string]$Message,
         [switch]$ShowVerbose
