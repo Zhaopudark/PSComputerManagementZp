@@ -105,7 +105,7 @@ function Assert-AdminPermission {
     [CmdletBinding()]
     [OutputType([void])]
     param()
-    if (!Test-AdminPermission){
+    if (!(Test-AdminPermission)){
         Write-Verbose "Current process is not in AdminPermission."
         throw [System.UnauthorizedAccessException]::new("You must be in administrator privilege.")
     }
