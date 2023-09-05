@@ -3,8 +3,6 @@
 # One is C:(NTFS)|D:(NTFS) and the other is C:(NTFS)|D:(ReFS)
 # For more information, see https://little-train.com/posts/f76966e4.html
 BeforeAll {
-    Import-Module "${PSScriptRoot}\..\Core\AuthorizationTools.psm1" -Scope Local
-    Import-Module PSComputerManagementZp -Force
     $guid = [guid]::NewGuid()
     function Test-LinkAclBeahvior([string]$Link,[string]$Source){
     <#
@@ -112,8 +110,8 @@ BeforeAll {
     New-AllItem -guid $guid
 }
 
-Describe 'Links Behavior' {
-    Context 'Test Basic Attributes' -Skip:(!(Test-Platform 'Windows')){
+Describe 'Links Behavior' -Skip:(!$IsWindows) {
+    Context 'Test Basic Attributes'{
         It 'Test HardLink' {
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").Attributes | Should -Be 'Archive'
             (Get-ItemProperty "${Home}\${guid}\file_for_hardlink.txt").LinkType | Should -Be 'HardLink'
@@ -231,7 +229,7 @@ Describe 'Links Behavior' {
             (Get-ItemProperty "${Home}\${guid}\non_local_symbiliclink").LinkTarget | Should -Be "D:\${guid}\dir_for_non_local_symbiliclink"
         }
     }
-    Context 'Test Deletion Behavior1 (delete link)' -Skip:(!(Test-Platform 'Windows')){
+    Context 'Test Deletion Behavior1 (delete link)'{
         It 'Test deletion about hardlink' {
             Remove-AllItem -guid $guid
             New-AllItem -guid $guid
@@ -327,7 +325,7 @@ Describe 'Links Behavior' {
             "D:\${guid}\dir_for_non_local_symbiliclink\test.txt" | Should -Exist
         }
     }
-    Context 'Test Deletion Behavior2 (delete source|target)' -Skip:(!(Test-Platform 'Windows')){
+    Context 'Test Deletion Behavior2 (delete source|target)'{
         It 'Test deletion about hardlink' {
             Remove-AllItem -guid $guid
             New-AllItem -guid $guid
@@ -421,7 +419,7 @@ Describe 'Links Behavior' {
             "D:\${guid}\non_local_symbiliclink\test.txt" | Should -Not -Exist
         }
     }
-    Context 'Test Authorization Behavior' -Skip:(!(Test-Platform 'Windows')){
+    Context 'Test Authorization Behavior'{
         It 'Test acl sync behavior on hardlink' {
             Remove-AllItem -guid $guid
             New-AllItem -guid $guid
@@ -451,5 +449,4 @@ Describe 'Links Behavior' {
 
 AfterAll {
     Remove-AllItem -guid $guid
-    Remove-Module PSComputerManagementZp -Force
 }
