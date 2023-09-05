@@ -17,6 +17,7 @@ $script:ModuleInfo = @{
         'Remove-MatchedPathsFromCurrentProcessEnvPaths',
         'Remove-MatchedPathsFromCurrentUserEnvPaths',
         'Remove-MatchedPathsFromCurrentMachineEnvPaths',
+        'Register-FSLEnvForPwsh',
         'Set-DirSymbolicLinkWithSync',
         'Set-FileSymbolicLinkWithSync',
         'Set-DirJunctionWithSync',

@@ -233,7 +233,7 @@ function Register-FSLEnvForPwsh{
 .SYNOPSIS
     Setup FSL environment variables for pwsh as well as FSL's bash settings in .profile
 .DESCRIPTION
-    FSL is a comprehensive library of analysis tools for FMRI, MRI and diffusion brain imaging data. 
+    FSL is a comprehensive library of analysis tools for FMRI, MRI and diffusion brain imaging data.
     See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/
 
     This function is used to setup FSL environment variables for pwsh as well as FSL's bash settings in .profile.
@@ -247,7 +247,7 @@ function Register-FSLEnvForPwsh{
     . ${FSLDIR}/etc/fslconf/fsl.sh
 
 .NOTES
-    When it comes to setup FSL, the official scripts [fslinstaller.py](https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py) 
+    When it comes to setup FSL, the official scripts [fslinstaller.py](https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py)
     do not support pwsh, but support bash. It will automatically register procedures in .profile. to setup FSL environment variables.
 
     If we use pwsh in WSL2 directly, i.e., set pwsh as the default shell in WSL2, we have to mimic all bash settings to maintain corresponding
@@ -264,7 +264,7 @@ function Register-FSLEnvForPwsh{
     have been set in .profile will be inherited by pwsh.
 
     So, there is no need to setup FSL environment variables for pwsh again.
-    This function is just for a record. 
+    This function is just for a record.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param ([string]$FslDir)
@@ -284,5 +284,5 @@ function Register-FSLEnvForPwsh{
         $Env:FSLGECUDAQ = "cuda.q"
         $Env:FSL_LOAD_NIFTI_EXTENSIONS = 0
         $Env:FSL_SKIP_GLOBAL = 0
-    } 
+    }
 }

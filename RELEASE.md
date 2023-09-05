@@ -4,6 +4,7 @@
 - Make sure all `Assert-` functions return void.
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
+- Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
 
 # Release v0.0.2
 
