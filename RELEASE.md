@@ -5,7 +5,13 @@
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
 - Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
-- Add a statement about HardLink in `README.md`.
+- Add a statement about the hard link in `README.md`.
+- Modify all file names for a better understanding.
+- Re-construct `Manager.Links`. Now the APIs about `Link Management` have been shrinked as:
+    - `Set-DirSymbolicLinkWithSync`
+    - `Set-FileSymbolicLinkWithSync`
+    - `Set-DirJunctionWithSync`
+    Since the hard link may bring potential problems, this module does not support the hard link's quick creation and synchronization. Do provide `Set-FileHardLinkWithSync` anymore.
 
 # Release v0.0.2
 
