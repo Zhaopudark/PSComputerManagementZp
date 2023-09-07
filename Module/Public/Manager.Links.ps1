@@ -11,12 +11,12 @@ function Set-DirSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Target,
         [Parameter(Mandatory)]
-        [string]$Backuppath
+        [string]$BackupDir
     )
     Assert-IsWindowsAndAdmin
 
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
-        Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
+        Move-Target2Source4SoftLink -Target $Path -Source $Target -BackupDir $BackupDir
         $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target
         Write-Logs ($link | Select-Object LinkType, FullName, Target)
     }
@@ -35,11 +35,11 @@ function Set-FileSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Target,
         [Parameter(Mandatory)]
-        [string]$Backuppath
+        [string]$BackupDir
     )
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
-        Move-BeforeSetFileLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
+        Move-Target2Source4SoftLink -Target $Path -Source $Target -BackupDir $BackupDir
         $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target
         Write-Logs ($link | Select-Object LinkType, FullName, Target)
     }
@@ -59,11 +59,11 @@ function Set-DirJunctionWithSync{
         [Parameter(Mandatory)]
         [string]$Target,
         [Parameter(Mandatory)]
-        [string]$Backuppath
+        [string]$BackupDir
     )
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a junction point from $Path to $Source, as $Path->$Target",'','')){
-        Merge-BeforeSetDirLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
+        Move-Target2Source4SoftLink -Target $Path -Source $Target -BackupDir $BackupDir
         $link = New-Item -ItemType Junction -Path $Path -Target $Target
         Write-Logs ($link | Select-Object LinkType, FullName, Target)
     }
@@ -83,11 +83,11 @@ function Set-FileHardLinkWithSync{
         [Parameter(Mandatory)]
         [string]$Target,
         [Parameter(Mandatory)]
-        [string]$Backuppath
+        [string]$BackupDir
     )
     Assert-IsWindowsAndAdmin
     if ($PSCmdlet.ShouldProcess("Set a file hard link from $Path to $Source, as $Path->$Target",'','')){
-        Move-BeforeSetFileLink -Target1 $Path -Target2 $Target -Backuppath $Backuppath
+        Move-Target2Source4SoftLink -Target $Path -Source $Target -BackupDir $BackupDir
         $link = New-Item -ItemType HardLink -Path $Path -Target $Target
         Write-Logs ($link | Select-Object LinkType, FullName, Target)
     }
