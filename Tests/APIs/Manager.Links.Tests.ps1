@@ -32,7 +32,7 @@ BeforeAll {
 Describe 'Test Link Management' {
     Context 'On Windows' -Skip:(!$IsWindows){
         It 'Test Set-DirSymbolicLinkWithSync' {
-            Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -Backuppath "$test_path\backup"
+            Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_symbolick_dir\dir1"
             $item.LinkType | Should -Be 'SymbolicLink'
             $item.LinkTarget | Should -Be "$test_path\test_symbolick_dir\dir2"
@@ -54,7 +54,7 @@ Describe 'Test Link Management' {
             "$backup2\dir2\file22.txt" | Should -Exist
         }
         It 'Test Set-DirJunctionWithSync' {
-            Set-DirJunctionWithSync -Path "$test_path\test_junction\dir3"  -Target "$test_path\test_junction\dir4" -Backuppath "$test_path\backup"
+            Set-DirJunctionWithSync -Path "$test_path\test_junction\dir3"  -Target "$test_path\test_junction\dir4" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_junction\dir3"
             $item.LinkType | Should -Be 'Junction'
             $item.LinkTarget | Should -Be "$test_path\test_junction\dir4"
@@ -76,7 +76,7 @@ Describe 'Test Link Management' {
             "$backup4\dir4\file44.txt" | Should -Exist
         }
         It 'Test Set-FileSymbolicLinkWithSync' {
-            Set-FileSymbolicLinkWithSync -Path "$test_path\file_for_symboliclink1.txt"  -Target "$test_path\file_for_symboliclink2.txt" -Backuppath "$test_path\backup"
+            Set-FileSymbolicLinkWithSync -Path "$test_path\file_for_symboliclink1.txt"  -Target "$test_path\file_for_symboliclink2.txt" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\file_for_symboliclink1.txt"
             $item.LinkType | Should -Be 'SymbolicLink'
             $item.LinkTarget | Should -Be "$test_path\file_for_symboliclink2.txt"
@@ -88,7 +88,7 @@ Describe 'Test Link Management' {
             "$backup2" | Should -Exist
         }
         It 'Test Set-FileHardLinkWithSync' {
-            Set-FileHardLinkWithSync -Path "$test_path\file_for_hardlink1.txt"  -Target "$test_path\file_for_hardlink2.txt" -Backuppath "$test_path\backup"
+            Set-FileHardLinkWithSync -Path "$test_path\file_for_hardlink1.txt"  -Target "$test_path\file_for_hardlink2.txt" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\file_for_hardlink1.txt"
             $item.LinkType | Should -Be 'Hardlink'
             $item.LinkTarget | Should -BeNullOrEmpty
@@ -105,13 +105,13 @@ Describe 'Test Link Management' {
     }
     Context 'On non-Windows' -Skip:$IsWindows{
         It 'Test Set-DirSymbolicLinkWithSync' {
-            {Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -Backuppath "$test_path\backup" }| Should -Throw
+            {Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -BackupDir "$test_path\backup" }| Should -Throw
         }
         It 'Test Set-DirJunctionWithSync' {
-            {Set-DirJunctionWithSync -Path "$test_path\test_symbolick_dir\dir3"  -Target "$test_path\test_symbolick_dir\dir4" -Backuppath "$test_path\backup" }| Should -Throw
+            {Set-DirJunctionWithSync -Path "$test_path\test_symbolick_dir\dir3"  -Target "$test_path\test_symbolick_dir\dir4" -BackupDir "$test_path\backup" }| Should -Throw
         }
         It 'Test Set-FileSymbolicLinkWithSync' {
-            {Set-FileSymbolicLinkWithSync -Path "$test_path\file_symbolic_link"  -Target "$test_path\file_for_symbolic_link.txt" -Backuppath "$test_path\backup"}| Should -Throw
+            {Set-FileSymbolicLinkWithSync -Path "$test_path\file_symbolic_link"  -Target "$test_path\file_for_symbolic_link.txt" -BackupDir "$test_path\backup"}| Should -Throw
         }
 
     }
