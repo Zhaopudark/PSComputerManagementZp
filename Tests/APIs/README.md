@@ -227,15 +227,6 @@ For more information on the motivation, rationale, logic, and usage of this func
     which means $Path is a junction point to $Target.
 #>
 ```
-## Set-FileHardLinkWithSync
-```powershell
-<#
-.DESCRIPTION
-    Set a file hard link from $Path to $Source.
-    Then, we will get a result as $Path->$Target,
-    which means $Path is a hard link to $Target.
-#>
-```
 
 # Proxy Management
 ## Get-GatewayIPV4

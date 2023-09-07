@@ -21,7 +21,6 @@ $script:ModuleInfo = @{
         'Set-DirSymbolicLinkWithSync',
         'Set-FileSymbolicLinkWithSync',
         'Set-DirJunctionWithSync',
-        'Set-FileHardLinkWithSync',
         'Get-GatewayIPV4',
         'Get-LocalHostIPV4',
         'Set-SystemProxyIPV4ForCurrentUser',
