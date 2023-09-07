@@ -22,7 +22,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
         It '[Source:non-existing]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target and $Source are both non-existing."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target and $Source are both non-existing."
         }
         It '[Source:existing-simple-file]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -52,19 +52,19 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $file_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is non-existing but the $Source a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is non-existing but the $Source a soft link."
         }
         It '[Source:existing-directory-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is non-existing but the $Source a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is non-existing but the $Source a soft link."
         }
         It '[Source:existing-directory-junction-point]' -Skip:(!$IsWIndows){
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $source -ItemType Junction -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is non-existing but the $Source a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is non-existing but the $Source a soft link."
         }     
     }
     Context '[Target:existing-simple-file]'{
@@ -102,28 +102,28 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $target -ItemType File -Force
             New-Item -Path $source -ItemType Directory -Force
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple file but the $Source is a simple directory."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple file but the $Source is a simple directory."
         }
         It '[Source:existing-file-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $target -ItemType File -Force
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $file_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple file but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple file but the $Source is a soft link."
         }
         It '[Source:existing-directory-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $target -ItemType File -Force
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple file but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple file but the $Source is a soft link."
         }
         It '[Source:existing-directory-junction-point]' -Skip:(!$IsWIndows){
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $target -ItemType File -Force
             New-Item -Path $source -ItemType Junction -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple file but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple file but the $Source is a soft link."
         }
     }
     Context '[Target:existing-simple-directory]'{
@@ -143,7 +143,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $target -ItemType Directory -Force
             New-Item -Path $source -ItemType File -Force
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple directory but the $Source is a simple file."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple directory but the $Source is a simple file."
         }
         It '[Source:existing-simple-directory]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -179,7 +179,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Directory -Force
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $file_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple directory but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple directory but the $Source is a soft link."
         }
         It '[Source:existing-directory-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -187,7 +187,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Directory -Force
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple directory but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple directory but the $Source is a soft link."
         }
         It '[Source:existing-directory-junction-point]' -Skip:(!$IsWIndows){
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -195,7 +195,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Directory -Force
             New-Item -Path $source -ItemType Junction -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a simple directory but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a simple directory but the $Source is a soft link."
         }
     }
     Context '[Target:existing-file-symbolic-link]'{
@@ -204,7 +204,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $file_path
 
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a file symbolic link but the $Source is non-existing."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a file symbolic link but the $Source is non-existing."
         }
         It '[Source:existing-simple-file]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -224,7 +224,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $file_path
             New-Item -Path $source -ItemType Directory -Force
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a file symbolic link but the $Source is a simple directory."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a file symbolic link but the $Source is a simple directory."
         }
         It '[Source:existing-file-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -232,7 +232,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $file_path
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $another_file_path
 
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a file symbolic link but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a file symbolic link but the $Source is a soft link."
         }
         It '[Source:existing-directory-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -240,7 +240,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $file_path
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $another_dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a file symbolic link but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a file symbolic link but the $Source is a soft link."
         }
         It '[Source:existing-directory-junction-point]' -Skip:(!$IsWIndows){
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -248,7 +248,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $file_path
             New-Item -Path $source -ItemType Junction -Force -Target $another_dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a file symbolic link but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a file symbolic link but the $Source is a soft link."
         }
     }
     Context '[Target:existing-directory-symbolic-link]'{
@@ -257,7 +257,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a directory symbolic link but the $Source is non-existing."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a directory symbolic link but the $Source is non-existing."
         }
         It '[Source:existing-simple-file]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -265,7 +265,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $dir_path
             New-Item -Path $source -ItemType File -Force
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a directory symbolic link but the $Source is a simple file."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a directory symbolic link but the $Source is a simple file."
         }
         It '[Source:existing-simple-directory]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -297,7 +297,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $dir_path
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $another_file_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a directory symbolic link but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a directory symbolic link but the $Source is a soft link."
         }
         It '[Source:existing-directory-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -305,7 +305,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $dir_path
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $another_dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a directory symbolic link but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a directory symbolic link but the $Source is a soft link."
         }
         It '[Source:existing-directory-junction-point]' -Skip:(!$IsWIndows){
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -313,7 +313,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType SymbolicLink -Force -Target $dir_path
             New-Item -Path $source -ItemType Junction -Force -Target $another_dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a directory symbolic link but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a directory symbolic link but the $Source is a soft link."
         }
     }
     Context '[Target:existing-directory-junction-point]' -Skip:(!$IsWIndows){
@@ -322,7 +322,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
 
             New-Item -Path $target -ItemType Junction -Force -Target $dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a junction point but the $Source is non-existing."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a junction point but the $Source is non-existing."
         }
         It '[Source:existing-simple-file]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -330,7 +330,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Junction -Force -Target $dir_path
             New-Item -Path $source -ItemType File -Force
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a junction point but the $Source is a simple file."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a junction point but the $Source is a simple file."
         }
         It '[Source:existing-simple-directory]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -363,7 +363,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Junction -Force -Target $dir_path
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $another_file_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a junction point but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a junction point but the $Source is a soft link."
         }
         It '[Source:existing-directory-symbolic-link]'{
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -371,7 +371,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Junction -Force -Target $dir_path
             New-Item -Path $source -ItemType SymbolicLink -Force -Target $another_dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a junction point but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a junction point but the $Source is a soft link."
         }
         It '[Source:existing-directory-junction-point]' -Skip:(!$IsWIndows){
             Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
@@ -379,7 +379,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
             New-Item -Path $target -ItemType Junction -Force -Target $dir_path
             New-Item -Path $source -ItemType Junction -Force -Target $another_dir_path
-            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "\[Non-supported conditions\] The $Target is a junction point but the $Source is a soft link."
+            {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is a junction point but the $Source is a soft link."
         }
     }
 }
