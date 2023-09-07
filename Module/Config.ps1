@@ -40,11 +40,12 @@ $script:ModuleInfo = @{
 # see https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope
 # https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3
 
-. "${PSScriptRoot}\Private\Base\PlatformTools.ps1"
-. "${PSScriptRoot}\Private\Base\LoggerTools.ps1" -LoggingPath "${Home}\.log\$($script:ModuleInfo.ModuleName)" -ModuleVersion $script:ModuleInfo.ModuleVersion
-. "${PSScriptRoot}\Private\AuthorizationTools.ps1"
-. "${PSScriptRoot}\Private\LinkTools.ps1"
-. "${PSScriptRoot}\Private\PathTools.ps1"
+. "${PSScriptRoot}\Private\BasicTools.Platform.ps1"
+. "${PSScriptRoot}\Private\BasicTools.Logger.ps1" -LoggingPath "${Home}\.log\$($script:ModuleInfo.ModuleName)" -ModuleVersion $script:ModuleInfo.ModuleVersion
+$tools_scripts = Get-Item "${PSScriptRoot}\Private\Tools*.ps1" | ForEach-Object { . $_.FullName }
+foreach ($script in $tools_scripts){
+    . $script
+}
 
 function Get-ModuleInfo {
     return $script:ModuleInfo

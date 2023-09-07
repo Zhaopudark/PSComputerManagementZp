@@ -5,6 +5,7 @@
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
 - Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
+- Add a statement about HardLink in `README.md`.
 
 # Release v0.0.2
 
