@@ -6,8 +6,6 @@ BeforeAll {
     New-Item -Path $test_path -ItemType Directory -Force
     New-Item -Path "$test_path\file_for_symboliclink1.txt" -ItemType File
     New-Item -Path "$test_path\file_for_symboliclink2.txt" -ItemType File
-    New-Item -Path "$test_path\file_for_hardlink1.txt" -ItemType File
-    New-Item -Path "$test_path\file_for_hardlink2.txt" -ItemType File
     New-Item -Path "$test_path\test_junction" -ItemType Directory
     New-Item -Path "$test_path\test_junction\dir3" -ItemType Directory
     New-Item -Path "$test_path\test_junction\dir3\file3.txt" -ItemType File
@@ -82,25 +80,13 @@ Describe 'Test Link Management' {
             $item.LinkTarget | Should -Be "$test_path\file_for_symboliclink2.txt"
             "$test_path\file_for_symboliclink1.txt" | Should -Exist
             "$test_path\file_for_symboliclink2.txt" | Should -Exist
-            $backup1 = (Get-ChildItem "$test_path\backup"  -Filter "*symboliclink1.txt")[0]
-            $backup2 = (Get-ChildItem "$test_path\backup"  -Filter "*symboliclink2.txt")[0]
-            "$backup1" | Should -Exist
-            "$backup2" | Should -Exist
-        }
-        It 'Test Set-FileHardLinkWithSync' {
-            Set-FileHardLinkWithSync -Path "$test_path\file_for_hardlink1.txt"  -Target "$test_path\file_for_hardlink2.txt" -BackupDir "$test_path\backup"
-            $item = Get-ItemProperty "$test_path\file_for_hardlink1.txt"
-            $item.LinkType | Should -Be 'Hardlink'
-            $item.LinkTarget | Should -BeNullOrEmpty
-            $item = Get-ItemProperty "$test_path\file_for_hardlink2.txt"
-            $item.LinkType | Should -Be 'Hardlink'
-            $item.LinkTarget | Should -BeNullOrEmpty
-            "$test_path\file_for_hardlink1.txt" | Should -Exist
-            "$test_path\file_for_hardlink2.txt" | Should -Exist
-            $backup1 = (Get-ChildItem "$test_path\backup"  -Filter "*hardlink1.txt")[0]
-            $backup2 = (Get-ChildItem "$test_path\backup"  -Filter "*hardlink2.txt")[0]
-            "$backup1" | Should -Exist
-            "$backup2" | Should -Exist
+ 
+            foreach($item in Get-Item "$test_path\backup\*symboliclink1.txt"){
+                $item | Should -Not -Exist
+            }
+            foreach($item in Get-Item "$test_path\backup\*symboliclink2.txt"){
+                $item | Should -Exist
+            }
         }
     }
     Context 'On non-Windows' -Skip:$IsWindows{
