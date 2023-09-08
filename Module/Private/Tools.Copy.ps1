@@ -31,7 +31,7 @@ function Copy-FileWithBackup{
     if ($PSCmdlet.ShouldProcess("Then copy $source to $destination. Backup $destination if it exists already.",'','')){
         if(Test-Path $destination){
             # see https://stackoverflow.com/a/77062276/17357963
-            [psobject] $destination = Get-FormattedFileSystemPath -Path $destination
+            [psobject] $destination = [FormattedFileSystemPath]::new($destination)
             if(!$destination.IsFile){
                 throw "The $destination should be a file."
             }
@@ -86,7 +86,7 @@ function Copy-DirWithBackup{
         if(Test-Path $destination){
             $source_backup = "$BackupDir/$Indicator-$($source.ToShortName())"
             # see https://stackoverflow.com/a/77062276/17357963
-            [psobject] $destination = Get-FormattedFileSystemPath -Path $destination
+            [psobject] $destination = [FormattedFileSystemPath]::new($destination)
             if(!$destination.IsDir){
                 throw "The $destination should be a directory."
             }

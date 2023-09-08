@@ -16,6 +16,12 @@ BeforeAll {
     New-Item -Path $another_dir_path -ItemType Directory -Force
     $target = "${Home}/$guid/target"
     $source = "${Home}/$guid/source"
+    New-Item -Path $target -ItemType File -Force
+    New-Item -Path $source -ItemType File -Force
+    $target = [FormattedFileSystemPath]::new($target)
+    $source = [FormattedFileSystemPath]::new($source)
+    Remove-Item -Path $target -Force -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
 }
 Describe '[Test Move-Target2Source4SoftLink on different conditions of Target and Source]' {
     Context '[Target:non-existing]' {

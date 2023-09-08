@@ -309,16 +309,3 @@
         return ($this.LiteralPath -replace '[/\\:]+', '-').Trim('-')
     }
 }
-
-function Get-FormattedFileSystemPath{
-<#
-.DESCRIPTION
-    A function to apply the class FormattedFileSystemPath on a path.
-    Return an instance of it
-#>
-    param(
-        [Parameter(Mandatory)]
-        [string]$Path
-    )
-    return [FormattedFileSystemPath]::new($Path)
-}
