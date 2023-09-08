@@ -6,9 +6,11 @@ function Test-Platform{
     Currently, it only support Windows, Linux and Wsl2.
     If $Verbose is given, it will show the result.
 .EXAMPLE
+    ```powershell
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
+    ```
 .OUTPUTS
     $true if compatible, otherwise $false.
 #>

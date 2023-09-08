@@ -30,7 +30,9 @@ function Add-PathToCurrentProcessEnvPaths{
     Append a path to the current process level env paths.
     Before appending, the function will check and de-duplicate the current process level env paths.
 .EXAMPLE
+    ```powershell
     Add-PathToCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -51,7 +53,9 @@ function Add-PathToCurrentUserEnvPaths{
     Support Windows only.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
+    ```powershell
     Add-PathToCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -75,7 +79,9 @@ function Add-PathToCurrentMachineEnvPaths{
     Need Administrator privilege.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
+    ```powershell
     Add-PathToCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -95,7 +101,9 @@ function Remove-PathFromCurrentProcessEnvPaths{
     Remove a path from the current process level env paths.
     Before removing, the function will check and de-duplicate the current process level env paths.
 .EXAMPLE
+    ```powershell
     Remove-PathFromCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -118,7 +126,9 @@ function Remove-PathFromCurrentUserEnvPaths{
     Support Windows only.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
+    ```powershell
     Remove-PathFromCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -143,7 +153,9 @@ function Remove-PathFromCurrentMachineEnvPaths{
     Need Administrator privilege.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
+    ```powershell
     Remove-PathFromCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -163,8 +175,10 @@ function Remove-MatchedPathsFromCurrentProcessEnvPaths{
     Remove matched paths from the current process level env paths.
     Before removing, the function will check and de-duplicate the current process level env paths.
 .EXAMPLE
+    ```powershell
     Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the process level env paths.
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -187,8 +201,10 @@ function Remove-MatchedPathsFromCurrentUserEnvPaths{
     Support Windows only.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
+    ```powershell
     Remove-MatchedPathsFromCurrentUserEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the user level env paths.
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -213,8 +229,10 @@ function Remove-MatchedPathsFromCurrentMachineEnvPaths{
     Need Administrator privilege.
     See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
+    ```powershell
     Remove-MatchedPathsFromCurrentMachineEnvPaths -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the machine level env paths.
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -239,12 +257,13 @@ function Register-FSLEnvForPwsh{
     This function is used to setup FSL environment variables for pwsh as well as FSL's bash settings in .profile.
     It mimics the following bash settings in .profile:
 
-    # bash
+    ```bash
     # FSL Setup
     FSLDIR=/home/some_user_name/fsl
     PATH=${FSLDIR}/share/fsl/bin:${PATH}
     export FSLDIR PATH
     . ${FSLDIR}/etc/fslconf/fsl.sh
+    ```
 
 .NOTES
     When it comes to setup FSL, the official scripts [fslinstaller.py](https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py)

@@ -14,11 +14,12 @@ For more information on the motivations, rationale, logic, limitations and usage
     Only for single user account on window system, i.e. totoally Personal Computer
 
 .COMPONENT
-    $new_acl = Get-Acl -LiteralPath $Path
-    $sddl = ... # Get default SDDL of `$Path`
-    $new_acl.SetSecurityDescriptorSddlForm($sddl)
-    Set-Acl -LiteralPath $Path -AclObject $new_acl
-
+    ```powershell
+        $new_acl = Get-Acl -LiteralPath $Path
+        $sddl = ... # Get default SDDL of `$Path`
+        $new_acl.SetSecurityDescriptorSddlForm($sddl)
+        Set-Acl -LiteralPath $Path -AclObject $new_acl
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

@@ -1,8 +1,8 @@
 function Set-DirSymbolicLinkWithSync{
 <#
 .DESCRIPTION
-    Set a directory symbolic link from $Path to $Source
-    Then, we will get a result as $Path->$Target, which means $Path is a symbolic link to $Target
+    Set a directory symbolic link from the path to the target.
+    Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -24,9 +24,9 @@ function Set-DirSymbolicLinkWithSync{
 function Set-FileSymbolicLinkWithSync{
 <#
 .DESCRIPTION
-    Set a file symbolic link from $Path to $Source.
-    Then, we will get a result as $Path->$Target,
-    which means $Path is a symbolic link to $Target.
+    Set a file symbolic link from the path to the target.
+    Then, get a result as $path\rightarrow target$,
+    which means the path is a symbolic link to the target.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -48,9 +48,9 @@ function Set-FileSymbolicLinkWithSync{
 function Set-DirJunctionWithSync{
 <#
 .DESCRIPTION
-    Set a junction point from $Path to $Source.
-    Then, we will get a result as $Path->$Target,
-    which means $Path is a junction point to $Target.
+    Set a junction point from the path to the target.
+    Then, get a result as $path\rightarrow target$,
+    which means the path is a junction point to the target.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

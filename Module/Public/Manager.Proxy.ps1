@@ -57,11 +57,11 @@ function Set-SystemProxyIPV4ForCurrentUser{
 .DESCRIPTION
     Set system proxy as `ServerIP:PortNumber` for the current user.
     It does not influence environment variables, such as
-        $Env:http_proxy, $Env:https_proxy, $Env:ftp_proxy, $Env:socks_proxy etc.
+        `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
     It is not for all users (not on `local machine` level).
     Automatically add bypass list.
     It only support IPV4.
-    Refer to https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE
+    Refer to [windows-core-proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
     Refer to [Chat-GPT](https://chat.openai.com/)
 
 .PARAMETER ServerIP
@@ -71,7 +71,9 @@ function Set-SystemProxyIPV4ForCurrentUser{
     The port number for proxy.
 
 .EXAMPLE
-    Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890.
+    ```powershell
+    Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890
+    ```
 
 .NOTES
     Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that hosted
@@ -155,8 +157,9 @@ function Set-EnvProxyIPV4ForShellProcess{
     The port number for proxy.
 
 .EXAMPLE
-    Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890.
-
+    ```powershell
+    Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
