@@ -192,3 +192,13 @@
         Write-Logs "[Env Paths Modifed] The removement has been done on 'Machine' level env path." -ShowVerbose
     }
 }
+
+function Get-EnvPaths{
+<#
+.DESCRIPTION
+    A function to apply the class EnvPaths.
+    Return an instance of it.
+#>
+    param()
+    return [EnvPaths]::new()
+}
