@@ -62,139 +62,141 @@ function Move-Target2Source4SoftLink{
     )
 
     try {
-        $_target = [FormattedFileSystemPath]::new($Target)
-        $_target_exist = $true
-        $_target_simple_file = $_target.IsFile -and !($_target.IsSymbolicLink -or $_target.IsHardLink)
-        $_target_simple_directory = $_target.IsDir -and !($_target.IsSymbolicLink -or $_target.IsJunction)
-        $_target_symbolic_link_file = $_target.IsFile -and $_target.IsSymbolicLink
-        $_target_symbolic_link_directory = $_target.IsDir -and $_target.IsSymbolicLink
-        $_target_junction_point_directory = $_target.IsDir -and $_target.IsJunction
+        # see https://stackoverflow.com/a/77062276/17357963
+        [psobject] $target = [FormattedFileSystemPath]::new($Target)
+        $target_exist = $true
+        $target_simple_file = $target.IsFile -and !($target.IsSymbolicLink -or $target.IsHardLink)
+        $target_simple_directory = $target.IsDir -and !($target.IsSymbolicLink -or $target.IsJunction)
+        $target_symbolic_link_file = $target.IsFile -and $target.IsSymbolicLink
+        $target_symbolic_link_directory = $target.IsDir -and $target.IsSymbolicLink
+        $target_junction_point_directory = $target.IsDir -and $target.IsJunction
     }
     catch [System.Management.Automation.ItemNotFoundException]{
-        $_target_exist = $false
+        $target_exist = $false
     }
     catch {
         Write-Logs  "Exception caught: $_"
     }
     try {
-        $_source = [FormattedFileSystemPath]::new($Source)
-        $_source_exist = $true
-        $_source_simple_file = $_source.IsFile -and !($_source.IsSymbolicLink -or $_source.IsHardLink)
-        $_source_simple_directory = $_source.IsDir -and !($_source.IsSymbolicLink -or $_source.IsJunction)
-        $_source_symbolic_link_file = $_source.IsFile -and $_source.IsSymbolicLink
-        $_source_symbolic_link_directory = $_source.IsDir -and $_source.IsSymbolicLink
-        $_source_junction_point_directory = $_source.IsDir -and $_source.IsJunction
+        # see https://stackoverflow.com/a/77062276/17357963
+        [psobject] $source = [FormattedFileSystemPath]::new($Source)
+        $source_exist = $true
+        $source_simple_file = $source.IsFile -and !($source.IsSymbolicLink -or $source.IsHardLink)
+        $source_simple_directory = $source.IsDir -and !($source.IsSymbolicLink -or $source.IsJunction)
+        $source_symbolic_link_file = $source.IsFile -and $source.IsSymbolicLink
+        $source_symbolic_link_directory = $source.IsDir -and $source.IsSymbolicLink
+        $source_junction_point_directory = $source.IsDir -and $source.IsJunction
     }
     catch [System.Management.Automation.ItemNotFoundException]{
-        $_source_exist = $false
+        $source_exist = $false
     }
     catch {
         Write-Logs  "Exception caught: $_"
     }
     $supprted_set_message = "@('non-existing', 'existing-simple-file', 'existing-simple-directory', 'existing-file-symbolic-link', 'existing-directory-symbolic-link', 'existing-directory-junction-point')"
     $indicator = [guid]::NewGuid()
-    if (!$_target_exist){
-        if(!$_source_exist){
+    if (!$target_exist){
+        if(!$source_exist){
             # 1           | non-existing                      | non-existing              | throw error
             throw "[Non-supported conditions] The $Target and $Source are both non-existing."
-        }elseif($_source_simple_file){
+        }elseif($source_simple_file){
             # 1           | non-existing                      | existing-simple-file      | pass(do nothing)
             Write-Logs  "[Do nothing] The $Target is non-existing and the $Source is a simple file already."
-        }elseif($_source_simple_directory){
+        }elseif($source_simple_directory){
             # 1           | non-existing                      | existing-simple-directory | pass(do nothing)
             Write-Logs  "[Do nothing] The $Target is non-existing and the $Source is a simple directory already."
-        }elseif($_source_symbolic_link_file -or $_source_symbolic_link_directory -or $_source_junction_point_directory){
+        }elseif($source_symbolic_link_file -or $source_symbolic_link_directory -or $source_junction_point_directory){
             # 3           | non-existing                      | one of the 3 link types   | throw error
             throw "[Non-supported conditions] The $Target is non-existing but the $Source a soft link."
         }else{
             throw "[Non-supported conditions] The $Target is non-existing but the $Source is not in the set of: $supprted_set_message."
         }
-    }elseif($_target_simple_file){
-        if(!$_source_exist){
+    }elseif($target_simple_file){
+        if(!$source_exist){
             # 1           | existing-simple-file              | non-existing              | copy target to source, del target
             Copy-FileWithBackup -Path $Target -Destination $Source -BackupDir $BackupDir -Indicator $indicator
             Write-Logs "Remove-Item -Path $Target -Force"
             Remove-Item -Path $Target -Force
-        }elseif($_source_simple_file){
+        }elseif($source_simple_file){
             # 1           | existing-simple-file              | existing-simple-file      | backup source, copy target to cover source, del target
             Copy-FileWithBackup -Path $Target -Destination $Source -BackupDir $BackupDir -Indicator $indicator
             Write-Logs "Remove-Item -Path $Target -Force"
             Remove-Item -Path $Target -Force
-        }elseif($_source_simple_directory){
+        }elseif($source_simple_directory){
             # 1           | existing-simple-file              | existing-simple-directory | throw error
             throw "[Non-supported conditions] The $Target is a simple file but the $Source is a simple directory."
-        }elseif($_source_symbolic_link_file -or $_source_symbolic_link_directory -or $_source_junction_point_directory){
+        }elseif($source_symbolic_link_file -or $source_symbolic_link_directory -or $source_junction_point_directory){
             # 3           | existing-simple-file              | one of the 3 link types   | throw error
             throw "[Non-supported conditions] The $Target is a simple file but the $Source is a soft link."
         }else{
             throw "[Non-supported conditions] The $Target is a simple file but the $Source is not in the set of: $supprted_set_message."
         }
-    }elseif($_target_simple_directory){
-        if(!$_source_exist){
+    }elseif($target_simple_directory){
+        if(!$source_exist){
             # 1           | existing-simple-directory         | non-existing              | copy target to source, del target
             Copy-DirWithBackup -Path $Target -Destination $Source -BackupDir $BackupDir -Indicator $indicator
             Write-Logs "Remove-Item -Path $Target -Recurse -Force"
             Remove-Item -Path $Target -Recurse -Force
-        }elseif($_source_simple_file){
+        }elseif($source_simple_file){
             # 1           | existing-simple-directory         | existing-simple-file      | throw error
             throw "[Non-supported conditions] The $Target is a simple directory but the $Source is a simple file."
-        }elseif($_source_simple_directory){
+        }elseif($source_simple_directory){
             # 1           | existing-simple-directory         | existing-simple-directory | backup source, backup target, merge target to source (items within target will cover), del target
             Copy-DirWithBackup -Path $Target -Destination $Source -BackupDir $BackupDir -Indicator $indicator
             Write-Logs "Remove-Item -Path $Target -Recurse -Force"
             Remove-Item -Path $Target -Recurse -Force
-        }elseif($_source_symbolic_link_file -or $_source_symbolic_link_directory -or $_source_junction_point_directory){
+        }elseif($source_symbolic_link_file -or $source_symbolic_link_directory -or $source_junction_point_directory){
             # 3           | existing-simple-directory         | one of the 3 link types   | throw error
             throw "[Non-supported conditions] The $Target is a simple directory but the $Source is a soft link."
         }else{
             throw "[Non-supported conditions] The $Target is a simple directory but the $Source is not in the set of: $supprted_set_message."
         }
-    }elseif($_target_symbolic_link_file){
-        if(!$_source_exist){
+    }elseif($target_symbolic_link_file){
+        if(!$source_exist){
             # 1           | existing-file-symbolic-link       | non-existing              | throw error
             throw "[Non-supported conditions] The $Target is a file symbolic link but the $Source is non-existing."
-        }elseif($_source_simple_file){
+        }elseif($source_simple_file){
             # 1           | existing-file-symbolic-link       | existing-simple-file      | del target
             Write-Logs  "Remove-Item $Target -Force"
             Remove-Item $Target -Force
-        }elseif($_source_simple_directory){
+        }elseif($source_simple_directory){
             # 1           | existing-file-symbolic-link       | existing-simple-directory | throw error
             throw "[Non-supported conditions] The $Target is a file symbolic link but the $Source is a simple directory."
-        }elseif($_source_symbolic_link_file -or $_source_symbolic_link_directory -or $_source_junction_point_directory){
+        }elseif($source_symbolic_link_file -or $source_symbolic_link_directory -or $source_junction_point_directory){
             # 3           | existing-file-symbolic-link       | one of the 3 link types   | throw error
             throw "[Non-supported conditions] The $Target is a file symbolic link but the $Source is a soft link."
         }else{
             throw "[Non-supported conditions] The $Target is a file symbolic link but the $Source is not in the set of: $supprted_set_message."
         }
-    }elseif($_target_symbolic_link_directory){
-        if(!$_source_exist){
+    }elseif($target_symbolic_link_directory){
+        if(!$source_exist){
             # 1           | existing-directory-symbolic-link  | non-existing              | throw error
             throw "[Non-supported conditions] The $Target is a directory symbolic link but the $Source is non-existing."
-        }elseif($_source_simple_file){
+        }elseif($source_simple_file){
             # 1           | existing-directory-symbolic-link  | existing-simple-file      | throw error
             throw "[Non-supported conditions] The $Target is a directory symbolic link but the $Source is a simple file."
-        }elseif($_source_simple_directory){
+        }elseif($source_simple_directory){
             # 1           | existing-directory-symbolic-link  | existing-simple-directory | del target
             Write-Logs  "Remove-Item $Target -Force"
             Remove-Item $Target -Force
-        }elseif($_source_symbolic_link_file -or $_source_symbolic_link_directory -or $_source_junction_point_directory){
+        }elseif($source_symbolic_link_file -or $source_symbolic_link_directory -or $source_junction_point_directory){
             # 3           | existing-directory-symbolic-link  | one of the 3 link types   | throw error
             throw "[Non-supported conditions] The $Target is a directory symbolic link but the $Source is a soft link."
         }else{
             throw "[Non-supported conditions] The $Target is a directory symbolic link but the $Source is not in the set of: $supprted_set_message."
         }
-    }elseif($_target_junction_point_directory){
-        if(!$_source_exist){
+    }elseif($target_junction_point_directory){
+        if(!$source_exist){
             # 1           | existing-directory-junction-point | non-existing              | throw error
             throw "[Non-supported conditions] The $Target is a junction point but the $Source is non-existing."
-        }elseif($_source_simple_file){
+        }elseif($source_simple_file){
             # 1           | existing-directory-junction-point | existing-simple-file      | throw error
             throw "[Non-supported conditions] The $Target is a junction point but the $Source is a simple file."
-        }elseif($_source_simple_directory){
+        }elseif($source_simple_directory){
             # 1           | existing-directory-junction-point | existing-simple-directory | del target
             Write-Logs  "Remove-Item $Target -Force"
             Remove-Item $Target -Force
-        }elseif($_source_symbolic_link_file -or $_source_symbolic_link_directory -or $_source_junction_point_directory){
+        }elseif($source_symbolic_link_file -or $source_symbolic_link_directory -or $source_junction_point_directory){
             # 3           | existing-directory-junction-point | one of the 3 link types   | throw error
             throw "[Non-supported conditions] The $Target is a junction point but the $Source is a soft link."
         }else{

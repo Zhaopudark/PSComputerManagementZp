@@ -66,9 +66,7 @@ For more information on the motivations, rationale, logic, limitations and usage
                 if ($Path.IsInRecycleBin){
                     throw "Cannot use `-Recurse` on a path in Recycle Bin: $Path"
                 }
-
                 # Recurse bypass: files, symbolic link directories, junctions, System Volume Information, `$Recycle.Bin
-
                 $paths = Get-ChildItem -LiteralPath $Path -Force -Recurse -Attributes !ReparsePoint -ErrorAction Continue
                 # The progress bar is refer to Chat-Gpt
                 $total = $paths.Count
@@ -77,19 +75,13 @@ For more information on the motivations, rationale, logic, limitations and usage
                     $current++
                     $progressPercentage = ($current / $total) * 100
                     $progressStatus = "Processing file $current of $total"
-
                     Write-Progress -Activity "Traversing Directory" -Status $progressStatus -PercentComplete $progressPercentage
-
                     # Do your personal jobs, such as: $file.FullName
                     Reset-Authorization -Path $item.FullName
-
                 }
-
                 Write-Progress -Activity "Traversing Directory" -Completed
             }
-
         }
-
     }
     catch {
         Write-Logs  "Reset-Authorization Exception: $PSItem"

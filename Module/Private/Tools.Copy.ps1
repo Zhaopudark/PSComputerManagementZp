@@ -29,7 +29,7 @@ function Copy-FileWithBackup{
     $source = $Path
     $destination = $Destination
     if ($PSCmdlet.ShouldProcess("Then copy $source to $destination. Backup $destination if it exists already.",'','')){
-        if(Test-Path $_destination){
+        if(Test-Path $destination){
             # see https://stackoverflow.com/a/77062276/17357963
             [psobject] $destination = Get-FormattedFileSystemPath -Path $destination
             if(!$destination.IsFile){
