@@ -1,5 +1,6 @@
 # Release v0.0.3
 
+## Release v0.0.3-beta0
 - Improve the components in `PlatformTools.ps1`. 
 - Make sure all `Assert-` functions return void.
 - Make sure all `Test-` functions return boolean.
@@ -12,6 +13,15 @@
     - `Set-FileSymbolicLinkWithSync`
     - `Set-DirJunctionWithSync`
     Since the hard link may bring potential problems, this module does not support the hard link's quick creation and synchronization. Do provide `Set-FileHardLinkWithSync` anymore.
+- `README.md` file for all putlic APIs can be automatically generated now.
+- Define a mode for **Version Iteration** and write it into root `README.md`
+    - For further development, `RELEASE.md` should have a constructure as:
+        ```markdown
+        # Release v0.0.3
+        ## Release v0.0.3-stable
+        ## Release v0.0.3-beta0
+        ```
+
 
 # Release v0.0.2
 

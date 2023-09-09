@@ -100,6 +100,26 @@ function Format-Doc2Markdown{
     return $function_comment
 }
 
+function Get-PreReleaseString{
+    [OutputType([string])]
+    param(
+        [Parameter(Mandatory)]
+        [string]$ReleaseNotesPath
+    )
+    $release_title = Get-Content $ReleaseNotesPath | Select-String -Pattern "^## " | Select-Object -First 1
+    if ($release_title -match 'v([\d]+\.[\d]+\.[\d]+)[\-]*(.*)'){
+        $pre_release_string = $Matches[2]
+        if ($pre_release_string -match 'beta[\d+]|stable'){
+            return $pre_release_string.ToLower()
+        }
+        else{
+            throw "[Invalid pre-release string] The pre-release string in $ReleaseNotesPath is $pre_release_string, but it should one be 'stable' or 'beta0', 'beta1' etc."
+        }
+    }else{
+        return ''
+    }
+}
+
 function Assert-ReleaseVersionConsistency{
     param(
         [Parameter(Mandatory)]
@@ -109,7 +129,7 @@ function Assert-ReleaseVersionConsistency{
     )
 
     $release_title = Get-Content $ReleaseNotesPath | Select-String -Pattern "^# " | Select-Object -First 1
-    if ($release_title -match "v([\d]+\.[\d]+\.[\d]+)"){
+    if ($release_title -match 'v([\d]+\.[\d]+\.[\d]+)'){
         $version = $Matches[1]
         if (!($version -ceq $ModuleInfo.ModuleVersion)){
             throw "[Imcompatible version] The newest version in $ReleaseNotesPath is $version, but it should be $ModuleVersion."
