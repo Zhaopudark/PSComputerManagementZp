@@ -11,13 +11,15 @@
 | [![Public-AIPs](https://img.shields.io/badge/Public-AIPs-orange)](Tests/APIs/README.md) |
 | [![Private-Components](https://img.shields.io/badge/Private-Components-pink)](Tests/Components/README.md) |
 
+# Tests on multiple platforms
 
 
-| Tests                                                        | Documentations                                               |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [![Intsallation-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md) |
-| [![Components-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Public-AIPs](https://img.shields.io/badge/Public-AIPs-orange)](Tests/APIs/README.md) |
-| [![APIs-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/APIs-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Public-Examples](https://img.shields.io/badge/Public-Examples-red)](Examples/README.md) |
+
+| Linux                                                        | Windows                                                      | MacOS                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [![Intsallation-Tests-on-Linux.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-Linux.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-Windows.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-Windows.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-MacOS.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-MacOS.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) |
+| [![Components-Tests-on-Linux.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests-on-Linux.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Components-Tests-on-Windows.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests-on-Windows.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-MacOS.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-MacOS.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) |
+| [![APIs-Tests-on-Linux.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/APIs-Tests-on-Linux.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Components-Tests-on-Windows.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests-on-Windows.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-MacOS.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-MacOS.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) |
 
 # Backgrounds
 

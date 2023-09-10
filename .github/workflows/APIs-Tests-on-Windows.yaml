@@ -1,0 +1,21 @@
+name: APIs Tests on Windows
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:     
+  tests-on-windows:
+    runs-on: windows-latest 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Apply pester tests 
+      shell: pwsh
+      run: | 
+        $PSVersionTable
+        "ErrorActionPreference: $ErrorActionPreference"
+        ./install.ps1
+        Invoke-Pester './Tests/APIs/'  -Passthru
