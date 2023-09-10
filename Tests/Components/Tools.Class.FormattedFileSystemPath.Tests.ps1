@@ -28,11 +28,11 @@ Describe '[Test PathTools]' {
             $path = [FormattedFileSystemPath]::new("${test_path}/teSt.tXt")
             $path | Should -BeExactly "${Home}\$guid\test.txt"
         }
-        It '[Test on Linux dir]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows dir]' -Skip:($IsWindows){
             $path = [FormattedFileSystemPath]::new("${test_path}\test_dir")
             $path | Should -BeExactly "${Home}/$guid/test_dir"
         }
-        It '[Test on Linux file]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows file]' -Skip:($IsWindows){
             $path = [FormattedFileSystemPath]::new("${test_path}\test.txt")
             $path | Should -BeExactly "${Home}/$guid/test.txt"
         }
@@ -82,7 +82,7 @@ Describe '[Test PathTools]' {
             $path | Should -BeExactly "$maybe_c`:\"
 
         }
-        It '[Test on Linux drive, single slash]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows drive, single slash]' -Skip:($IsWIndows){
             $maybe_root = (Get-ItemProperty ${Home}).PSDrive.Name # / on Linux and Wsl2, not '/root'
             $path = [FormattedFileSystemPath]::new("$maybe_root")
             $path | Should -BeExactly "$maybe_root"
@@ -93,7 +93,7 @@ Describe '[Test PathTools]' {
             $path = [FormattedFileSystemPath]::new("$maybe_root\")
             $path | Should -BeExactly "$maybe_root"
         }
-        It '[Test on Linux drive, multiple slashs]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows drive, multiple slashs]' -Skip:($IsWIndows){
             $maybe_root = (Get-ItemProperty ${Home}).PSDrive.Name # / on Linux and Wsl2, not '/root'
             $path = [FormattedFileSystemPath]::new("$maybe_root\\")
             $path | Should -BeExactly "$maybe_root"
@@ -238,7 +238,7 @@ Describe '[Test PathTools]' {
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeFalse
         }
-        It '[Test on Linux]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows]' -Skip:($IsWIndows){
             $path = [FormattedFileSystemPath]::new("${Home}")
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'

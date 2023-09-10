@@ -89,20 +89,20 @@ Describe '[Test AuthorizationTools]' {
             Remove-Item "$test_path/test_txt_hard_link"
 
         }
-        It '[Test on Linux dir with symbolik link]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows dir with symbolik link]' -Skip:($IsWIndows){
             New-Item -Path "$test_path/test_dir_symbilic_link" -ItemType SymbolicLink -Target "$test_path/test_dir"
             {Reset-PathAttribute -Path "$test_path/test_dir_symbilic_link" -ErrorAction Stop} | Should -Throw
             Remove-Item "$test_path/test_dir_symbilic_link"
         }
-        It '[Test on Linux dir with junction point]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows dir with junction point]' -Skip:($IsWIndows){
             # pass since it is not supported on linux file system
         }
-        It '[Test on Linux file with symbolik link]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows file with symbolik link]' -Skip:($IsWIndows){
             New-Item -Path "$test_path/test_txt_symbilic_link" -ItemType SymbolicLink -Target "$test_path/test.txt"
             {Reset-PathAttribute -Path "$test_path/test_txt_symbilic_link" -ErrorAction Stop} | Should -Throw
             Remove-Item "$test_path/test_txt_symbilic_link"
         }
-        It '[Test on Linux file with hard link]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows file with hard link]' -Skip:($IsWIndows){
             New-Item -Path "$test_path/test_txt_hard_link" -ItemType HardLink -Target "$test_path/test.txt"
             {Reset-PathAttribute -Path "$test_path/test_txt_hard_link" -ErrorAction Stop} | Should -Throw
             Remove-Item "$test_path/test_txt_hard_link"
@@ -139,7 +139,7 @@ Describe '[Test AuthorizationTools]' {
             {Get-PathType "$maybe_c`:\System Volume Information"}| Should -Throw
             {Get-PathType "$maybe_c`:\`$Recycle.Bin" }| Should -Throw
         }
-        It '[Test on Linux file]' -Skip:(!$IsLinux){
+        It '[Test on Non-Windows file]' -Skip:($IsWindows){
             {Get-PathType "$test_path/test_dir" }| Should -Throw
         }
     }
