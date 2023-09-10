@@ -650,6 +650,7 @@ All private Components are recored here. (Only for Contributors)
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
+    Test-Platform -Name 'MacOS' -Verbose
     ```
 - **Link**
 
@@ -666,7 +667,7 @@ All private Components are recored here. (Only for Contributors)
 - **Outputs**
 
     None.
-- **Note**
+- **Notes**
 
     If the log file does not exist, it will be created automatically.
     But the creation results will be muted to avoid some errors about bool function's return value.
