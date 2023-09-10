@@ -9,7 +9,7 @@
 | [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md) |
 | [![Public-Examples](https://img.shields.io/badge/Public-Examples-royalblue)](Examples/README.md) |
 | [![Public-AIPs](https://img.shields.io/badge/Public-AIPs-orange)](Tests/APIs/README.md) |
-| [![Private-Components](https://img.shields.io/badge/Private-Components-pink)](Tests/Components/README.md) (Only for Contributors) |
+| [![Private-Components](https://img.shields.io/badge/Private-Components-pink)](Tests/Components/README.md) |
 
 
 
