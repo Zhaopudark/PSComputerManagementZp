@@ -14,14 +14,7 @@ jobs:
 
     - name: install module 
       shell: pwsh
-      run: | 
-        # $current_path = $pwd
-        # cd /
-        # $current_ErrorActionPreference = $ErrorActionPreference
-        # $ErrorActionPreference = 'continue'
-        # Get-ChildItem -Recurse -Include *.ps1,*.psm1 | Select-String -Pattern "ErrorActionPreference"
-        # $ErrorActionPreference = $current_ErrorActionPreference
-        # cd $current_path
+      run: |
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1

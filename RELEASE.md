@@ -1,7 +1,7 @@
 # Release v0.0.3
 
 ## Release v0.0.3-beta0
-- Add `MacOS` supporting.
+- Add supportment for `MacOS`.
 - Rename `Write-FileLogs` to `Write-FileLog` and `Write-Logs` to `Write-Log`.
     - There may be a PSScriptAnalyzer warning:
         ```powershell

@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  tests-on-linux:
+  tests-on-macos:
     runs-on: macos-latest
     steps:
     - name: Checkout repository
