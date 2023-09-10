@@ -21,7 +21,7 @@
         - Check if the path exists in file system. If not, throw an error.
         - Check if the path is with wildcard characters by file system. If so, throw an error.
         - It means a path (an instance of this class) represents only a path, not a group of paths.
-    
+
     **Third** Format the path with file system access:
         - Convert it to an absolute one.
         - Convert it to an original-case one.
@@ -30,7 +30,7 @@
             - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
             - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
             - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
-    
+
     **#TODO **:
         - Cross-platform support.
         - Currently, this class is only adapative on each single platform, but not cross-platform.

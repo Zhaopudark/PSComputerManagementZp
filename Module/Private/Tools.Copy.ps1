@@ -125,11 +125,10 @@ function Copy-DirWithBackup{
                 Robocopy $source $source_backup /e /copyall /dcopy:DATE /log+:"$log_file"
                 Robocopy $destination $destination_backup /e /copyall /dcopy:DATE /log+:"$log_file"
                 Robocopy $source $destination /e /copyall /dcopy:DATE /log+:"$log_file"
-              
             }
             catch {
                 Write-Log "[Try Robocopy Failed] Use Copy-Item instead. But Copy-Item will loss the metadata of directories in the source."
-                
+
                 New-Item -Path $source_backup -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                 Write-Log " Copy-Item -Path `"$source\*`" -Destination $source_backup -Recurse -Force"
                 Copy-Item -Path "$source\*" -Destination $source_backup -Recurse -Force

@@ -80,7 +80,7 @@ Describe 'Test Link Management' {
             $item.LinkTarget | Should -Be "$test_path\file_for_symboliclink2.txt"
             "$test_path\file_for_symboliclink1.txt" | Should -Exist
             "$test_path\file_for_symboliclink2.txt" | Should -Exist
- 
+
             foreach($item in Get-Item "$test_path\backup\*symboliclink1.txt"){
                 $item | Should -Not -Exist
             }

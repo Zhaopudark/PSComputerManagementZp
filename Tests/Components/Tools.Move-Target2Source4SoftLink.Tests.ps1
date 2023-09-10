@@ -71,7 +71,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             Remove-Item -Path $source -Force -Recurse -ErrorAction SilentlyContinue
             New-Item -Path $source -ItemType Junction -Force -Target $dir_path
             {Move-Target2Source4SoftLink -Target $target -Source $source -BackupDir $backup_dir } | Should -Throw "[[]Non-supported conditions[]] The $Target is non-existing but the $Source a soft link."
-        }     
+        }
     }
     Context '[Target:existing-simple-file]'{
         It '[Source:non-existing]'{
@@ -100,7 +100,7 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
             foreach($item in Get-Item "$backup_dir\*$guid*"){
                 $item | Should -Exist
             }
-            
+
             Remove-Item "$backup_dir\*" -Recurse -Force
         }
         It '[Source:existing-simple-directory]'{

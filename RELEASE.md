@@ -10,6 +10,7 @@
 - Make sure all `Assert-` functions return void.
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
+- Rename all APIs or components about `xEnvPaths` to `xEnvPath`.
 - Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
 - Add a statement about the hard link in `README.md`.
 - Modify all file names for a better understanding.
@@ -42,17 +43,16 @@
     - The private function `Write-FileLogs` should only be used in the private function `Write-Logs`, and the latter is the only logging function in all components. Also, the latter is not an API function for normal users.
 
 - Re-construct `EnvManagers`. Now the APIs about `Environment Variables Management` have been re-write as:
-    - `Merge-RedundantEnvPathFromCurrentMachineToCurrentUser`
-    - `Add-PathToCurrentProcessEnvPath`
-    - `Add-PathToCurrentUserEnvPath`
-    - `Add-PathToCurrentMachineEnvPath`
-    - `Remove-PathFromCurrentProcessEnvPath`
-    - `Remove-PathFromCurrentUserEnvPath`
-    - `Remove-PathFromCurrentMachineEnvPath`
-    - `Remove-MatchedPathsFromCurrentProcessEnvPath`
-    - `Remove-MatchedPathsFromCurrentUserEnvPath`
-    - `Remove-MatchedPathsFromCurrentMachineEnvPath`
-    
+    - `Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser`
+    - `Add-PathToCurrentProcessEnvPaths`
+    - `Add-PathToCurrentUserEnvPaths`
+    - `Add-PathToCurrentMachineEnvPaths`
+    - `Remove-PathFromCurrentProcessEnvPaths`
+    - `Remove-PathFromCurrentUserEnvPaths`
+    - `Remove-PathFromCurrentMachineEnvPaths`
+    - `Remove-MatchedPathsFromCurrentProcessEnvPaths`
+    - `Remove-MatchedPathsFromCurrentUserEnvPaths`
+    - `Remove-MatchedPathsFromCurrentMachineEnvPaths`
 
 # Release v0.0.1
 

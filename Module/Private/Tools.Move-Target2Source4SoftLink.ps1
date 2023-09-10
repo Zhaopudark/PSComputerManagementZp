@@ -7,7 +7,7 @@ function Move-Target2Source4SoftLink{
 .DESCRIPTION
     When we want to set a soft link (symbolic link or junction point) from `A` to `B`, as $A\rightarrow B$, we may find that `A` is non-existing while `B` is existing.
     That is not our expectation. We may need to move `B` to `A` at first, then go back to set the link $A\rightarrow B$.
-    
+
     Worsely, if we find `A` and `B` are both existing at first, we may need to consider merging or backuping procedures.
 
     This function can help users to do the above things easily, i.e., it can move the target item to the source automatically, with essential backup.
@@ -21,9 +21,9 @@ function Move-Target2Source4SoftLink{
 .NOTES
     This function is not generic and is more of an integration for a class of business.
     The following are the main rules of this function:
-    
+
     **First**, check the target and source path if they are both in the following conditions:
-        
+
         1. non-existing
         2. existing-simple-file
         3. existing-simple-directory
@@ -59,7 +59,7 @@ function Move-Target2Source4SoftLink{
         |1           | existing-directory-junction-point| existing-simple-file      | throw error|
         |1           | existing-directory-junction-point| existing-simple-directory | del target|
         |3           | existing-directory-junction-point| one of the 3 link types   | throw error|
-        
+
     The other conditions out of the above 36 conditions will throw error as well.
 .LINK
     Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
