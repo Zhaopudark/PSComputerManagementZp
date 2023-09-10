@@ -2,6 +2,11 @@
 
 ## Release v0.0.3-beta0
 - Rename `Write-FileLogs` to `Write-FileLog` and `Write-Logs` to `Write-Log`.
+    - There may be a PSScriptAnalyzer warning:
+        ```powershell
+        WARNING: The cmdlet 'Write-Log' is a cmdlet that is included with PowerShell (version core-6.1.0-windows) whose definition should not be overridden.
+        ```
+    - But it seem in powershell 7.x, there is no built-in `Write-Log` cmdlet. So, it is safe to ignore this warning.
 - Make sure all `Assert-` functions return void.
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
@@ -14,6 +19,7 @@
     - `Set-DirJunctionWithSync`
     Since the hard link may bring potential problems, this module does not support the hard link's quick creation and synchronization. Do provide `Set-FileHardLinkWithSync` anymore.
 - `README.md` file for all putlic APIs can be automatically generated now.
+- `README.md` file for all private components can be automatically generated now.
 - Define a mode for **Version Iteration** and write it into root `README.md`
     - For further development, `RELEASE.md` should have a constructure as:
         ```markdown
@@ -36,16 +42,16 @@
     - The private function `Write-FileLogs` should only be used in the private function `Write-Logs`, and the latter is the only logging function in all components. Also, the latter is not an API function for normal users.
 
 - Re-construct `EnvManagers`. Now the APIs about `Environment Variables Management` have been re-write as:
-    - `Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser`
-    - `Add-PathToCurrentProcessEnvPaths`
-    - `Add-PathToCurrentUserEnvPaths`
-    - `Add-PathToCurrentMachineEnvPaths`
-    - `Remove-PathFromCurrentProcessEnvPaths`
-    - `Remove-PathFromCurrentUserEnvPaths`
-    - `Remove-PathFromCurrentMachineEnvPaths`
-    - `Remove-MatchedPathsFromCurrentProcessEnvPaths`
-    - `Remove-MatchedPathsFromCurrentUserEnvPaths`
-    - `Remove-MatchedPathsFromCurrentMachineEnvPaths`
+    - `Merge-RedundantEnvPathFromCurrentMachineToCurrentUser`
+    - `Add-PathToCurrentProcessEnvPath`
+    - `Add-PathToCurrentUserEnvPath`
+    - `Add-PathToCurrentMachineEnvPath`
+    - `Remove-PathFromCurrentProcessEnvPath`
+    - `Remove-PathFromCurrentUserEnvPath`
+    - `Remove-PathFromCurrentMachineEnvPath`
+    - `Remove-MatchedPathsFromCurrentProcessEnvPath`
+    - `Remove-MatchedPathsFromCurrentUserEnvPath`
+    - `Remove-MatchedPathsFromCurrentMachineEnvPath`
     
 
 # Release v0.0.1

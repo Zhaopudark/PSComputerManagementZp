@@ -9,6 +9,7 @@ $ModuleInfo.Prerelease = Get-PreReleaseString -ReleaseNotesPath "${PSScriptRoot}
 
 # generate APIs README.md
 $api_content = @("All public APIs are recored here.")
+$api_content += "## Functions"
 foreach ($entry in $ModuleInfo.SortedFunctionsToExportWithDocs){
     $api_content += "### $($entry.Name)"
     if ($entry.Value){
@@ -22,6 +23,19 @@ $api_content | Set-Content -Path "${PSScriptRoot}\Tests\APIs\README.md"
 
 # generate Components README.md
 $component_content = @("All private Components are recored here. (Only for Contributors)")
+
+$component_content += "## Classes"
+foreach ($entry in $ModuleInfo.SortedClassesNotToExportWithDocs){
+    $component_content += "### $($entry.Name)"
+    if ($entry.Value){
+        $component_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
+    }
+    else{
+        $component_content += ''
+    }
+}
+
+$component_content += "## Functions"
 foreach ($entry in $ModuleInfo.SortedFunctionsNotToExportWithDocs){
     $component_content += "### $($entry.Name)"
     if ($entry.Value){
@@ -31,6 +45,7 @@ foreach ($entry in $ModuleInfo.SortedFunctionsNotToExportWithDocs){
         $component_content += ''
     }
 }
+
 $component_content | Set-Content -Path "${PSScriptRoot}\Tests\Components\README.md"
 
 

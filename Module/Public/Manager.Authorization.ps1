@@ -36,7 +36,7 @@ For more information on the motivations, rationale, logic, limitations and usage
     )
     try {
         Assert-IsWindowsAndAdmin
-        Assert-ValidPath4AuthorizationTools $Path
+        Assert-ValidPath4Authorization $Path
         $path_type = Get-PathType $Path -SkipPlatformCheck -SkipPathCheck
         $sddl = Get-DefaultSddl -PathType $path_type
         $new_acl = Get-Acl -LiteralPath $Path

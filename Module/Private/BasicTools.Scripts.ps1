@@ -1,4 +1,4 @@
-function Get-FunctionDocs{
+function Get-FunctionDoc{
 <#
 .DESCRIPTION
     Get function docs from a script file.
@@ -37,6 +37,44 @@ function Get-FunctionDocs{
     return $function_name_with_docs
 }
 
+function Get-ClassDoc{
+<#
+.DESCRIPTION
+    Get class docs from a script file.
+.INPUTS
+    A script file path.
+.OUTPUTS
+    A hashtable with class names as keys and class docs as values.
+#>
+    [CmdletBinding()]
+    [OutputType([hashtable])]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+    if (-not (Test-Path -Path $Path -PathType Leaf)){
+        throw "Path '$Path' does not exist or is not a file."
+    }
+    if (-not ($Path.EndsWith('.ps1') -or $Path.EndsWith('.psm1'))){
+        throw "Path '$Path' is not a PowerShell script file."
+    }
+    $script_content = Get-Content -Path $Path -Raw
+    $class_bloks =  $script_content | Select-String -Pattern '(?sm)^\s*class .*?^\}' -AllMatches
+    $class_name_with_docs = @{}
+    foreach ($match in $class_bloks.Matches) {
+        $block = $match.Value
+        $class_name = ($block | Select-String -Pattern 'class\s+([A-Za-z0-9_]+)').Matches.Groups[1].Value
+        $comment_matched = $block | Select-String -Pattern '(?s)<#(.*?)#>'
+        if ($comment_matched.Count -ne 0){
+            $class_comment = $comment_matched.Matches.Groups[1].Value
+        }
+        else{
+            $class_comment = ''
+        }
+        $class_name_with_docs[$class_name] = $class_comment
+    }
+    return $class_name_with_docs
+}
 function Format-Doc2Markdown{
 <#
 .DESCRIPTION
@@ -45,15 +83,15 @@ function Format-Doc2Markdown{
     The formatted markdown string is like this:
     ```markdown
     - Synopsis
-        
-        xxx
-    - Description
-        
-        xxx
-    - Parameters `Aa`
 
         xxx
-    - Parameters `Bb`
+    - Description
+
+        xxx
+    - Parameters `$Aa`
+
+        xxx
+    - Parameters `$Bb`
 
         xxx
     ```
@@ -80,7 +118,7 @@ function Format-Doc2Markdown{
                 # .PARAMETER xxx -> - Parameter `xxx`
                 $title = '- **'+$Matches[2].Substring(0,1).ToUpper() + $Matches[2].Substring(1).ToLower()+'**'
                 if ($Matches[3]) {
-                    $title += " ``$($Matches[3])``"
+                    $title += " ```$$($Matches[3])``"
                 }
                 $block += $title
                 $block += ''

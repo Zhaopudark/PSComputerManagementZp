@@ -1,4 +1,99 @@
 All private Components are recored here. (Only for Contributors)
+## Classes
+### EnvPath
+    
+- **Synopsis**
+
+    A class that maintains the process, user, and machine level `$Env:PATH`, holds the de-duplicated paths, and provides some useful methods for some scenarios that need to modify the `$Env:PATH`.
+- **Notes**
+
+    Do not check any path's existence or validity.
+    
+### FormattedFileSystemPath
+    
+- **Synopsis**
+
+    A class that receives a file system path, formats the path automatically when initialized, holds the formatted path, and provides some useful attributes(properties) simultaneously for a quick check.
+- **Notes**
+
+    Support file system paths only!
+- **Description**
+
+    Automatically format a path to standard format by the following procedures and rules:
+    1. Preprocess a received path with some literal check (string level, without accessing it by file system):
+    - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
+    - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
+    - Reduce any consecutive colons to a single `:`
+    - Strip any trailing slashs.
+    - According to the platform, append a single '\' or '/' if the path ends with a colon.
+    - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
+    - Convert the drive name to initial capital letter.
+    - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash '\' or '/',
+    according to the platform will be added at the head.
+    2. Test the preprocessed path with file system access:
+    - Check if the path exists in file system. If not, throw an error.
+    - Check if the path is with wildcard characters by file system. If so, throw an error.
+    -  It means a path (an instance of this class) represents only a path, not a group of paths.
+    3. Format the path with file system access:
+    - Convert it to an absolute one.
+    - Convert it to an original-case one.
+    - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity),
+    items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
+    - And, in NTFS of Windows, two paths with only case differences can represent the same item, i.g., `c:\uSeRs\usER\TesT.tXt` and `C:\Users\User\test.txt`.
+    - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
+    - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
+    - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
+    #TODO
+    Cross-platform support.
+    Currently, this class is only adapative on each single platform, but not cross-platform.
+    But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
+    
+    Some properties of the path are also provided:
+    1. LiteralPath: The formatted path.
+    2. OriginalPlatform: The platform of the source path.
+    3. Slash: The slash of the path.
+    4. Attributes: The attributes of the path.
+    5. Linktype: The link type of the path.
+    6. LinkTarget: The link target of the path.
+    7. Qualifier: The qualifier of the path.
+    8. QualifierRoot: The root of the qualifier of the path.
+    9. DriveFormat: The format of the drive of the path.
+    10. IsDir: If the path is a directory.
+    11. IsFile: If the path is a file.
+    12. IsDriveRoot: If the path is the root of a drive.
+    13. IsBeOrInSystemDrive: If the path is in the system drive.
+    14. IsInHome: If the path is in the home directory.
+    15. IsHome: If the path is the home directory.
+    16. IsDesktopINI: If the path is a desktop.ini file.
+    (Windows only):
+    17. IsSystemVolumeInfo: If the path is the System Volume Information directory.
+    18. IsInSystemVolumeInfo: If the path is in the System Volume Information directory.
+    19. IsRecycleBin: If the path is the Recycle Bin directory.
+    20. IsInRecycleBin: If the path is in the Recycle Bin directory.
+    21. IsSymbolicLink: If the path is a symbolic link.
+    22. IsJunction: If the path is a junction.
+    23. IsHardLink: If the path is a hard link.
+    
+- **Example**
+
+    Not usage examples, but a demonstration about the path formatting:
+    
+    | (Windows) Existing Path   | Given(Input) Path         | Formatted Path    |
+    | ------------------------- | ------------------------- | ----------------- |
+    | C:\Users                  | c:\uSeRs                  | C:\Users\         |
+    | C:\Users                  | C:\uSers                  | C:\Users\         |
+    | C:\Users\test.txt         | c:\uSeRs\usER\TesT.tXt    | C:\Users\test.txt |
+    | C:\Users\test.txt         | C:\uSeRs\user\TEST.TxT    | C:\Users\test.txt |
+    
+    | (Unix) Existing Path      | Given(Input) Path         | Formatted Path    |
+    | ------------------------- | ------------------------- | ----------------- |
+    | /home/uSer                | /home/uSer                | /home/uSer/       |
+- **Link**
+
+    Refer to the [default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
+    Refer to the [methods](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path.
+    
+## Functions
 ### Assert-AdminPermission
     
 - **Description**
@@ -65,17 +160,17 @@ All private Components are recored here. (Only for Contributors)
 - **Description**
 
     Assert if the release version in the release note file is consistent with the given version.
-- **Parameter** `Version`
+- **Parameter** `$Version`
 
     The version.
-- **Parameter** `ReleaseNotesPath`
+- **Parameter** `$ReleaseNotesPath`
 
     The release note file path.
 - **Outputs**
 
     None.
     
-### Assert-ValidPath4AuthorizationTools
+### Assert-ValidPath4Authorization
     
 - **Synopsis**
 
@@ -100,16 +195,16 @@ All private Components are recored here. (Only for Contributors)
     Copy a simple directory to a destination.
     If the destination exists, the source directory will be merged to the destination directory.
     Before the merging, both the source and destination will be backup to a directory.
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The source directory path.
-- **Parameter** `Destination`
+- **Parameter** `$Destination`
 
     The destination directory path.
-- **Parameter** `BackupDir`
+- **Parameter** `$BackupDir`
 
     The backup directory path.
-- **Parameter** `Indicator`
+- **Parameter** `$Indicator`
 
     The indicator string to indicate the backup directory.
 - **Notes**
@@ -136,16 +231,16 @@ All private Components are recored here. (Only for Contributors)
 - **Description**
 
     Copy a simple file to a destination. If the destination exists, the source file will cover the destination file. Before the covering, the destination file will be backup to a directory.
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The source file path.
-- **Parameter** `Destination`
+- **Parameter** `$Destination`
 
     The destination file path.
-- **Parameter** `BackupDir`
+- **Parameter** `$BackupDir`
 
     The backup directory path.
-- **Parameter** `Indicator`
+- **Parameter** `$Indicator`
 
     The indicator string to indicate the backup file.
 - **Outputs**
@@ -174,10 +269,10 @@ All private Components are recored here. (Only for Contributors)
     - Description
     
     xxx
-    - Parameters `Aa`
+    - Parameters `$Aa`
     
     xxx
-    - Parameters `Bb`
+    - Parameters `$Bb`
     
     xxx
     ```
@@ -187,6 +282,18 @@ All private Components are recored here. (Only for Contributors)
 - **Outputs**
 
     A formatted string that can be used in markdown directly.
+    
+### Get-ClassDoc
+    
+- **Description**
+
+    Get class docs from a script file.
+- **Inputs**
+
+    A script file path.
+- **Outputs**
+
+    A hashtable with class names as keys and class docs as values.
     
 ### Get-DefaultSddl
     
@@ -231,7 +338,7 @@ All private Components are recored here. (Only for Contributors)
     where, `$UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value`.
     All `SDDLs` are from a origin installed native system, so we can ensure it is in the default state.
     
-- **Parameter** `PathType`
+- **Parameter** `$PathType`
 
     The path type to be checked.
     
@@ -240,11 +347,11 @@ All private Components are recored here. (Only for Contributors)
     `[System.String]` to represtent a SDDL if the `$PathType` is involved in above mappings.
     `$null` if the `$PathType` is not involved in above mappings.
     
-### Get-EnvPaths
+### Get-EnvPath
     
 - **Description**
 
-    A function to apply the class EnvPaths.
+    A function to apply the class EnvPath.
     Return an instance of it.
     
 ### Get-FormattedFileSystemPath
@@ -254,7 +361,7 @@ All private Components are recored here. (Only for Contributors)
     A function to apply the class FormattedFileSystemPath on a path.
     Return an instance of it
     
-### Get-FunctionDocs
+### Get-FunctionDoc
     
 - **Description**
 
@@ -336,16 +443,16 @@ All private Components are recored here. (Only for Contributors)
     Actually, some paths have a hierarchical relationship and can belong to both types as the above, and we return only the first type recognized in the above order.
     That is to say, the above shown order is the key to identify all customized path types.
     
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The path to be checked to get its type.
     
-- **Parameter** `SkipPlatformCheck`
+- **Parameter** `$SkipPlatformCheck`
 
     Switch to disable platform check at the beginning.
     If true(given), the platform will not be checked at the beginning.
     
-- **Parameter** `SkipPathCheck`
+- **Parameter** `$SkipPathCheck`
 
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
@@ -382,13 +489,13 @@ All private Components are recored here. (Only for Contributors)
     
     This function can help users to do the above things easily, i.e., it can move the target item to the source automatically, with essential backup.
     It can be used before setting a soft link from the source to the target.
-- **Parameter** `Target`
+- **Parameter** `$Target`
 
     The target item path.
-- **Parameter** `Source`
+- **Parameter** `$Source`
 
     The source item path.
-- **Parameter** `BackupDir`
+- **Parameter** `$BackupDir`
 
     The backup directory path.
 - **Notes**
@@ -477,16 +584,16 @@ All private Components are recored here. (Only for Contributors)
     We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
     So, to reset the attributes to standard status, we cannot directly give the target attributes, but use a specific `$some_attributes`.
     
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The path to be checked to reset its attributes.
     
-- **Parameter** `SkipPlatformCheck`
+- **Parameter** `$SkipPlatformCheck`
 
     Switch to disable platform check at the beginning.
     If true(given), the platform will not be checked at the beginning.
     
-- **Parameter** `SkipPathCheck`
+- **Parameter** `$SkipPathCheck`
 
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
@@ -571,10 +678,10 @@ All private Components are recored here. (Only for Contributors)
 - **Description**
 
     Write log to a file and output to the console.
-- **Parameter** `Message`
+- **Parameter** `$Message`
 
     The message to be logged.
-- **Parameter** `ShowVerbose`
+- **Parameter** `$ShowVerbose`
 
     Whether to show the message in verbose mode.
 - **Outputs**

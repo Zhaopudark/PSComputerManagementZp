@@ -1,4 +1,4 @@
-﻿function Assert-ValidPath4AuthorizationTools{
+﻿function Assert-ValidPath4Authorization{
 <#
 .SYNOPSIS
     Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
@@ -48,7 +48,7 @@ function Reset-PathAttribute{
     | File      | `X:\*desktop.ini`               | Hidden, System, Archive   |
     | File      | `X:\*some_symbolic_link_file`   | Archive, ReparsePoint     |
     | File      | `X:\*some_hardlink`             | Archive                   |
-    
+
     Here the `X` represents any drive disk letter. And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
     Other directories' attributes will not be reset. And other files' attributes will not be reset.
 
@@ -95,7 +95,7 @@ function Reset-PathAttribute{
         Assert-IsWindows
     }
     if (-not $SkipPathCheck){
-        Assert-ValidPath4AuthorizationTools $Path
+        Assert-ValidPath4Authorization $Path
     }
 
     if($PSCmdlet.ShouldProcess("$Path",'reset the attributes')){
@@ -170,7 +170,7 @@ function Get-PathType{
     | `NonSystemDisk[NTFS]\HardLink`                    | `X:\*some_hardlink`                   |
     | `NonSystemDisk[ReFS]\HardLink`                    | `X:\*some_hardlink`                   |
     | `NonSystemDisk[FAT32]\HardLink`                   | `X:\*some_hardlink`                   |
-    
+
     Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system.
     When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`.
     Here `Home` means be or in `${Home}` directory.
@@ -205,7 +205,7 @@ function Get-PathType{
         Assert-IsWindows
     }
     if (-not $SkipPathCheck){
-        Assert-ValidPath4AuthorizationTools $Path
+        Assert-ValidPath4Authorization $Path
     }
     if ($Path.IsInHome -or $Path.IsHome){
         $header = "Home"
@@ -309,7 +309,7 @@ function Get-DefaultSddl{
         | `NonSystemDisk[ReFS]\SymbolicLinkFile`          | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
         | `NonSystemDisk[ReFS]\File`                      | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
         | `NonSystemDisk[ReFS]\HardLink`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
-   
+
     where, `$UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value`.
     All `SDDLs` are from a origin installed native system, so we can ensure it is in the default state.
 

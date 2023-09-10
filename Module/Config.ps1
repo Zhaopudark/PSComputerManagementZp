@@ -5,13 +5,19 @@ $scripts_to_export = Get-Item "${PSScriptRoot}\Public\*.ps1"
 
 $functions_not_to_export_with_docs = @{}
 foreach ($script in $scripts_not_to_export){
-    $functions_not_to_export_with_docs += Get-FunctionDocs -Path $script.FullName
+    $functions_not_to_export_with_docs += Get-FunctionDoc -Path $script.FullName
 }
 $SortedFunctionsNotToExportWithDocs = $functions_not_to_export_with_docs.GetEnumerator() | Sort-Object -Property Name
 
+$classes_not_to_export_with_docs = @{}
+foreach ($script in $scripts_not_to_export){
+    $classes_not_to_export_with_docs += Get-ClassDoc -Path $script.FullName
+}
+$SortedClassesNotToExportWithDocs = $classes_not_to_export_with_docs.GetEnumerator() | Sort-Object -Property Name
+
 $functions_to_export_with_docs = @{}
 foreach ($script in $scripts_to_export){
-    $functions_to_export_with_docs += Get-FunctionDocs -Path $script.FullName
+    $functions_to_export_with_docs += Get-FunctionDoc -Path $script.FullName
 }
 $SortedFunctionsToExportWithDocs = $functions_to_export_with_docs.GetEnumerator() | Sort-Object -Property Name
 
@@ -24,6 +30,7 @@ $ModuleInfo = @{
     PowerShellVersion = '7.0'
     ScriptsToExport = $scripts_to_export
     SortedFunctionsNotToExportWithDocs = $SortedFunctionsNotToExportWithDocs
+    SortedClassesNotToExportWithDocs = $SortedClassesNotToExportWithDocs
     SortedFunctionsToExportWithDocs = $SortedFunctionsToExportWithDocs
     FunctionsToExport = $SortedFunctionsToExportWithDocs.Name
     CmdletsToExport = @()

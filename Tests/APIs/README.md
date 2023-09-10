@@ -1,10 +1,11 @@
 All public APIs are recored here.
-### Add-PathToCurrentMachineEnvPaths
+## Functions
+### Add-PathToCurrentMachineEnvPath
     
 - **Description**
 
-    Append a path to the current machine level env paths.
-    Before appending, the function will check and de-duplicate the current machine level env paths.
+    Append a path to the current machine level `$Env:PATH`.
+    Before appending, the function will check and de-duplicate the current machine level `$Env:PATH`.
 - **Inputs**
 
     A string of the path.
@@ -19,15 +20,15 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Add-PathToCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
     
-### Add-PathToCurrentProcessEnvPaths
+### Add-PathToCurrentProcessEnvPath
     
 - **Description**
 
-    Append a path to the current process level env paths.
-    Before appending, the function will check and de-duplicate the current process level env paths.
+    Append a path to the current process level `$Env:PATH`.
+    Before appending, the function will check and de-duplicate the current process level `$Env:PATH`.
 - **Inputs**
 
     A string of the path.
@@ -37,15 +38,15 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Add-PathToCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
     
-### Add-PathToCurrentUserEnvPaths
+### Add-PathToCurrentUserEnvPath
     
 - **Description**
 
-    Append a path to the current user level env paths.
-    Before appending, the function will check and de-duplicate the current user level env paths.
+    Append a path to the current user level `$Env:PATH`.
+    Before appending, the function will check and de-duplicate the current user level `$Env:PATH`.
 - **Inputs**
 
     A string of the path.
@@ -59,7 +60,7 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Add-PathToCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
     
 ### Get-GatewayIPV4
@@ -100,12 +101,12 @@ All public APIs are recored here.
 
     It only support IPV4.
     
-### Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser
+### Merge-RedundantEnvPathFromCurrentMachineToCurrentUser
     
 - **Description**
 
-    Merge redundant items form the current machine level env paths to the current user level.
-    Before merging, the function will check and de-duplicate the current machine level and the current user level env paths.
+    Merge redundant items form the current machine level `$Env:PATH` to the current user level.
+    Before merging, the function will check and de-duplicate the current machine level and the current user level `$Env:PATH`.
 - **Inputs**
 
     None.
@@ -119,9 +120,9 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Description**
 
-    Sometimes, we may find some redundant items that both in the machine level and the user level env paths.
+    Sometimes, we may find some redundant items that both in the machine level and the user level `$Env:PATH`.
     This may because we have installed some software in different privileges.
-    This function will help us to merge the redundant items from the machine level env paths to the user level.
+    This function will help us to merge the redundant items from the machine level `$Env:PATH` to the user level.
     The operation can symplify the `$Env:PATH`.
     
 ### Register-FSLEnvForPwsh
@@ -183,12 +184,12 @@ All public APIs are recored here.
 
     None.
     
-### Remove-MatchedPathsFromCurrentMachineEnvPaths
+### Remove-MatchedPathsFromCurrentMachineEnvPath
     
 - **Description**
 
-    Remove matched paths from the current machine level env paths.
-    Before removing, the function will check and de-duplicate the current machine level env paths.
+    Remove matched paths from the current machine level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current machine level `$Env:PATH`.
 - **Inputs**
 
     A string of pattern.
@@ -203,16 +204,16 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Remove-MatchedPathsFromCurrentMachineEnvPaths -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the machine level env paths.
+    Remove-MatchedPathsFromCurrentMachineEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the machine level `$Env:PATH`.
     ```
     
-### Remove-MatchedPathsFromCurrentProcessEnvPaths
+### Remove-MatchedPathsFromCurrentProcessEnvPath
     
 - **Description**
 
-    Remove matched paths from the current process level env paths.
-    Before removing, the function will check and de-duplicate the current process level env paths.
+    Remove matched paths from the current process level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current process level `$Env:PATH`.
 - **Inputs**
 
     A string of pattern.
@@ -222,16 +223,16 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the process level env paths.
+    Remove-MatchedPathsFromCurrentProcessEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the process level `$Env:PATH`.
     ```
     
-### Remove-MatchedPathsFromCurrentUserEnvPaths
+### Remove-MatchedPathsFromCurrentUserEnvPath
     
 - **Description**
 
-    Remove matched paths from the current user level env paths.
-    Before removing, the function will check and de-duplicate the current user level env paths.
+    Remove matched paths from the current user level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current user level `$Env:PATH`.
 - **Inputs**
 
     A string of pattern.
@@ -245,16 +246,16 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Remove-MatchedPathsFromCurrentUserEnvPaths -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the user level env paths.
+    Remove-MatchedPathsFromCurrentUserEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the user level `$Env:PATH`.
     ```
     
-### Remove-PathFromCurrentMachineEnvPaths
+### Remove-PathFromCurrentMachineEnvPath
     
 - **Description**
 
-    Remove a path from the current machine level env paths.
-    Before removing, the function will check and de-duplicate the current machine level env paths.
+    Remove a path from the current machine level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current machine level `$Env:PATH`.
 - **Inputs**
 
     A string of the path.
@@ -269,15 +270,15 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Remove-PathFromCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Remove-PathFromCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
     
-### Remove-PathFromCurrentProcessEnvPaths
+### Remove-PathFromCurrentProcessEnvPath
     
 - **Description**
 
-    Remove a path from the current process level env paths.
-    Before removing, the function will check and de-duplicate the current process level env paths.
+    Remove a path from the current process level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current process level `$Env:PATH`.
 - **Inputs**
 
     A string of the path.
@@ -287,15 +288,15 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Remove-PathFromCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Remove-PathFromCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
     
-### Remove-PathFromCurrentUserEnvPaths
+### Remove-PathFromCurrentUserEnvPath
     
 - **Description**
 
-    Remove a path from the current user level env paths.
-    Before removing, the function will check and de-duplicate the current user level env paths.
+    Remove a path from the current user level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current user level `$Env:PATH`.
 - **Inputs**
 
     A string of the path.
@@ -309,7 +310,7 @@ All public APIs are recored here.
 - **Example**
 
     ```powershell
-    Remove-PathFromCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Remove-PathFromCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
     
 ### Remove-SystemProxyIPV4ForCurrentUser
@@ -341,10 +342,10 @@ All public APIs are recored here.
     Only for window system
     Only for single user account on window system, i.e. totoally Personal Computer
     
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The path to be reset.
-- **Parameter** `Recurse`
+- **Parameter** `$Recurse`
 
     A switch parameter to indicate whether to reset the ACL of all files and directories in the path recursively.
 - **Outputs**
@@ -368,13 +369,13 @@ All public APIs are recored here.
 
     Set a junction point from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a junction point to the target.
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The path to be set.
-- **Parameter** `Target`
+- **Parameter** `$Target`
 
     The target path.
-- **Parameter** `BackupDir`
+- **Parameter** `$BackupDir`
 
     The backup directory path.
 - **Outputs**
@@ -387,13 +388,13 @@ All public APIs are recored here.
 
     Set a directory symbolic link from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The path to be set.
-- **Parameter** `Target`
+- **Parameter** `$Target`
 
     The target path.
-- **Parameter** `BackupDir`
+- **Parameter** `$BackupDir`
 
     The backup directory path.
 - **Outputs**
@@ -408,11 +409,11 @@ All public APIs are recored here.
     It does not influence system proxy.
     It only support IPV4.
     
-- **Parameter** `ServerIP`
+- **Parameter** `$ServerIP`
 
     The server IP address for proxy.
     
-- **Parameter** `PortNumber`
+- **Parameter** `$PortNumber`
 
     The port number for proxy.
     
@@ -431,13 +432,13 @@ All public APIs are recored here.
 
     Set a file symbolic link from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
-- **Parameter** `Path`
+- **Parameter** `$Path`
 
     The path to be set.
-- **Parameter** `Target`
+- **Parameter** `$Target`
 
     The target path.
-- **Parameter** `BackupDir`
+- **Parameter** `$BackupDir`
 
     The backup directory path.
 - **Outputs**
@@ -450,11 +451,11 @@ All public APIs are recored here.
 
     Set system proxy as `ServerIP:PortNumber` for the current user.
     
-- **Parameter** `ServerIP`
+- **Parameter** `$ServerIP`
 
     The server IP address for proxy.
     
-- **Parameter** `PortNumber`
+- **Parameter** `$PortNumber`
 
     The port number for proxy.
     

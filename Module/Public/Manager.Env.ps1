@@ -1,10 +1,10 @@
 
 
-function Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser{
+function Merge-RedundantEnvPathFromCurrentMachineToCurrentUser{
 <#
 .DESCRIPTION
-    Merge redundant items form the current machine level env paths to the current user level.
-    Before merging, the function will check and de-duplicate the current machine level and the current user level env paths.
+    Merge redundant items form the current machine level `$Env:PATH` to the current user level.
+    Before merging, the function will check and de-duplicate the current machine level and the current user level `$Env:PATH`.
 .INPUTS
     None.
 .OUTPUTS
@@ -14,32 +14,32 @@ function Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser{
     Need Administrator privilege.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .DESCRIPTION
-    Sometimes, we may find some redundant items that both in the machine level and the user level env paths.
+    Sometimes, we may find some redundant items that both in the machine level and the user level `$Env:PATH`.
     This may because we have installed some software in different privileges.
-    This function will help us to merge the redundant items from the machine level env paths to the user level.
+    This function will help us to merge the redundant items from the machine level `$Env:PATH` to the user level.
     The operation can symplify the `$Env:PATH`.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param()
     Assert-IsWindowsAndAdmin
-    $env_paths = [EnvPaths]::new()
-    if($PSCmdlet.ShouldProcess("Merge redundant items from the current machine level env paths to the current user level",'','')){
-        $env_paths.MergeDeDuplicatedEnvPathsFromMachineLevelToUserLevel()
+    $env_paths = [EnvPath]::new()
+    if($PSCmdlet.ShouldProcess("Merge redundant items from the current machine level `$Env:PATH` to the current user level",'','')){
+        $env_paths.MergeDeDuplicatedEnvPathFromMachineLevelToUserLevel()
     }
 }
 
-function Add-PathToCurrentProcessEnvPaths{
+function Add-PathToCurrentProcessEnvPath{
 <#
 .DESCRIPTION
-    Append a path to the current process level env paths.
-    Before appending, the function will check and de-duplicate the current process level env paths.
+    Append a path to the current process level `$Env:PATH`.
+    Before appending, the function will check and de-duplicate the current process level `$Env:PATH`.
 .INPUTS
     A string of the path.
 .OUTPUTS
     None.
 .EXAMPLE
     ```powershell
-    Add-PathToCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -47,16 +47,16 @@ function Add-PathToCurrentProcessEnvPaths{
         [Parameter(Mandatory)]
         [string]$Path
     )
-    $env_paths = [EnvPaths]::new()
-    if ($PSCmdlet.ShouldProcess("Append $Path to process level env path",'','')){
-        $env_paths.AppendProcessLevelEnvPaths($Path)
+    $env_paths = [EnvPath]::new()
+    if ($PSCmdlet.ShouldProcess("Append $Path to process level `$Env:PATH`.",'','')){
+        $env_paths.AppendProcessLevelEnvPath($Path)
     }
 }
-function Add-PathToCurrentUserEnvPaths{
+function Add-PathToCurrentUserEnvPath{
 <#
 .DESCRIPTION
-    Append a path to the current user level env paths.
-    Before appending, the function will check and de-duplicate the current user level env paths.
+    Append a path to the current user level `$Env:PATH`.
+    Before appending, the function will check and de-duplicate the current user level `$Env:PATH`.
 .INPUTS
     A string of the path.
 .OUTPUTS
@@ -66,7 +66,7 @@ function Add-PathToCurrentUserEnvPaths{
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
-    Add-PathToCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -75,17 +75,17 @@ function Add-PathToCurrentUserEnvPaths{
         [string]$Path
     )
     Assert-IsWindows
-    $env_paths = [EnvPaths]::new()
-    if ($PSCmdlet.ShouldProcess("Append $Path to user level env path",'','')){
-        $env_paths.AppendUserLevelEnvPaths($Path)
+    $env_paths = [EnvPath]::new()
+    if ($PSCmdlet.ShouldProcess("Append $Path to user level `$Env:PATH`.",'','')){
+        $env_paths.AppendUserLevelEnvPath($Path)
     }
 }
 
-function Add-PathToCurrentMachineEnvPaths{
+function Add-PathToCurrentMachineEnvPath{
 <#
 .DESCRIPTION
-    Append a path to the current machine level env paths.
-    Before appending, the function will check and de-duplicate the current machine level env paths.
+    Append a path to the current machine level `$Env:PATH`.
+    Before appending, the function will check and de-duplicate the current machine level `$Env:PATH`.
 .INPUTS
     A string of the path.
 .OUTPUTS
@@ -96,7 +96,7 @@ function Add-PathToCurrentMachineEnvPaths{
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
-    Add-PathToCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -105,24 +105,24 @@ function Add-PathToCurrentMachineEnvPaths{
         [string]$Path
     )
     Assert-IsWindowsAndAdmin
-    $env_paths = [EnvPaths]::new()
-    if ($PSCmdlet.ShouldProcess("Append $Path to machine level env path",'','')){
-        $env_paths.AppendMachineLevelEnvPaths($Path)
+    $env_paths = [EnvPath]::new()
+    if ($PSCmdlet.ShouldProcess("Append $Path to machine level `$Env:PATH`.",'','')){
+        $env_paths.AppendMachineLevelEnvPath($Path)
     }
 }
 
-function Remove-PathFromCurrentProcessEnvPaths{
+function Remove-PathFromCurrentProcessEnvPath{
 <#
 .DESCRIPTION
-    Remove a path from the current process level env paths.
-    Before removing, the function will check and de-duplicate the current process level env paths.
+    Remove a path from the current process level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current process level `$Env:PATH`.
 .INPUTS
     A string of the path.
 .OUTPUTS
     None.
 .EXAMPLE
     ```powershell
-    Remove-PathFromCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Remove-PathFromCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -130,18 +130,18 @@ function Remove-PathFromCurrentProcessEnvPaths{
         [Parameter(Mandatory)]
         [string]$Path
     )
-    $env_paths = [EnvPaths]::new()
+    $env_paths = [EnvPath]::new()
     $IsPattern = $false
-    if ($PSCmdlet.ShouldProcess("Remove $Path from process level env path",'','')){
-        $env_paths.RemoveProcessLevelEnvPaths($Path,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove $Path from process level `$Env:PATH`.",'','')){
+        $env_paths.RemoveProcessLevelEnvPath($Path,$IsPattern)
     }
 }
 
-function Remove-PathFromCurrentUserEnvPaths{
+function Remove-PathFromCurrentUserEnvPath{
 <#
 .DESCRIPTION
-    Remove a path from the current user level env paths.
-    Before removing, the function will check and de-duplicate the current user level env paths.
+    Remove a path from the current user level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current user level `$Env:PATH`.
 .INPUTS
     A string of the path.
 .OUTPUTS
@@ -151,7 +151,7 @@ function Remove-PathFromCurrentUserEnvPaths{
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
-    Remove-PathFromCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Remove-PathFromCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -160,18 +160,18 @@ function Remove-PathFromCurrentUserEnvPaths{
         [string]$Path
     )
     Assert-IsWindows
-    $env_paths = [EnvPaths]::new()
+    $env_paths = [EnvPath]::new()
     $IsPattern = $false
-    if ($PSCmdlet.ShouldProcess("Remove $Path from user level env path",'','')){
-        $env_paths.RemoveUserLevelEnvPaths($Path,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove $Path from user level `$Env:PATH`.",'','')){
+        $env_paths.RemoveUserLevelEnvPath($Path,$IsPattern)
     }
 }
 
-function Remove-PathFromCurrentMachineEnvPaths{
+function Remove-PathFromCurrentMachineEnvPath{
 <#
 .DESCRIPTION
-    Remove a path from the current machine level env paths.
-    Before removing, the function will check and de-duplicate the current machine level env paths.
+    Remove a path from the current machine level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current machine level `$Env:PATH`.
 .INPUTS
     A string of the path.
 .OUTPUTS
@@ -182,7 +182,7 @@ function Remove-PathFromCurrentMachineEnvPaths{
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
-    Remove-PathFromCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
+    Remove-PathFromCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -191,25 +191,25 @@ function Remove-PathFromCurrentMachineEnvPaths{
         [string]$Path
     )
     Assert-IsWindowsAndAdmin
-    $env_paths = [EnvPaths]::new()
+    $env_paths = [EnvPath]::new()
     $IsPattern = $false
-    if ($PSCmdlet.ShouldProcess("Remove $Path from machine level env path",'','')){
-        $env_paths.RemoveMachineLevelEnvPaths($Path,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove $Path from machine level `$Env:PATH`.",'','')){
+        $env_paths.RemoveMachineLevelEnvPath($Path,$IsPattern)
     }
 }
-function Remove-MatchedPathsFromCurrentProcessEnvPaths{
+function Remove-MatchedPathsFromCurrentProcessEnvPath{
 <#
 .DESCRIPTION
-    Remove matched paths from the current process level env paths.
-    Before removing, the function will check and de-duplicate the current process level env paths.
+    Remove matched paths from the current process level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current process level `$Env:PATH`.
 .INPUTS
     A string of pattern.
 .OUTPUTS
     None.
 .EXAMPLE
     ```powershell
-    Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the process level env paths.
+    Remove-MatchedPathsFromCurrentProcessEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the process level `$Env:PATH`.
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -217,18 +217,18 @@ function Remove-MatchedPathsFromCurrentProcessEnvPaths{
         [Parameter(Mandatory)]
         [string]$Pattern
     )
-    $env_paths = [EnvPaths]::new()
+    $env_paths = [EnvPath]::new()
     $IsPattern = $true
-    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from process level env path",'','')){
-        $env_paths.RemoveProcessLevelEnvPaths($Pattern,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from process level `$Env:PATH`.",'','')){
+        $env_paths.RemoveProcessLevelEnvPath($Pattern,$IsPattern)
     }
 }
 
-function Remove-MatchedPathsFromCurrentUserEnvPaths{
+function Remove-MatchedPathsFromCurrentUserEnvPath{
 <#
 .DESCRIPTION
-    Remove matched paths from the current user level env paths.
-    Before removing, the function will check and de-duplicate the current user level env paths.
+    Remove matched paths from the current user level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current user level `$Env:PATH`.
 .INPUTS
     A string of pattern.
 .OUTPUTS
@@ -238,8 +238,8 @@ function Remove-MatchedPathsFromCurrentUserEnvPaths{
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
-    Remove-MatchedPathsFromCurrentUserEnvPaths -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the user level env paths.
+    Remove-MatchedPathsFromCurrentUserEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the user level `$Env:PATH`.
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -248,18 +248,18 @@ function Remove-MatchedPathsFromCurrentUserEnvPaths{
         [string]$Pattern
     )
     Assert-IsWindows
-    $env_paths = [EnvPaths]::new()
+    $env_paths = [EnvPath]::new()
     $IsPattern = $true
-    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from user level env path",'','')){
-        $env_paths.RemoveUserLevelEnvPaths($Pattern,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from user level `$Env:PATH`.",'','')){
+        $env_paths.RemoveUserLevelEnvPath($Pattern,$IsPattern)
     }
 }
 
-function Remove-MatchedPathsFromCurrentMachineEnvPaths{
+function Remove-MatchedPathsFromCurrentMachineEnvPath{
 <#
 .DESCRIPTION
-    Remove matched paths from the current machine level env paths.
-    Before removing, the function will check and de-duplicate the current machine level env paths.
+    Remove matched paths from the current machine level `$Env:PATH`.
+    Before removing, the function will check and de-duplicate the current machine level `$Env:PATH`.
 .INPUTS
     A string of pattern.
 .OUTPUTS
@@ -270,8 +270,8 @@ function Remove-MatchedPathsFromCurrentMachineEnvPaths{
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
-    Remove-MatchedPathsFromCurrentMachineEnvPaths -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the machine level env paths.
+    Remove-MatchedPathsFromCurrentMachineEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the machine level `$Env:PATH`.
     ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
@@ -280,10 +280,10 @@ function Remove-MatchedPathsFromCurrentMachineEnvPaths{
         [string]$Pattern
     )
     Assert-IsWindowsAndAdmin
-    $env_paths = [EnvPaths]::new()
+    $env_paths = [EnvPath]::new()
     $IsPattern = $true
-    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from machine level env path",'','')){
-        $env_paths.RemoveMachineLevelEnvPaths($Pattern,$IsPattern)
+    if ($PSCmdlet.ShouldProcess("Remove items that match ``$($Pattern)`` from machine level `$Env:PATH`.",'','')){
+        $env_paths.RemoveMachineLevelEnvPath($Pattern,$IsPattern)
     }
 }
 function Register-FSLEnvForPwsh{
@@ -334,10 +334,10 @@ function Register-FSLEnvForPwsh{
     if ($PSCmdlet.ShouldProcess("Setup FSL for pwsh.",'','')){
         # FSL Setup
         $Env:FSLDIR =  "$FslDir"
-        Add-PathToCurrentProcessEnvPaths "${Env:FSLDIR}/share/fsl/bin"
+        Add-PathToCurrentProcessEnvPath "${Env:FSLDIR}/share/fsl/bin"
 
         if (Test-Path "${FSLDIR}/etc/fslversion" ){
-            Add-PathToCurrentProcessEnvPaths "${Env:FSLDIR}/share/fsl/bin"
+            Add-PathToCurrentProcessEnvPath "${Env:FSLDIR}/share/fsl/bin"
         }
         $Env:FSLOUTPUTTYPE = "NIFTI_GZ"
         $Env:FSLMULTIFILEQUIT = "TRUE"
