@@ -14,6 +14,7 @@ function Test-Platform{
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
+    Test-Platform -Name 'MacOS' -Verbose
     ```
 .LINK
     Refer to the [doc](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
