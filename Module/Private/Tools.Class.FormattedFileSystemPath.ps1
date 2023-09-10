@@ -6,35 +6,37 @@
     Support file system paths only!
 .DESCRIPTION
     Automatically format a path to standard format by the following procedures and rules:
-    1. Preprocess a received path with some literal check (string level, without accessing it by file system):
+    **First**: Preprocess a received path with some literal check (string level, without accessing it by file system):
         - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
         - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
         - Reduce any consecutive colons to a single `:`
         - Strip any trailing slashs.
-        - According to the platform, append a single '\' or '/' if the path ends with a colon.
-        - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
+        - According to the platform, append a single `\` or `/` if the path ends with a colon.
+        - Reduce any consecutive slashes to a single one, and convert them to `\` or `/`, according to the platform.
         - Convert the drive name to initial capital letter.
-        - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash '\' or '/',
+        - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash `\` or `/`,
             according to the platform will be added at the head.
-    2. Test the preprocessed path with file system access:
+
+    **Second**: Test the preprocessed path with file system access:
         - Check if the path exists in file system. If not, throw an error.
         - Check if the path is with wildcard characters by file system. If so, throw an error.
-            -  It means a path (an instance of this class) represents only a path, not a group of paths.
-    3. Format the path with file system access:
+        - It means a path (an instance of this class) represents only a path, not a group of paths.
+    
+    **Third** Format the path with file system access:
         - Convert it to an absolute one.
         - Convert it to an original-case one.
-            - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity),
-                items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
+            - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity), items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
             - And, in NTFS of Windows, two paths with only case differences can represent the same item, i.g., `c:\uSeRs\usER\TesT.tXt` and `C:\Users\User\test.txt`.
             - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
             - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
             - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
-    #TODO
-        Cross-platform support.
-        Currently, this class is only adapative on each single platform, but not cross-platform.
-        But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
+    
+    **#TODO **:
+        - Cross-platform support.
+        - Currently, this class is only adapative on each single platform, but not cross-platform.
+        - But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
 
-    Some properties of the path are also provided:
+    **Some properties of the path are also provided**:
         1. LiteralPath: The formatted path.
         2. OriginalPlatform: The platform of the source path.
         3. Slash: The slash of the path.

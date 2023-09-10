@@ -20,35 +20,37 @@ All private Components are recored here. (Only for Contributors)
 - **Description**
 
     Automatically format a path to standard format by the following procedures and rules:
-    1. Preprocess a received path with some literal check (string level, without accessing it by file system):
+    **First**: Preprocess a received path with some literal check (string level, without accessing it by file system):
     - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
     - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
     - Reduce any consecutive colons to a single `:`
     - Strip any trailing slashs.
-    - According to the platform, append a single '\' or '/' if the path ends with a colon.
-    - Reduce any consecutive slashes to a single one, and convert them to '\' or '/', according to the platform.
+    - According to the platform, append a single `\` or `/` if the path ends with a colon.
+    - Reduce any consecutive slashes to a single one, and convert them to `\` or `/`, according to the platform.
     - Convert the drive name to initial capital letter.
-    - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash '\' or '/',
+    - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash `\` or `/`,
     according to the platform will be added at the head.
-    2. Test the preprocessed path with file system access:
+    
+    **Second**: Test the preprocessed path with file system access:
     - Check if the path exists in file system. If not, throw an error.
     - Check if the path is with wildcard characters by file system. If so, throw an error.
-    -  It means a path (an instance of this class) represents only a path, not a group of paths.
-    3. Format the path with file system access:
+    - It means a path (an instance of this class) represents only a path, not a group of paths.
+    
+    **Third** Format the path with file system access:
     - Convert it to an absolute one.
     - Convert it to an original-case one.
-    - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity),
-    items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
+    - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity), items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
     - And, in NTFS of Windows, two paths with only case differences can represent the same item, i.g., `c:\uSeRs\usER\TesT.tXt` and `C:\Users\User\test.txt`.
     - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
     - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
     - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
-    #TODO
-    Cross-platform support.
-    Currently, this class is only adapative on each single platform, but not cross-platform.
-    But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
     
-    Some properties of the path are also provided:
+    **#TODO **:
+    - Cross-platform support.
+    - Currently, this class is only adapative on each single platform, but not cross-platform.
+    - But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
+    
+    **Some properties of the path are also provided**:
     1. LiteralPath: The formatted path.
     2. OriginalPlatform: The platform of the source path.
     3. Slash: The slash of the path.
@@ -436,12 +438,9 @@ All private Components are recored here. (Only for Contributors)
     | `NonSystemDisk[ReFS]\HardLink`                    | `X:\*some_hardlink`                   |
     | `NonSystemDisk[FAT32]\HardLink`                   | `X:\*some_hardlink`                   |
     
-    Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system.
-    When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`.
-    Here `Home` means be or in `${Home}` directory.
+    Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system. When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`. Here `Home` means be or in `${Home}` directory.
     
-    Actually, some paths have a hierarchical relationship and can belong to both types as the above, and we return only the first type recognized in the above order.
-    That is to say, the above shown order is the key to identify all customized path types.
+    Actually, some paths have a hierarchical relationship and can belong to both types as the above, and we return only the first type recognized in the above order. That is to say, the above shown order is the key to identify all customized path types.
     
 - **Parameter** `$Path`
 
@@ -485,6 +484,7 @@ All private Components are recored here. (Only for Contributors)
 
     When we want to set a soft link (symbolic link or junction point) from `A` to `B`, as $A\rightarrow B$, we may find that `A` is non-existing while `B` is existing.
     That is not our expectation. We may need to move `B` to `A` at first, then go back to set the link $A\rightarrow B$.
+    
     Worsely, if we find `A` and `B` are both existing at first, we may need to consider merging or backuping procedures.
     
     This function can help users to do the above things easily, i.e., it can move the target item to the source automatically, with essential backup.
@@ -570,9 +570,7 @@ All private Components are recored here. (Only for Contributors)
     | File      | `X:\*some_hardlink`             | Archive                   |
     
     Here the `X` represents any drive disk letter. And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
-    Other directories' attributes will not be reset. And other files' attributes will not be reset.
-    
-    See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
+    Other directories' attributes will not be reset. And other files' attributes will not be reset. See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
     
     Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
     ```powershell

@@ -50,9 +50,7 @@ function Reset-PathAttribute{
     | File      | `X:\*some_hardlink`             | Archive                   |
 
     Here the `X` represents any drive disk letter. And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
-    Other directories' attributes will not be reset. And other files' attributes will not be reset.
-
-    See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
+    Other directories' attributes will not be reset. And other files' attributes will not be reset. See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
 
     Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
     ```powershell
@@ -171,12 +169,9 @@ function Get-PathType{
     | `NonSystemDisk[ReFS]\HardLink`                    | `X:\*some_hardlink`                   |
     | `NonSystemDisk[FAT32]\HardLink`                   | `X:\*some_hardlink`                   |
 
-    Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system.
-    When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`.
-    Here `Home` means be or in `${Home}` directory.
+    Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system. When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`. Here `Home` means be or in `${Home}` directory.
 
-    Actually, some paths have a hierarchical relationship and can belong to both types as the above, and we return only the first type recognized in the above order.
-    That is to say, the above shown order is the key to identify all customized path types.
+    Actually, some paths have a hierarchical relationship and can belong to both types as the above, and we return only the first type recognized in the above order. That is to say, the above shown order is the key to identify all customized path types.
 
 .PARAMETER Path
     The path to be checked to get its type.

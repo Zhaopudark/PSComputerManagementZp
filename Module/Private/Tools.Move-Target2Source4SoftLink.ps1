@@ -7,6 +7,7 @@ function Move-Target2Source4SoftLink{
 .DESCRIPTION
     When we want to set a soft link (symbolic link or junction point) from `A` to `B`, as $A\rightarrow B$, we may find that `A` is non-existing while `B` is existing.
     That is not our expectation. We may need to move `B` to `A` at first, then go back to set the link $A\rightarrow B$.
+    
     Worsely, if we find `A` and `B` are both existing at first, we may need to consider merging or backuping procedures.
 
     This function can help users to do the above things easily, i.e., it can move the target item to the source automatically, with essential backup.
