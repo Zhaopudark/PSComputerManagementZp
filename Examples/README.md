@@ -159,7 +159,7 @@ Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 # About Reset Authorization on Windows
 
-For more information on the motivation, rationale, logic, and usage of function `Reset-Authorization`, see the [post here](https://little-train.com/posts/7fdde8eb.html)
+For more information on the motivation, rationale, logic, and usage of function `Reset-Authorization`, see the [post](https://little-train.com/posts/7fdde8eb.html)
 
 Please run PowerShell with `Administrator` privilege. 
 
@@ -184,7 +184,7 @@ try {
     Remove-Module PSComputerManagementZp
 }
 catch {
-    Write-Logs  "Set-Authorization Exception: $PSItem"
-    Write-Logs  "Operation has been skipped on $Path."
+    Write-Log  "Set-Authorization Exception: $PSItem"
+    Write-Log  "Operation has been skipped on $Path."
 }
 ```

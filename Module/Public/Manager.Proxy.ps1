@@ -3,22 +3,23 @@
 .DESCRIPTION
     Get the gateway IP address(IPV4) of the current system.
 .INPUTS
-    None
+    None.
 .OUTPUTS
-    System.String
+    A string of the gateway IP address.
 .NOTES
     It only support IPV4.
+    Originally, refer to the post [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
+    But there will be a warning like:
+    ```markdown
+    File 'xxx' uses WMI cmdlet. For PowerShell 3.0 and above, use CIM cmdlet, which perform the same tasks as the WMI cmdlets.
+    The CIM cmdlets comply with WS-Management (WSMan) standards and with the Common Information Model (CIM) standard, which enables the cmdlets to use the same techniques
+    to manage Windows computers and those running other operating systems.
+    ```
+    So in this function, `Get-CimInstance` is used to replace `Get-WmiObject`
 #>
     [CmdletBinding()]
     param()
     if (Test-Platform 'Windows'){
-        # get Gateway IP, see https://blog.csdn.net/YOLO3/article/details/81117952
-        # $wmi = Get-WmiObject win32_networkadapterconfiguration -filter "ipenabled = 'true'"
-        # File 'ProxyTools.psm1' uses WMI cmdlet. For PowerShell 3.0 and above, use CIM cmdlet
-        # which perform the same tasks as the WMI cmdlets. The CIM cmdlets comply with WS-Management (WSMan) standards
-        # and with the Common Information Model (CIM) standard, which enables the cmdlets to use the same techniques
-        # to manage Windows computers and those running other operating systems.
-        # So, use Get-CimInstance to replace Get-WmiObject
         $wmi = Get-CimInstance win32_networkadapterconfiguration -filter "ipenabled = 'true'"
         return $wmi.DefaultIPGateway
     }elseif (Test-Platform 'Linux'){
@@ -28,7 +29,7 @@
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
         return $gateway_ip
     }else{
-        Write-Logs  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        Write-Log  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
     }
 }
@@ -37,9 +38,9 @@ function Get-LocalHostIPV4{
 .DESCRIPTION
     Get the localhost IP address(IPV4) of the current system.
 .INPUTS
-    None
+    None.
 .OUTPUTS
-    System.String
+    A string of the localhost IP address.
 .NOTES
     It only support IPV4.
 #>
@@ -56,13 +57,6 @@ function Set-SystemProxyIPV4ForCurrentUser{
 <#
 .DESCRIPTION
     Set system proxy as `ServerIP:PortNumber` for the current user.
-    It does not influence environment variables, such as
-        `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
-    It is not for all users (not on `local machine` level).
-    Automatically add bypass list.
-    It only support IPV4.
-    Refer to [windows-core-proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
-    Refer to [Chat-GPT](https://chat.openai.com/)
 
 .PARAMETER ServerIP
     The server IP address for proxy.
@@ -70,14 +64,24 @@ function Set-SystemProxyIPV4ForCurrentUser{
 .PARAMETER PortNumber
     The port number for proxy.
 
+.OUTPUTS
+    None.
+
 .EXAMPLE
     ```powershell
     Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890
     ```
-
 .NOTES
+    It does not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
+    It is not for all users (not on `local machine` level).
+    Automatically add bypass list.
+    It only support IPV4.
     Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that hosted
     by a Windows 11 `Virtual Machine` `Host Machine`.
+.LINK
+    Refer to [windows-core-proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
+    Refer to [Chat-GPT](https://chat.openai.com/)
+
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -87,45 +91,40 @@ function Set-SystemProxyIPV4ForCurrentUser{
         [int]$PortNumber
     )
 
-    # 设置绕过代理的地址
-    # 其中 <local> 和Window系统设置中，代理设置的`Don‘t use proxy server for local (intranet) addresses` 选项有关
+    # set bypass address
+    # where <local> and the `Don‘t use proxy server for local (intranet) addresses` option in Windows Settings are related
     $bypass_address = "<local>;localhost;127.*;10.*;172.16.*;" +`
     "172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;" +`
     "172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;192.168.*"
 
-    # 将代理服务器地址和端口地址合并
+    # merge the server ip and port number
     $proxyAddress = "${ServerIP}:${PortNumber}"
-    # 指定注册表项
+    # assign the registry key on the current user
     $regKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'
 
     if ($PSCmdlet.ShouldProcess("Set System Proxy IPV4 as $proxyAddress on $regKey",'','')){
-        # 设置系统代理(修改当前用户的注册表项, 即当前用户级别)
+        # set system proxy(modify the registry)
+
         Set-ItemProperty -Path $regKey -Name 'ProxyServer' -Value $proxyAddress
         Set-ItemProperty -Path $regKey -Name 'ProxyEnable' -Value 1
         Set-ItemProperty -Path $regKey -Name 'ProxyOverride' -Value $bypass_address
-
-
-        # 设置绕过代理的地址
-        # $existingBypass = (Get-ItemProperty -Path $regKey -Name 'ProxyOverride').ProxyOverride
-        # $newBypass = "$existingBypass;$bypass_address"
-        # Set-ItemProperty -Path $regKey -Name 'ProxyOverride' -Value $newBypass
     }
-    # 显示设置后的代理信息
+    # show the proxy info after setting
     $proxyInfo = Get-ItemProperty -Path $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
-    Write-Logs $proxyInfo -ShowVerbose
+    Write-Log $proxyInfo -ShowVerbose
 }
 function Remove-SystemProxyIPV4ForCurrentUser{
 <#
 .DESCRIPTION
     Revokes all opeartions in function `Set-SystemProxyIPV4ForCurrentUser`
 .INPUTS
-    None
+    None.
 .OUTPUTS
-    None
+    None.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param()
-    # 指定注册表项
+    # assign the registry key on the current user
     $regKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'
     if ($PSCmdlet.ShouldProcess("Unset System Proxy IPV4 on $regKey",'','')){
         Set-ItemProperty $regKey -Name 'ProxyServer' -Value ''
@@ -139,9 +138,9 @@ function Remove-SystemProxyIPV4ForCurrentUser{
         # `Windows Settings->Network & Internet->Proxy` still exists)
     }
 
-    # 显示设置后的代理信息
+    # show the proxy info after removing
     $proxyInfo = Get-ItemProperty $regKey | Select-Object -Property ProxyServer, ProxyEnable, ProxyOverride
-    Write-Logs $proxyInfo -ShowVerbose
+    Write-Log $proxyInfo -ShowVerbose
 }
 function Set-EnvProxyIPV4ForShellProcess{
 <#
@@ -156,6 +155,8 @@ function Set-EnvProxyIPV4ForShellProcess{
 .PARAMETER PortNumber
     The port number for proxy.
 
+.OUTPUTS
+    None.
 .EXAMPLE
     ```powershell
     Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890
@@ -180,11 +181,11 @@ function Set-EnvProxyIPV4ForShellProcess{
 function Remove-EnvProxyIPV4ForShellProcess{
 <#
 .DESCRIPTION
-    Revokes all opeartions in function `Set-EnvProxyIPV4ForShellProcess`
+    Revokes all opeartions in function `Set-EnvProxyIPV4ForShellProcess`.
 .INPUTS
-    None
+    None.
 .OUTPUTS
-    None
+    None.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param()

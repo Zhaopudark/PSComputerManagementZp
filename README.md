@@ -4,6 +4,15 @@
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
 [![ReleaseDownloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total.svg?style=flat-square)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
 
+| Documentations                                               |
+| ------------------------------------------------------------ |
+| [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md) |
+| [![Public-Examples](https://img.shields.io/badge/Public-Examples-royalblue)](Examples/README.md) |
+| [![Public-AIPs](https://img.shields.io/badge/Public-AIPs-orange)](Tests/APIs/README.md) |
+| [![Private-Components](https://img.shields.io/badge/Private-Components-pink)](Tests/Components/README.md) (Only for Contributors) |
+
+
+
 | Tests                                                        | Documentations                                               |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [![Intsallation-Tests.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md) |
@@ -102,7 +111,7 @@ Here are some formative rules of this module's development:
 - **Variable Naming**: `snake_case` is used to indicate private variables while `PascalCase` is used for non-private variables. So, in code style consistency, please consider the above rule.
 - **Paths**: Almost all components deal only with existing and accessible paths. If a path is non-existing or not accessible, errors or warnings will be thrown. This rule is to avoid unexpected operations and can be seen in almost all components of this module.
 - **Comments** : `.SYNOPSIS` and `.DESCRIPTION` are both used to describe the function's usage and details, with the former being a brief description of key points and the latter being a detailed description with rationales and ideas. And, `.SYNOPSIS` may use more normal language than `.DESCRIPTION`. There is no restriction that they must be used together.
-- **Logging**: The principle is that when making logs, the logs will be written into files anyway. If a log needs to be displayed in the console, it will be done as a `Verbose` message. The private function `Write-FileLogs` should only be used in the private function `Write-Logs`, and the latter is the only logging function in all components. Also, the latter is not an API function for normal users.
+- **Logging**: The principle is that when making logs, the logs will be written into files anyway. If a log needs to be displayed in the console, it will be done as a `Verbose` message. The private function `Write-FileLog` should only be used in the private function `Write-Log`, and the latter is the only logging function in all components. Also, the latter is not an API function for normal users.
 - **Hardlinks**: Although hard links can sometimes be considered normal files, in this module, it is recommended to restrict any `copy-` or `move-` operations on hard links to avoid potential problems.
 - **Version Iteration**: To be consistent with both [PowerShell Gallery](https://www.powershellgallery.com/) and GitHub's pre-release feature of repositories, this module has supported pre-release with suffix labels such as `beta0`, `beta1` etc. Take the version `v0.0.3-beta0` as an example:
   -  The character `v` is used only for GitHub's as an indicator of tags. The actually version is `0.0.3-beta0`, which is the same to the one in [PowerShell Gallery](https://www.powershellgallery.com/).

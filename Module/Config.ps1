@@ -1,13 +1,18 @@
 . "${PSScriptRoot}\Private\BasicTools.Scripts.ps1"
 
+$scripts_not_to_export = Get-Item "${PSScriptRoot}\Private\*.ps1"
 $scripts_to_export = Get-Item "${PSScriptRoot}\Public\*.ps1"
 
-$functions_to_export_with_docs = @{}
+$functions_not_to_export_with_docs = @{}
+foreach ($script in $scripts_not_to_export){
+    $functions_not_to_export_with_docs += Get-FunctionDocs -Path $script.FullName
+}
+$SortedFunctionsNotToExportWithDocs = $functions_not_to_export_with_docs.GetEnumerator() | Sort-Object -Property Name
 
+$functions_to_export_with_docs = @{}
 foreach ($script in $scripts_to_export){
     $functions_to_export_with_docs += Get-FunctionDocs -Path $script.FullName
 }
-
 $SortedFunctionsToExportWithDocs = $functions_to_export_with_docs.GetEnumerator() | Sort-Object -Property Name
 
 $ModuleInfo = @{
@@ -18,6 +23,7 @@ $ModuleInfo = @{
     Description = 'A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2 and Linux.'
     PowerShellVersion = '7.0'
     ScriptsToExport = $scripts_to_export
+    SortedFunctionsNotToExportWithDocs = $SortedFunctionsNotToExportWithDocs
     SortedFunctionsToExportWithDocs = $SortedFunctionsToExportWithDocs
     FunctionsToExport = $SortedFunctionsToExportWithDocs.Name
     CmdletsToExport = @()
@@ -31,8 +37,8 @@ $ModuleInfo = @{
 }
 
 # NOTE: should use `.` not `&` to add items into current scope
-# see https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope
-# https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3
+# see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope)
+# also see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3)
 
 . "${PSScriptRoot}\Private\BasicTools.Platform.ps1"
 . "${PSScriptRoot}\Private\BasicTools.Logger.ps1" -LoggingPath "${Home}\.log\$($ModuleInfo.ModuleName)" -ModuleVersion $ModuleInfo.ModuleVersion

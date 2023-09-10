@@ -4,15 +4,19 @@ function Test-Platform{
 .DESCRIPTION
     Test if the current platform is compatible with the arg `Name`.
     Currently, it only support Windows, Linux and Wsl2.
-    If $Verbose is given, it will show the result.
+    If `$Verbose` is given, it will show the result.
+.INPUTS
+    A string to indicate the platform name.
+.OUTPUTS
+    `$true` if compatible, otherwise `$false`.
 .EXAMPLE
     ```powershell
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
     ```
-.OUTPUTS
-    $true if compatible, otherwise $false.
+.LINK
+    Refer to the [doc](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
 #>
     [CmdletBinding()]
     [OutputType([bool])]
@@ -21,21 +25,6 @@ function Test-Platform{
         [ValidateNotNullOrEmpty()]
         [string]$Name
     )
-    # if ($IsWindows){
-    #     Write-Verbose "Windows"
-    #     return 'Windows'
-    # } elseif ($IsLinux -and (Test-IsWSL2)){
-    #     Write-Verbose "Wsl2"
-    #     return 'Wsl2'
-    # } elseif ($IsLinux -and(!(Test-IsWSL2))){
-    #     Write-Verbose "Linux"
-    #     return 'Linux'
-    # } else {
-    #     Write-Warning  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-    #     return $null
-    # }
-    # see https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux
-    # for more information about $IsWindows and $IsLinux
     if ($IsWindows){
         if ($Name.ToLower() -eq "windows"){
             Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
@@ -66,6 +55,14 @@ function Test-Platform{
 }
 # Linux Only
 function Test-IsWSL2{
+<#
+.DESCRIPTION
+    Test if the current platform is Wsl2.
+.INPUTS
+    None.
+.OUTPUTS
+    `$true` if Wsl2, otherwise `$false`.
+#>
     [CmdletBinding()]
     [OutputType([bool])]
     param ()
@@ -73,15 +70,31 @@ function Test-IsWSL2{
     return $output.Contains("WSL2")
 }
 function Assert-IsLinuxOrWSL2{
+<#
+.DESCRIPTION
+    Assert if the current platform is Linux or Wsl2.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
     [CmdletBinding()]
     [OutputType([void])]
     param ()
     if (!(Test-Platform -Name 'Linux') -or !((Test-Platform -Name 'Wsl2'))){
         throw "The current platform shoule be Linux or Wsl2 but it is $($PSVersionTable.Platform)."
-    } 
+    }
 }
 # Windows Only
 function Test-AdminPermission {
+<#
+.DESCRIPTION
+    Test if the current process is in AdminPermission.
+.INPUTS
+    None.
+.OUTPUTS
+    `$true` if in AdminPermission, otherwise `$false`.
+#>
     [CmdletBinding()]
     [OutputType([bool])]
     param()
@@ -95,6 +108,14 @@ function Test-AdminPermission {
     }
 }
 function Assert-IsWindows{
+<#
+.DESCRIPTION
+    Assert if the current platform is Windows.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
     [CmdletBinding()]
     [OutputType([void])]
     param()
@@ -103,6 +124,14 @@ function Assert-IsWindows{
     }
 }
 function Assert-AdminPermission {
+<#
+.DESCRIPTION
+    Assert if the current process is in AdminPermission.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
     [CmdletBinding()]
     [OutputType([void])]
     param()
@@ -112,6 +141,14 @@ function Assert-AdminPermission {
     }
 }
 function Assert-IsWindowsAndAdmin{
+<#
+.DESCRIPTION
+    Assert if the current platform is Windows and the current process is in AdminPermission.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
     [CmdletBinding()]
     [OutputType([bool])]
     param()
@@ -119,6 +156,15 @@ function Assert-IsWindowsAndAdmin{
     Assert-AdminPermission
 }
 function Assert-AdminRobocopyAvailable{
+<#
+.DESCRIPTION
+    Assert the robocopy command is available.
+    And assert if the current platform is Windows and the current process is in AdminPermission.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
     [CmdletBinding()]
     [OutputType([void])]
     param()

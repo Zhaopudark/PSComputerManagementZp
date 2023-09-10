@@ -1,10 +1,7 @@
 ﻿class FormattedFileSystemPath {
 <#
 .SYNOPSIS
-    A class that receives a file system path,
-        formats the path automatically when initialized,
-        holds the formatted path,
-        and provides some useful attributes(properties) simultaneously for a quick check.
+    A class that receives a file system path, formats the path automatically when initialized, holds the formatted path, and provides some useful attributes(properties) simultaneously for a quick check.
 .NOTES
     Support file system paths only!
 .DESCRIPTION
@@ -26,7 +23,7 @@
     3. Format the path with file system access:
         - Convert it to an absolute one.
         - Convert it to an original-case one.
-            - Even though, by default(https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity),
+            - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity),
                 items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
             - And, in NTFS of Windows, two paths with only case differences can represent the same item, i.g., `c:\uSeRs\usER\TesT.tXt` and `C:\Users\User\test.txt`.
             - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
@@ -76,6 +73,9 @@
     | (Unix) Existing Path      | Given(Input) Path         | Formatted Path    |
     | ------------------------- | ------------------------- | ----------------- |
     | /home/uSer                | /home/uSer                | /home/uSer/       |
+.LINK
+    Refer to the [default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
+    Refer to the [methods](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path.
 #>
     [ValidateNotNullOrEmpty()][string] $LiteralPath
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform

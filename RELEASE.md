@@ -1,7 +1,7 @@
 # Release v0.0.3
 
 ## Release v0.0.3-beta0
-- Improve the components in `PlatformTools.ps1`. 
+- Rename `Write-FileLogs` to `Write-FileLog` and `Write-Logs` to `Write-Log`.
 - Make sure all `Assert-` functions return void.
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.

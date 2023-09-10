@@ -2,7 +2,7 @@ function Reset-Authorization{
 <#
 .SYNOPSIS
 Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
-For more information on the motivations, rationale, logic, limitations and usage of this function, see https://little-train.com/posts/7fdde8eb.html
+For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/7fdde8eb.html).
 
 .DESCRIPTION
     Reset ACL of `$Path` to its default state by 3 steps:
@@ -13,6 +13,12 @@ For more information on the motivations, rationale, logic, limitations and usage
     Only for window system
     Only for single user account on window system, i.e. totoally Personal Computer
 
+.PARAMETER Path
+    The path to be reset.
+.PARAMETER Recurse
+    A switch parameter to indicate whether to reset the ACL of all files and directories in the path recursively.
+.OUTPUTS
+    None.
 .COMPONENT
     ```powershell
         $new_acl = Get-Acl -LiteralPath $Path
@@ -20,6 +26,8 @@ For more information on the motivations, rationale, logic, limitations and usage
         $new_acl.SetSecurityDescriptorSddlForm($sddl)
         Set-Acl -LiteralPath $Path -AclObject $new_acl
     ```
+.LINK
+    Refer to the [post](https://little-train.com/posts/7fdde8eb.html) for more information about this function.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -37,18 +45,18 @@ For more information on the motivations, rationale, logic, limitations and usage
             Reset-PathAttribute $Path -SkipPlatformCheck -SkipPathCheck
             if ($new_acl.Sddl -ne $sddl){
                 try {
-                    Write-Logs  "`$Path is:`n`t $Path"
-                    Write-Logs  "Current Sddl is:`n`t $($new_acl.Sddl)"
-                    Write-Logs  "Target Sddl is:`n`t $($sddl)"
+                    Write-Log  "`$Path is:`n`t $Path"
+                    Write-Log  "Current Sddl is:`n`t $($new_acl.Sddl)"
+                    Write-Log  "Target Sddl is:`n`t $($sddl)"
 
                     $new_acl.SetSecurityDescriptorSddlForm($sddl)
-                    Write-Logs  "After dry-run, the sddl is:`n`t $($new_acl.Sddl)"
+                    Write-Log  "After dry-run, the sddl is:`n`t $($new_acl.Sddl)"
 
                     Set-Acl -LiteralPath $Path -AclObject $new_acl
-                    Write-Logs  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
+                    Write-Log  "After applying ACL modification, the sddl is:`n`t $((Get-Acl -LiteralPath $Path).Sddl)"
                 }
                 catch [System.ArgumentException]{
-                    Write-Logs  "`$Path is too long: '$Path'"
+                    Write-Log  "`$Path is too long: '$Path'"
                 }
             }
             if ($Recurse){
@@ -85,7 +93,7 @@ For more information on the motivations, rationale, logic, limitations and usage
         }
     }
     catch {
-        Write-Logs  "Reset-Authorization Exception: $PSItem"
-        Write-Logs  "Operation has been skipped on $Path."
+        Write-Log  "Reset-Authorization Exception: $PSItem"
+        Write-Log  "Operation has been skipped on $Path."
     }
 }

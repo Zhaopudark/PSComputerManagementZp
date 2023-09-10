@@ -3,17 +3,37 @@ $ErrorActionPreference = 'Stop'
 . "${PSScriptRoot}\Module\Config.ps1"
 
 # check release version
-Assert-ReleaseVersionConsistency -ModuleVersion $ModuleInfo.ModuleVersion -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
-# check and get pre-release string 
+Assert-ReleaseVersionConsistency -Version $ModuleInfo.ModuleVersion -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
+# check and get pre-release string
 $ModuleInfo.Prerelease = Get-PreReleaseString -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
 
 # generate APIs README.md
-$api_content = @()
+$api_content = @("All public APIs are recored here.")
 foreach ($entry in $ModuleInfo.SortedFunctionsToExportWithDocs){
     $api_content += "### $($entry.Name)"
-    $api_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
+    if ($entry.Value){
+        $api_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
+    }
+    else{
+        $api_content += ''
+    }
 }
 $api_content | Set-Content -Path "${PSScriptRoot}\Tests\APIs\README.md"
+
+# generate Components README.md
+$component_content = @("All private Components are recored here. (Only for Contributors)")
+foreach ($entry in $ModuleInfo.SortedFunctionsNotToExportWithDocs){
+    $component_content += "### $($entry.Name)"
+    if ($entry.Value){
+        $component_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
+    }
+    else{
+        $component_content += ''
+    }
+}
+$component_content | Set-Content -Path "${PSScriptRoot}\Tests\Components\README.md"
+
+
 
 if (!(Test-Path -LiteralPath $ModuleInfo.BuildPath)){
     New-Item -Path $ModuleInfo.BuildPath -ItemType Directory

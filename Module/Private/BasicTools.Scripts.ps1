@@ -29,6 +29,9 @@ function Get-FunctionDocs{
         if ($comment_matched.Count -ne 0){
             $function_comment = $comment_matched.Matches.Groups[1].Value
         }
+        else{
+            $function_comment = ''
+        }
         $function_name_with_docs[$function_name] = $function_comment
     }
     return $function_name_with_docs
@@ -39,18 +42,7 @@ function Format-Doc2Markdown{
 .DESCRIPTION
     Convert a function doc to markdown string with a fixed format.
 .NOTES
-    The formatting rule is as:
-    ```powershell
-    .SYNOPSIS
-        xxx
-    .DESCRIPTION
-        xxx
-    .PARAMETER Aa
-        xxx
-    .PARAMETER Bb
-        xxx
-    ```
-    to
+    The formatted markdown string is like this:
     ```markdown
     - Synopsis
         
@@ -76,6 +68,7 @@ function Format-Doc2Markdown{
         [Parameter(Mandatory)]
         [string]$DocString
     )
+    $function_comment = $null
     if ($DocString){
         $comment_lines = $DocString -split '\r?\n'
         $block = @()
@@ -101,6 +94,14 @@ function Format-Doc2Markdown{
 }
 
 function Get-PreReleaseString{
+<#
+.DESCRIPTION
+    Get the pre-release string from a release note file.
+.INPUTS
+    A release note file path.
+.OUTPUTS
+    A string of the pre-release string.
+#>
     [OutputType([string])]
     param(
         [Parameter(Mandatory)]
@@ -127,18 +128,28 @@ function Get-PreReleaseString{
 }
 
 function Assert-ReleaseVersionConsistency{
+<#
+.DESCRIPTION
+    Assert if the release version in the release note file is consistent with the given version.
+.PARAMETER Version
+    The version.
+.PARAMETER ReleaseNotesPath
+    The release note file path.
+.OUTPUTS
+    None.
+#>
     param(
         [Parameter(Mandatory)]
-        [string]$ModuleVersion,
+        [string]$Version,
         [Parameter(Mandatory)]
         [string]$ReleaseNotesPath
     )
 
     $release_title = Get-Content $ReleaseNotesPath | Select-String -Pattern "^# " | Select-Object -First 1
     if ($release_title -match 'v([\d]+\.[\d]+\.[\d]+)'){
-        $version = $Matches[1]
-        if (!($version -ceq $ModuleInfo.ModuleVersion)){
-            throw "[Imcompatible version] The newest version in $ReleaseNotesPath is $version, but it should be $ModuleVersion."
+        $release_version = $Matches[1]
+        if (!($release_version -ceq $Version)){
+            throw "[Imcompatible version] The newest version in $ReleaseNotesPath is $release_version, but it should be $Version."
         }
     }else{
         throw "[Invalid release title] The release title in $ReleaseNotesPath is $release_title, but it should be like '# xxx v0.0.1'."

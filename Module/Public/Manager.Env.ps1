@@ -2,13 +2,17 @@
 
 function Merge-RedundantEnvPathsFromCurrentMachineToCurrentUser{
 <#
-.SYNOPSIS
+.DESCRIPTION
     Merge redundant items form the current machine level env paths to the current user level.
     Before merging, the function will check and de-duplicate the current machine level and the current user level env paths.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
     Need Administrator privilege.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .DESCRIPTION
     Sometimes, we may find some redundant items that both in the machine level and the user level env paths.
     This may because we have installed some software in different privileges.
@@ -29,6 +33,10 @@ function Add-PathToCurrentProcessEnvPaths{
 .DESCRIPTION
     Append a path to the current process level env paths.
     Before appending, the function will check and de-duplicate the current process level env paths.
+.INPUTS
+    A string of the path.
+.OUTPUTS
+    None.
 .EXAMPLE
     ```powershell
     Add-PathToCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
@@ -49,9 +57,13 @@ function Add-PathToCurrentUserEnvPaths{
 .DESCRIPTION
     Append a path to the current user level env paths.
     Before appending, the function will check and de-duplicate the current user level env paths.
+.INPUTS
+    A string of the path.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
     Add-PathToCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
@@ -74,10 +86,14 @@ function Add-PathToCurrentMachineEnvPaths{
 .DESCRIPTION
     Append a path to the current machine level env paths.
     Before appending, the function will check and de-duplicate the current machine level env paths.
+.INPUTS
+    A string of the path.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
     Need Administrator privilege.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
     Add-PathToCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
@@ -100,6 +116,10 @@ function Remove-PathFromCurrentProcessEnvPaths{
 .DESCRIPTION
     Remove a path from the current process level env paths.
     Before removing, the function will check and de-duplicate the current process level env paths.
+.INPUTS
+    A string of the path.
+.OUTPUTS
+    None.
 .EXAMPLE
     ```powershell
     Remove-PathFromCurrentProcessEnvPaths -Path 'C:\Program Files\Git\cmd'
@@ -122,9 +142,13 @@ function Remove-PathFromCurrentUserEnvPaths{
 .DESCRIPTION
     Remove a path from the current user level env paths.
     Before removing, the function will check and de-duplicate the current user level env paths.
+.INPUTS
+    A string of the path.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
     Remove-PathFromCurrentUserEnvPaths -Path 'C:\Program Files\Git\cmd'
@@ -148,10 +172,14 @@ function Remove-PathFromCurrentMachineEnvPaths{
 .DESCRIPTION
     Remove a path from the current machine level env paths.
     Before removing, the function will check and de-duplicate the current machine level env paths.
+.INPUTS
+    A string of the path.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
     Need Administrator privilege.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
     Remove-PathFromCurrentMachineEnvPaths -Path 'C:\Program Files\Git\cmd'
@@ -174,6 +202,10 @@ function Remove-MatchedPathsFromCurrentProcessEnvPaths{
 .DESCRIPTION
     Remove matched paths from the current process level env paths.
     Before removing, the function will check and de-duplicate the current process level env paths.
+.INPUTS
+    A string of pattern.
+.OUTPUTS
+    None.
 .EXAMPLE
     ```powershell
     Remove-MatchedPathsFromCurrentProcessEnvPaths -Pattern 'Git'
@@ -197,9 +229,13 @@ function Remove-MatchedPathsFromCurrentUserEnvPaths{
 .DESCRIPTION
     Remove matched paths from the current user level env paths.
     Before removing, the function will check and de-duplicate the current user level env paths.
+.INPUTS
+    A string of pattern.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
     Remove-MatchedPathsFromCurrentUserEnvPaths -Pattern 'Git'
@@ -224,10 +260,14 @@ function Remove-MatchedPathsFromCurrentMachineEnvPaths{
 .DESCRIPTION
     Remove matched paths from the current machine level env paths.
     Before removing, the function will check and de-duplicate the current machine level env paths.
+.INPUTS
+    A string of pattern.
+.OUTPUTS
+    None.
 .NOTES
     Support Windows only.
     Need Administrator privilege.
-    See https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3 for ShouldProcess warnings given by PSScriptAnalyzer.
+    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 .EXAMPLE
     ```powershell
     Remove-MatchedPathsFromCurrentMachineEnvPaths -Pattern 'Git'
@@ -264,7 +304,10 @@ function Register-FSLEnvForPwsh{
     export FSLDIR PATH
     . ${FSLDIR}/etc/fslconf/fsl.sh
     ```
-
+.INPUTS
+    A path string of the FSL directory.
+.OUTPUTS
+    None.
 .NOTES
     When it comes to setup FSL, the official scripts [fslinstaller.py](https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py)
     do not support pwsh, but support bash. It will automatically register procedures in .profile. to setup FSL environment variables.
@@ -289,7 +332,7 @@ function Register-FSLEnvForPwsh{
     param ([string]$FslDir)
     Assert-IsLinuxOrWSL2
     if ($PSCmdlet.ShouldProcess("Setup FSL for pwsh.",'','')){
-            # FSL Setup
+        # FSL Setup
         $Env:FSLDIR =  "$FslDir"
         Add-PathToCurrentProcessEnvPaths "${Env:FSLDIR}/share/fsl/bin"
 

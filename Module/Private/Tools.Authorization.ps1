@@ -1,15 +1,17 @@
 ﻿function Assert-ValidPath4AuthorizationTools{
 <#
 .SYNOPSIS
-    Check if a path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
+    Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
 
 .DESCRIPTION
-    Check if $Path is valid as the rule defined in https://little-train.com/posts/7fdde8eb.html.
+    Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
     Only the following 4 types of paths are valid:
         1. root path of Non-system disk
         2. other path in Non-system disk
         3. path of ${Home}
         4. other path in ${Home}
+.LINK
+    Refer to the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
 #>
     param(
         [FormattedFileSystemPath]$Path
@@ -23,7 +25,7 @@
     if (($Path.IsBeOrInSystemDrive)-and !($Path.IsInHome) -and !($Path.IsHome)) {
         throw "[Unsupported path] If $Path is in SystemDisk, it should be or in `${Home}: ${Home}."
     }
-    Write-Logs "[Supported path] $Path"
+    Write-Log "[Supported path] $Path"
 }
 
 function Reset-PathAttribute{
@@ -35,35 +37,32 @@ function Reset-PathAttribute{
 .DESCRIPTION
     Reset the attributes of $Path to the original status, when it matches one of the following 8 types
     (appended with corresponding standard attriibuts):
-    Directory:
-        X:\                             Hidden, System, Directory
-        X:\System Volume Information\   Hidden, System, Directory
-        X:\$Recycle.Bin\                Hidden, System, Directory
-        X:\*some_symbolic_link_dir\     Directory, ReparsePoint
-        X:\*some_junction\              Directory, ReparsePoint
-    File:
-        X:\*desktop.ini                 Hidden, System, Archive
-        X:\*some_symbolic_link_file     Archive, ReparsePoint
-        X:\*some_hardlink               Archive
-    Here the `X` represents any drive disk letter.
-    And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
-    Other directories' attriibuts will not be reset.
-    Other files' attriibuts will not be reset.
 
-    See https://little-train.com/posts/7fdde8eb.html for more details.
+    | Type      | Specific Path Example           | Default Attributes        |
+    | --------- | ------------------------------- | ------------------------- |
+    | Directory | `X:\ `                          | Hidden, System, Directory |
+    | Directory | `X:\System Volume Information\` | Hidden, System, Directory |
+    | Directory | `X:\$Recycle.Bin\`              | Hidden, System, Directory |
+    | Directory | `X:\*some_symbolic_link_dir\`   | Directory, ReparsePoint   |
+    | Directory | `X:\*some_junction\`            | Directory, ReparsePoint   |
+    | File      | `X:\*desktop.ini`               | Hidden, System, Archive   |
+    | File      | `X:\*some_symbolic_link_file`   | Archive, ReparsePoint     |
+    | File      | `X:\*some_hardlink`             | Archive                   |
+    
+    Here the `X` represents any drive disk letter. And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
+    Other directories' attributes will not be reset. And other files' attributes will not be reset.
+
+    See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
 
     Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
-        ReadOnly, Hidden, System, Directory, Archive, Device,
-        Normal, Temporary, SparseFile, ReparsePoint, Compressed,
-        Offline, NotContentIndexed, Encrypted, IntegrityStream, NoScrubData.
-    We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But
-    `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
-    So, to reset the attributes to standard status, we cannot directly give the
-    target attributes, but use a specific `$some_attributes`.
+    ```powershell
+    ReadOnly, Hidden, System, Directory, Archive, Device,
+    Normal, Temporary, SparseFile, ReparsePoint, Compressed,
+    Offline, NotContentIndexed, Encrypted, IntegrityStream, NoScrubData.
+    ```
 
-.COMPONENT
-    To set the attriibuts of $Path:
-        Set-ItemProperty $Path -Name Attributes -Value $some_attributes
+    We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
+    So, to reset the attributes to standard status, we cannot directly give the target attributes, but use a specific `$some_attributes`.
 
 .PARAMETER Path
     The path to be checked to reset its attributes.
@@ -71,9 +70,19 @@ function Reset-PathAttribute{
 .PARAMETER SkipPlatformCheck
     Switch to disable platform check at the beginning.
     If true(given), the platform will not be checked at the beginning.
+
 .PARAMETER SkipPathCheck
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
+.OUTPUTS
+    None.
+
+.COMPONENT
+    To set the attributes of `$Path`:
+
+    ```powershell
+    Set-ItemProperty $Path -Name Attributes -Value $some_attributes
+    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -116,41 +125,58 @@ function Reset-PathAttribute{
 function Get-PathType{
 <#
 .SYNOPSIS
-    Get a customized path type of a fileSystem path(disk, directory, file, link, etc.),
-    according to the `Types of Items` described in https://little-train.com/posts/7fdde8eb.html.
+    Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/7fdde8eb.html).
 .DESCRIPTION
-    Basing on `New-Item -ItemType`, see
-    https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype,
-    this function defines 38 types of items, including the 28 types of items that defined in https://little-train.com/posts/7fdde8eb.html.
+    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
+    this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
 
-    Here are these types and example:
-        Directory:
-            NonSystemDisk[NTFS/ReFS/FAT32]\Root                         X:\
-            Home\Root                                                   ${Home}\
-            NonSystemDisk[NTFS/ReFS/FAT32]\System Volume Information    X:\System Volume Information
-            NonSystemDisk[NTFS/ReFS/FAT32]\$Recycle.Bin                 X:\$Recycle.Bin
-            Home\Directory                                              ${Home}\*some_nomrmal_dir\
-            Home\SymbolicLinkDirectory                                  ${Home}\*some_symbolic_link_dir\
-            Home\Junction                                               ${Home}\*some_junction\
-            NonSystemDisk[NTFS/ReFS/FAT32]\Directory                    X:\*some_nomrmal_dir\
-            NonSystemDisk[NTFS/ReFS/FAT32]\SymbolicLinkDirectory        X:\*some_symbolic_link_dir\
-            NonSystemDisk[NTFS/ReFS/FAT32]\Junction                     X:\*some_junction\
-        File:
-            Home\desktop.ini                                            ${Home}\*desktop.ini
-            Home\SymbolicLinkFile                                       ${Home}\*some_symbolic_link_file
-            Home\File                                                   ${Home}\*some_normal_file or InHome\*some_sparse_file
-            Home\HardLink                                               ${Home}\*some_hardlink
-            NonSystemDisk[NTFS/ReFS/FAT32]\desktop.ini                  X:\*desktop.ini
-            NonSystemDisk[NTFS/ReFS/FAT32]\SymbolicLinkFile             X:\*some_symbolic_link_file
-            NonSystemDisk[NTFS/ReFS/FAT32]\File                         X:\*some_normal_file or X:\*some_sparse_file
-            NonSystemDisk[NTFS/ReFS/FAT32]\HardLink                     X:\*some_hardlink
+    | Types Description                                 | Path Example                          |
+    | -----------------------------------------------   | --------------------------------------|
+    | `NonSystemDisk[NTFS]\Root`                        | `X:\`                                 |
+    | `NonSystemDisk[ReFS]\Root`                        | `X:\`                                 |
+    | `NonSystemDisk[FAT32]\Root`                       | `X:\`                                 |
+    | `Home\Root`                                       | `${Home}\`                            |
+    | `NonSystemDisk[NTFS]\System Volume Information`   | `X:\System Volume Information\`       |
+    | `NonSystemDisk[ReFS]\System Volume Information`   | `X:\System Volume Information\`       |
+    | `NonSystemDisk[FAT32]\System Volume Information`  | `X:\System Volume Information\`       |
+    | `NonSystemDisk[NTFS]\$Recycle.Bin`                | `X:\$Recycle.Bin\`                    |
+    | `NonSystemDisk[ReFS]\$Recycle.Bin`                | `X:\$Recycle.Bin\`                    |
+    | `NonSystemDisk[FAT32]\$Recycle.Bin`               | `X:\$Recycle.Bin\`                    |
+    | `Home\Directory`                                  | `${Home}\*some_nomrmal_dir\`          |
+    | `Home\SymbolicLinkDirectory`                      | `${Home}\*some_symbolic_link_dir\`    |
+    | `Home\Junction`                                   | `${Home}\*some_junction\`             |
+    | `NonSystemDisk[NTFS]\Directory`                   | `X:\*some_nomrmal_dir\`               |
+    | `NonSystemDisk[ReFS]\Directory`                   | `X:\*some_nomrmal_dir\`               |
+    | `NonSystemDisk[FAT32]\Directory`                  | `X:\*some_nomrmal_dir\`               |
+    | `NonSystemDisk[NTFS]\SymbolicLinkDirectory`       | `X:\*some_symbolic_link_dir\`         |
+    | `NonSystemDisk[ReFS]\SymbolicLinkDirectory`       | `X:\*some_symbolic_link_dir\`         |
+    | `NonSystemDisk[FAT32]\SymbolicLinkDirectory`      | `X:\*some_symbolic_link_dir\`         |
+    | `NonSystemDisk[NTFS]\Junction`                    | `X:\*some_junction\`                  |
+    | `NonSystemDisk[ReFS]\Junction`                    | `X:\*some_junction\`                  |
+    | `NonSystemDisk[FAT32]\Junction`                   | `X:\*some_junction\`                  |
+    | `Home\desktop.ini`                                | `${Home}\*desktop.ini`                |
+    | `Home\SymbolicLinkFile`                           | `${Home}\*some_symbolic_link_file`    |
+    | `Home\File`                                       | `${Home}\*some_normal_file`           |
+    | `Home\HardLink`                                   | `${Home}\*some_hardlink`              |
+    | `NonSystemDisk[NTFS]\desktop.ini`                 | `X:\*desktop.ini`                     |
+    | `NonSystemDisk[ReFS]\desktop.ini`                 | `X:\*desktop.ini`                     |
+    | `NonSystemDisk[FAT32]\desktop.ini`                | `X:\*desktop.ini`                     |
+    | `NonSystemDisk[NTFS]\SymbolicLinkFile`            | `X:\*some_symbolic_link_file`         |
+    | `NonSystemDisk[ReFS]\SymbolicLinkFile`            | `X:\*some_symbolic_link_file`         |
+    | `NonSystemDisk[FAT32]\SymbolicLinkFile`           | `X:\*some_symbolic_link_file`         |
+    | `NonSystemDisk[NTFS]\File`                        | `X:\*some_normal_file`                |
+    | `NonSystemDisk[ReFS]\File`                        | `X:\*some_normal_file`                |
+    | `NonSystemDisk[FAT32]\File`                       | `X:\*some_normal_file`                |
+    | `NonSystemDisk[NTFS]\HardLink`                    | `X:\*some_hardlink`                   |
+    | `NonSystemDisk[ReFS]\HardLink`                    | `X:\*some_hardlink`                   |
+    | `NonSystemDisk[FAT32]\HardLink`                   | `X:\*some_hardlink`                   |
+    
     Here `NonSystemDisk[NTFS/ReFS/FAT32]` means, `X` is not system disk drive letter and `X:\` is in one of NTFS/ReFS/FAT32 file system.
     When output, a spcific file system will be shown, such as `NonSystemDisk[NTFS]`.
     Here `Home` means be or in `${Home}` directory.
 
-    Actually, some paths have a hierarchical relationship and can belong to both types as follows, and we return only the first type recognized in the above order.
-    That is to same, the above shown order is the key to identify all customized path types.
-
+    Actually, some paths have a hierarchical relationship and can belong to both types as the above, and we return only the first type recognized in the above order.
+    That is to say, the above shown order is the key to identify all customized path types.
 
 .PARAMETER Path
     The path to be checked to get its type.
@@ -164,8 +190,8 @@ function Get-PathType{
     If true(given), the path will not be checked at the beginning.
 
 .OUTPUTS
-    System.String if `$Path` can be recognized as a customized path type.
-    $null when error or the`$Path` cannot be recognized as a customized path type.
+    `[System.String]` if `$Path` can be recognized as a customized path type.
+    `$null` when error or the`$Path` cannot be recognized as a customized path type.
 #>
     [CmdletBinding()]
     [OutputType([string])]
@@ -194,7 +220,7 @@ function Get-PathType{
         $header = "NonSystemDisk[FAT32]"
     }
     else {
-        Write-Logs "The $Path is not in home or has unsupported file system type: $($Path.DriveFormat)."
+        Write-Log "The $Path is not in home or has unsupported file system type: $($Path.DriveFormat)."
         return $null
     }
 
@@ -209,11 +235,11 @@ function Get-PathType{
             return "$header\`$Recycle.Bin"
         }
         elseif($Path.IsInSystemVolumeInfo){
-            Write-Logs "The $Path should not be in System Volume Information."
+            Write-Log "The $Path should not be in System Volume Information."
             return $null
         }
         elseif($Path.IsInRecycleBin){
-            Write-Logs "The $Path should not be in `$Recycle.Bin."
+            Write-Log "The $Path should not be in `$Recycle.Bin."
             return $null
         }
         elseif ($Path.IsSymbolicLink) {
@@ -241,7 +267,7 @@ function Get-PathType{
         }
     }
     else{
-        Write-Logs "The $Path is not supported."
+        Write-Log "The $Path is not supported."
         return $null
     }
 }
@@ -253,6 +279,8 @@ function Get-DefaultSddl{
 .DESCRIPTION
     Get the default SDDL of the `$PathType`.
     The relationship between the `$PathType` and its default SDDL are the following mappings:
+        | Type                                            | SDDL                                                         |
+        | ----------------------------------------------- | ------------------------------------------------------------ |
         | `NonSystemDisk[NTFS]\Root`                      | `O:SYG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;;FA;;;SY)(A;OICIIO;GA;;;SY)(A;OICIIO;GA;;;BA)(A;;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
         | `NonSystemDisk[ReFS]\Root`                      | `O:BAG:SYD:AI(A;OICIIO;SDGXGWGR;;;AU)(A;;0x1301bf;;;AU)(A;OICIIO;GA;;;SY)(A;;FA;;;SY)(A;OICI;FA;;;BA)(A;;0x1200a9;;;BU)(A;OICIIO;GXGR;;;BU)` |
         | `Home\Root`                                     | `O:BAG:SYD:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;FA;;;${UserSid})` |
@@ -281,15 +309,16 @@ function Get-DefaultSddl{
         | `NonSystemDisk[ReFS]\SymbolicLinkFile`          | `O:BAG:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
         | `NonSystemDisk[ReFS]\File`                      | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
         | `NonSystemDisk[ReFS]\HardLink`                  | `O:${UserSid}G:${UserSid}D:AI(A;ID;0x1301bf;;;AU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)(A;ID;0x1200a9;;;BU)` |
+   
     where, `$UserSid = (Get-LocalUser -Name ([Environment]::UserName)).SID.Value`.
-    All `SDDLs`s are from a origin installed native system, so we can ensure it is in the default state.
+    All `SDDLs` are from a origin installed native system, so we can ensure it is in the default state.
 
 .PARAMETER PathType
     The path type to be checked.
 
 .OUTPUTS
-    System.String to represtent a SDDL if the `$PathType` is involved in above mappings.
-    $null if the `$PathType` is not involved in above mappings.
+    `[System.String]` to represtent a SDDL if the `$PathType` is involved in above mappings.
+    `$null` if the `$PathType` is not involved in above mappings.
 #>
     [CmdletBinding()]
     param(
@@ -411,7 +440,7 @@ function Get-DefaultSddl{
             break
         }
         Default {
-            Write-Logs "The $Path has unsupported `$PathType: $PathType"
+            Write-Log "The $Path has unsupported `$PathType: $PathType"
             $Sddl = $null
         }
     }
