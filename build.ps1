@@ -51,12 +51,12 @@ $component_content | Set-Content -Path "${PSScriptRoot}\Tests\Components\README.
 
 
 if (!(Test-Path -LiteralPath $ModuleInfo.BuildPath)){
-    New-Item -Path $ModuleInfo.BuildPath -ItemType Directory
+    New-Item -Path $ModuleInfo.BuildPath -ItemType Directory | Out-Null
 }
 if (Test-Path -LiteralPath "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)"){
     Remove-Item "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)" -Force -Recurse
 }
-New-Item -Path "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)" -ItemType Directory
+New-Item -Path "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)" -ItemType Directory | Out-Null
 
 Copy-Item -Path "${PSScriptRoot}\Module\*" -Destination "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)" -Recurse -Force
 
