@@ -64,6 +64,9 @@ if (Test-Platform 'Windows'){
 }elseif (Test-Platform 'Linux'){
     $ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($ModuleInfo.ModuleName)"
     $ModuleInfo.BuildPath = "/tmp/$($ModuleInfo.ModuleName)"
+}elseif (Test-Platform 'MacOS'){
+    $ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($ModuleInfo.ModuleName)"
+    $ModuleInfo.BuildPath = "/tmp/$($ModuleInfo.ModuleName)"
 }else{
     Write-Error "The current platform, $($PSVersionTable.Platform), has not been supported yet."
     exit -1

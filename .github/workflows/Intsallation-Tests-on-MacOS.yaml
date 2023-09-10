@@ -1,0 +1,28 @@
+name: Installation Tests On MacOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests-on-linux:
+    runs-on: macos-latest 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: install module 
+      shell: pwsh
+      run: | 
+        # $current_path = $pwd
+        # cd /
+        # $current_ErrorActionPreference = $ErrorActionPreference
+        # $ErrorActionPreference = 'continue'
+        # Get-ChildItem -Recurse -Include *.ps1,*.psm1 | Select-String -Pattern "ErrorActionPreference"
+        # $ErrorActionPreference = $current_ErrorActionPreference
+        # cd $current_path
+        $PSVersionTable
+        "ErrorActionPreference: $ErrorActionPreference"
+        ./install.ps1
+        Import-Module PSComputerManagementZp

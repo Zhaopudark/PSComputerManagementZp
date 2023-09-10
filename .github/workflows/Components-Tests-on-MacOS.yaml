@@ -1,0 +1,21 @@
+name: Components Tests on MacOS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests-on-linux:
+    runs-on: macos-latest 
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Apply pester tests 
+      shell: pwsh
+      run: | 
+        $PSVersionTable
+        "ErrorActionPreference: $ErrorActionPreference"
+        ./install.ps1
+        Invoke-Pester './Tests/Components/'  -Passthru

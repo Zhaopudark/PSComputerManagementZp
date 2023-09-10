@@ -49,7 +49,16 @@ function Test-Platform{
             Write-Verbose "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
             return $false
         }
-    } else {
+    } elseif ($IsMacOS){
+        if ($Name.ToLower() -eq "macos"){
+            Write-Verbose "The current platform, $($PSVersionTable.Platform), is compatible with ${Name}."
+            return $true
+        } else {
+            Write-Verbose "The platform, $($PSVersionTable.Platform), is not compatible with ${Name}."
+            return $false
+        }
+    }
+    else {
         throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
     }
 }

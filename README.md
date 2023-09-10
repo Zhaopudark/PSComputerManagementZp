@@ -13,9 +13,7 @@
 
 # Tests on multiple platforms
 
-
-
-| Linux                                                        | Windows                                                      | MacOS                                                        |
+| Linux (Restricted Features)                                  | Windows (Full Features)                                      | MacOS(Restricted Features)                                   |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [![Intsallation-Tests-on-Linux.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-Linux.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-Windows.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-Windows.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-MacOS.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-MacOS.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) |
 | [![Components-Tests-on-Linux.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests-on-Linux.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Components-Tests-on-Windows.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Components-Tests-on-Windows.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) | [![Intsallation-Tests-on-MacOS.yaml](https://github.com/Zhaopudark/PSComputerManagementZp/actions/workflows/Intsallation-Tests-on-MacOS.yaml/badge.svg)](https://github.com/Zhaopudark/PSComputerManagementZp/actions) |
