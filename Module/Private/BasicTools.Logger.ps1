@@ -38,7 +38,7 @@ function Write-FileLog{
     A string to indicate the log message.
 .OUTPUTS
     None.
-.NOTE
+.NOTES
     If the log file does not exist, it will be created automatically.
     But the creation results will be muted to avoid some errors about bool function's return value.
 #>
