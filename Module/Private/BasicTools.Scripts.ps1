@@ -110,7 +110,13 @@ function Get-PreReleaseString{
     if ($release_title -match 'v([\d]+\.[\d]+\.[\d]+)[\-]*(.*)'){
         $pre_release_string = $Matches[2]
         if ($pre_release_string -match 'beta[\d+]|stable'){
-            return $pre_release_string.ToLower()
+            $result = $pre_release_string.ToLower()
+            if ($result -eq 'stable'){
+                return '' # stable version should not have pre-release string
+            }
+            else{
+                return $result
+            }
         }
         else{
             throw "[Invalid pre-release string] The pre-release string in $ReleaseNotesPath is $pre_release_string, but it should one be 'stable' or 'beta0', 'beta1' etc."

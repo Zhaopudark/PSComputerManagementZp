@@ -4,9 +4,10 @@ $ErrorActionPreference = 'Stop'
 
 # check release version
 Assert-ReleaseVersionConsistency -ModuleVersion $ModuleInfo.ModuleVersion -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
-# check pre-release string 
+# check and get pre-release string 
 $ModuleInfo.Prerelease = Get-PreReleaseString -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
 
+# generate APIs README.md
 $api_content = @()
 foreach ($entry in $ModuleInfo.SortedFunctionsToExportWithDocs){
     $api_content += "### $($entry.Name)"
@@ -24,7 +25,7 @@ New-Item -Path "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)" -ItemType
 
 Copy-Item -Path "${PSScriptRoot}\Module\*" -Destination "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)" -Recurse -Force
 
-if ($ModuleInfo.Prerelease){
+if ($ModuleInfo.Prerelease -and ($ModuleInfo.Prerelease -ne 'stable')){
     New-ModuleManifest -Path "$($ModuleInfo.BuildPath)\$($ModuleInfo.ModuleVersion)\$($ModuleInfo.ModuleName).psd1" `
         -ModuleVersion $ModuleInfo.ModuleVersion `
         -RootModule $ModuleInfo.RootModule `
