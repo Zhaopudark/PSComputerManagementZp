@@ -15,6 +15,7 @@
 - Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
 - Add a statement about the hard link in `README.md`.
 - Modify all file names for a better understanding.
+- Add `Export-ModuleMember` in `PSComputerManagementZp.psm1` to restrict the exported APIs. Even though it looks be duplicated with `*.psd1`, but it can used to restrict the exported APIs when some import `*.psm1` directly.
 - Re-construct `Manager.Links`. Now the APIs about `Link Management` have been shrinked as:
     - `Set-DirSymbolicLinkWithSync`
     - `Set-FileSymbolicLinkWithSync`
