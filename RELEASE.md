@@ -1,5 +1,8 @@
 # Release v0.0.3
 
+## Release v0.0.3-beta1
+- ''
+
 ## Release v0.0.3-beta0
 - Add supportment for `MacOS`.
 - Rename `Write-FileLogs` to `Write-FileLog` and `Write-Logs` to `Write-Log`.
@@ -12,17 +15,15 @@
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
 - Rename all APIs or components about `xEnvPaths` to `xEnvPath`.
-- Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
+- Add a public API function, `Register-FSLEnvForPwsh`, to register the [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) environment variables for the current PowerShell session.
 - Add a statement about the hard link in `README.md`.
 - Modify all file names for a better understanding.
-- Add `Export-ModuleMember` in `PSComputerManagementZp.psm1` to restrict the exported APIs. Even though it looks be duplicated with `*.psd1`, but it can used to restrict the exported APIs when some import `*.psm1` directly.
+- Add `Export-ModuleMember` in `PSComputerManagementZp.psm1` to restrict the exported APIs. Even though it looks be duplicated with `*.psd1`, but it can used to restrict the exported APIs when some one import `*.psm1` directly.
 - Re-construct `Manager.Links`. Now the APIs about `Link Management` have been shrinked as:
     - `Set-DirSymbolicLinkWithSync`
     - `Set-FileSymbolicLinkWithSync`
     - `Set-DirJunctionWithSync`
     Since the hard link may bring potential problems, this module does not support the hard link's quick creation and synchronization. Do provide `Set-FileHardLinkWithSync` anymore.
-- `README.md` file for all putlic APIs can be automatically generated now.
-- `README.md` file for all private components can be automatically generated now.
 - Define a mode for **Version Iteration** and write it into root `README.md`
     - For further development, `RELEASE.md` should have a constructure as:
         ```markdown
@@ -30,6 +31,8 @@
         ## Release v0.0.3-stable
         ## Release v0.0.3-beta0
         ```
+- The `README.md` file for all putlic APIs can be automatically generated now.
+- The `README.md` file for all private components can be automatically generated now.
 
 
 # Release v0.0.2

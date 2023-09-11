@@ -50,7 +50,7 @@ Some features are also available on WSL2 and Linux.
 # Installation
 There are two ways to install and use this module. Make sure your PowerShell version is 7.0 or later.
 
-- From source:
+- **From source**, with the latest version (maybe pre-release version):
 
   ```powershell
   git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
@@ -58,10 +58,33 @@ There are two ways to install and use this module. Make sure your PowerShell ver
   ./install.ps1
   ```
 
-- From [PowerShell Gallery](https://www.powershellgallery.com/)
+- **From source**, with a specific version:
 
   ```powershell
-  Install-Module -Name PSComputerManagementZp
+  git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
+  cd PSComputerManagementZp
+  git checkout v0.0.3
+  ./install.ps1
+  ```
+  
+- **From [PowerShell Gallery](https://www.powershellgallery.com/)**, with the stable version:
+
+  ```powershell
+  Install-Module -Name PSComputerManagementZp -Force
+  ```
+  If it has been installed already, just update:
+  ```powershell
+  Update-Module -Name PSComputerManagementZp -Force
+  ```
+
+- **From [PowerShell Gallery](https://www.powershellgallery.com/)**, with the latest version(maybe pre-release version):
+
+  ```powershell
+  Install-Module -Name PSComputerManagementZp -Force -AllowPrerelease
+  ```
+  If it has been installed already, just update:
+  ```powershell
+  Update-Module -Name PSComputerManagementZp -Force -AllowPrerelease
   ```
 
 # Limitations or Risks
