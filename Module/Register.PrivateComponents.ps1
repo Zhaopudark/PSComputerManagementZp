@@ -1,7 +1,6 @@
 
 . "${PSScriptRoot}\Private\BasicTools.Doc.ps1"
 
-
 $local:ModuleInfo = @{
     ModuleName = 'PSComputerManagementZp'
     ScriptsToExport = Get-Item "${PSScriptRoot}\Public\*.ps1" | ForEach-Object { $_.FullName }
