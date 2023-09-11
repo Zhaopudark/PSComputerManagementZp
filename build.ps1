@@ -76,7 +76,7 @@ if (!(Test-Path -LiteralPath $local:ModuleInfo.BuildPath)){
 if (Test-Path -LiteralPath "$($local:ModuleInfo.BuildPath)\$($local:ModuleSettings.ModuleVersion)"){
     Remove-Item "$($local:ModuleInfo.BuildPath)\$($local:ModuleSettings.ModuleVersion)" -Force -Recurse
 }
-New-Item -Path "$($local:ModuleInfo.BuildPath)\$($local:ModuleSettings.ModuleVersion)" -ItemType Directory | Out-Null
+New-Item -Path "$($local:ModuleInfo.BuildPath)\$($local:ModuleSettings.ModuleVersion)" -ItemType Directory
 
 Copy-Item -Path "${PSScriptRoot}\Module\*" -Destination "$($local:ModuleInfo.BuildPath)\$($local:ModuleSettings.ModuleVersion)" -Recurse -Force
 
