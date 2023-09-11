@@ -9,7 +9,7 @@ $Prerelease = Get-PreReleaseString -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md
 
 
 # generate APIs README.md
-$api_content = @("All `public APIs` are recored here.")
+$api_content = @("All ``public APIs`` are recored here.")
 $api_content += "## Functions"
 foreach ($entry in $local:ModuleInfo.SortedFunctionsToExportWithDocs){
     $api_content += "### $($entry.Name)"
@@ -23,7 +23,7 @@ foreach ($entry in $local:ModuleInfo.SortedFunctionsToExportWithDocs){
 $api_content | Set-Content -Path "${PSScriptRoot}\Tests\APIs\README.md"
 
 # generate Components README.md
-$component_content = @("All `private Components` are recored here. (Only for Contributors)")
+$component_content = @("All ``private Components`` are recored here. (Only for Contributors)")
 
 $component_content += "## Classes"
 foreach ($entry in $local:ModuleInfo.SortedClassesNotToExportWithDocs){
