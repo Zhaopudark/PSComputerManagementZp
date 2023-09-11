@@ -4,7 +4,7 @@
 $local:ModuleInfo = @{
     ModuleName = 'PSComputerManagementZp'
     ScriptsToExport = Get-Item "${PSScriptRoot}\Public\*.ps1" | ForEach-Object { $_.FullName }
-    ScriptsNotToExport = Get-Item "${PSScriptRoot}\Private\*.ps1" | ForEach-Object { $_.FullName } 
+    ScriptsNotToExport = Get-Item "${PSScriptRoot}\Private\*.ps1" | ForEach-Object { $_.FullName }
     SortedFunctionsToExportWithDocs = Get-SortedNameWithDocFromScript -Path "${PSScriptRoot}\Public\*.ps1" -DocType 'Function'
     SortedFunctionsNotToExportWithDocs = Get-SortedNameWithDocFromScript -Path "${PSScriptRoot}\Private\*.ps1" -DocType 'Function'
     SortedClassesNotToExportWithDocs = Get-SortedNameWithDocFromScript -Path "${PSScriptRoot}\Private\*.ps1" -DocType 'Class'

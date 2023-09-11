@@ -164,6 +164,4 @@ function Get-SortedNameWithDocFromScript{
     }
     $sorted_name_with_docs = $name_with_docs.GetEnumerator() | Sort-Object -Property Name
     return $sorted_name_with_docs
-} 
-    
-    
+}
