@@ -12,6 +12,7 @@
 - Make sure all `Test-` functions return boolean.
 - Make sure all `ValidateScript()` use `Test-` functions instead of `Assert-` functions.
 - Rename all APIs or components about `xEnvPaths` to `xEnvPath`.
+- Rename `Config.ps1` to `Register.PrivateComponents.ps` for better understanding.
 - Add a public API function, `Register-FSLEnvForPwsh`, to register the environment variables for the current PowerShell session.
 - Add a statement about the hard link in `README.md`.
 - Modify all file names for a better understanding.
