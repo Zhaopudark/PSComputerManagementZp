@@ -9,6 +9,9 @@ All public APIs are recored here.
 - **Inputs**
 
     A string of the path.
+- **Parameter** `$Path`
+
+    The path to be appended.
 - **Outputs**
 
     None.
@@ -19,9 +22,7 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Example**
 
-    ```powershell
     Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
-    ```
     
 ### Add-PathToCurrentProcessEnvPath
     
@@ -37,9 +38,7 @@ All public APIs are recored here.
     None.
 - **Example**
 
-    ```powershell
     Add-PathToCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
-    ```
     
 ### Add-PathToCurrentUserEnvPath
     
@@ -59,9 +58,7 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Example**
 
-    ```powershell
     Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
-    ```
     
 ### Get-GatewayIPV4
     
@@ -133,7 +130,7 @@ All public APIs are recored here.
 - **Description**
 
     FSL is a comprehensive library of analysis tools for FMRI, MRI and diffusion brain imaging data.
-    See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/
+    See the [FSL doc](ttps://fsl.fmrib.ox.ac.uk/fsl/fslwiki/)
     
     This function is used to setup FSL environment variables for pwsh as well as FSL's bash settings in .profile.
     It mimics the following bash settings in .profile:
@@ -203,10 +200,8 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Example**
 
-    ```powershell
     Remove-MatchedPathsFromCurrentMachineEnvPath -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the machine level `$Env:PATH`.
-    ```
     
 ### Remove-MatchedPathsFromCurrentProcessEnvPath
     
@@ -222,10 +217,8 @@ All public APIs are recored here.
     None.
 - **Example**
 
-    ```powershell
     Remove-MatchedPathsFromCurrentProcessEnvPath -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the process level `$Env:PATH`.
-    ```
     
 ### Remove-MatchedPathsFromCurrentUserEnvPath
     
@@ -245,10 +238,8 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Example**
 
-    ```powershell
     Remove-MatchedPathsFromCurrentUserEnvPath -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the user level `$Env:PATH`.
-    ```
     
 ### Remove-PathFromCurrentMachineEnvPath
     
@@ -269,9 +260,7 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Example**
 
-    ```powershell
     Remove-PathFromCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
-    ```
     
 ### Remove-PathFromCurrentProcessEnvPath
     
@@ -287,9 +276,7 @@ All public APIs are recored here.
     None.
 - **Example**
 
-    ```powershell
     Remove-PathFromCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
-    ```
     
 ### Remove-PathFromCurrentUserEnvPath
     
@@ -309,9 +296,7 @@ All public APIs are recored here.
     See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
 - **Example**
 
-    ```powershell
     Remove-PathFromCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
-    ```
     
 ### Remove-SystemProxyIPV4ForCurrentUser
     
@@ -422,9 +407,7 @@ All public APIs are recored here.
     None.
 - **Example**
 
-    ```powershell
     Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890
-    ```
     
 ### Set-FileSymbolicLinkWithSync
     
@@ -465,9 +448,8 @@ All public APIs are recored here.
     
 - **Example**
 
-    ```powershell
     Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890
-    ```
+    
 - **Notes**
 
     It does not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.

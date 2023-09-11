@@ -1,1 +1,1 @@
-. "${PSScriptRoot}\..\..\Module\Config.ps1"
+. "${PSScriptRoot}\..\..\Module\Register.PrivateComponents.ps1"

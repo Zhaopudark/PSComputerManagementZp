@@ -12,6 +12,8 @@ function Get-LogFileName{
 <#
 .DESCRIPTION
     Get the log file name.
+.PARAMETER KeyInfo
+    A string to indicate the key info of the log file.
 .INPUTS
     A string to indicate the key info of the log file.
 .OUTPUTS
@@ -34,6 +36,8 @@ function Write-FileLog{
 <#
 .DESCRIPTION
     Write log to a file.
+.PARAMETER Message
+    The message to be logged.
 .INPUTS
     A string to indicate the log message.
 .OUTPUTS
@@ -66,6 +70,8 @@ function Write-Log{
     The message to be logged.
 .PARAMETER ShowVerbose
     Whether to show the message in verbose mode.
+.INPUTS
+    A string and a switch.
 .OUTPUTS
     None.
 #>

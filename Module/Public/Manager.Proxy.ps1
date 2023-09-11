@@ -68,9 +68,8 @@ function Set-SystemProxyIPV4ForCurrentUser{
     None.
 
 .EXAMPLE
-    ```powershell
     Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890
-    ```
+
 .NOTES
     It does not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
     It is not for all users (not on `local machine` level).
@@ -158,9 +157,7 @@ function Set-EnvProxyIPV4ForShellProcess{
 .OUTPUTS
     None.
 .EXAMPLE
-    ```powershell
     Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890
-    ```
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

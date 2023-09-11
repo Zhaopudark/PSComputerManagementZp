@@ -13,7 +13,7 @@ All tests have been partitioned into 3 parts:
     - Excluding:
         - All public components
     - Testing configuration, adding components to testing scope(environment):
-        - Only private components are allowed. Can use a command like `. "${PSScriptRoot}\..\..\Module\Config.ps1"`.
+        - Only private components are allowed. Can use a command like `. "${PSScriptRoot}\..\..\Module\Register.PrivateComponents.ps1"`.
         - Forbid any public component. Avoid commands like `Import-Module PSComputerManagementZp`.
         - Ensure that all functionalities of private components are not affected by what is defined in each testing scope.
 
@@ -27,6 +27,6 @@ All tests have been partitioned into 3 parts:
         - All private components
     - Testing configuration, adding components to testing scope(environment):
         - Only public components are allowed. Can use a command like `Import-Module PSComputerManagementZp`.
-        - Forbid any private component. Avoid direct commands like `. "${PSScriptRoot}\..\..\Module\Config.ps1"`.
+        - Forbid any private component. Avoid direct commands like `. "${PSScriptRoot}\..\..\Module\Register.PrivateComponents.ps1"`.
         - If some private components are needed, mimic them with a different name before using them.
         - Ensure that all functionalities of public components are not affected by what is defined in each testing scope.

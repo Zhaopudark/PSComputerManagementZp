@@ -380,6 +380,9 @@ All private Components are recored here. (Only for Contributors)
 - **Description**
 
     Get the log file name.
+- **Parameter** `$KeyInfo`
+
+    A string to indicate the key info of the log file.
 - **Inputs**
 
     A string to indicate the key info of the log file.
@@ -472,6 +475,24 @@ All private Components are recored here. (Only for Contributors)
 - **Outputs**
 
     A string of the pre-release string.
+    
+### Get-SortedNameWithDocFromScript
+    
+- **Description**
+
+    Get sorted function names with docs from a script file or script files.
+- **Inputs**
+
+    A script file path or script files path, and the type of docs.
+- **Parameter** `$Path`
+
+    The path of a script file or script files.
+- **Parameter** `$DocType`
+
+    The type of docs, 'Function' or 'Class'.
+- **Outputs**
+
+    A hashtable enumerator with sorted function names as keys(names) and function docs as values.
     
 ### Move-Target2Source4SoftLink
     
@@ -646,12 +667,10 @@ All private Components are recored here. (Only for Contributors)
     `$true` if compatible, otherwise `$false`.
 - **Example**
 
-    ```powershell
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
     Test-Platform -Name 'MacOS' -Verbose
-    ```
 - **Link**
 
     Refer to the [doc](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
@@ -661,6 +680,9 @@ All private Components are recored here. (Only for Contributors)
 - **Description**
 
     Write log to a file.
+- **Parameter** `$Message`
+
+    The message to be logged.
 - **Inputs**
 
     A string to indicate the log message.
@@ -683,6 +705,9 @@ All private Components are recored here. (Only for Contributors)
 - **Parameter** `$ShowVerbose`
 
     Whether to show the message in verbose mode.
+- **Inputs**
+
+    A string and a switch.
 - **Outputs**
 
     None.
