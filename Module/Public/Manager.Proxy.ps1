@@ -18,6 +18,7 @@
     So in this function, `Get-CimInstance` is used to replace `Get-WmiObject`
 .LINK
     [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
+    [Select-String](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3)
 #>
     [CmdletBinding()]
     param()
@@ -30,9 +31,9 @@
             $gateway_ip = ''
         }
     }elseif (Test-Platform 'Linux'){
-        $gateway_ip = $(Get-Content /etc/resolv.conf | ForEach-Object { $_ -match 'nameserver (.*)' | Out-Null; $matches[1] }) #get gateway_ip
+        $gateway_ip = (Select-String '/etc/resolv.conf' -Pattern "nameserver (.*)").Matches.Groups[1].Value #get gateway_ip
     }elseif (Test-Platform 'Wsl2'){
-        $gateway_ip = $(Get-Content /etc/resolv.conf | ForEach-Object { $_ -match 'nameserver (.*)' | Out-Null; $matches[1] }) #get gateway_ip
+        $gateway_ip = (Select-String '/etc/resolv.conf' -Pattern "nameserver (.*)").Matches.Groups[1].Value #get gateway_ip
     }elseif (Test-Platform 'MacOS') {
         $gateway_ip = $(Get-Content /etc/resolv.conf) #get gateway_ip
     }else{

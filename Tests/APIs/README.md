@@ -98,6 +98,7 @@ All `public APIs` are recored here.
 - **Link**
 
     [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
+    [Select-String](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3)
     
 ### Get-LocalHostIPV4
     
