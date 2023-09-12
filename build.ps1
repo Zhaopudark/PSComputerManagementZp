@@ -1,4 +1,7 @@
+& "${PSScriptRoot}\build_for_APIs_docs.ps1" # isolate the scope with `&`
+
 $ErrorActionPreference = 'Stop'
+
 . "${PSScriptRoot}\Module\Register.PrivateComponents.ps1"
 
 
@@ -12,15 +15,15 @@ $Prerelease = Get-PreReleaseString -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md
 $api_content = @("All ``public APIs`` are recored here.")
 $api_content += "## Functions"
 foreach ($entry in $local:ModuleInfo.SortedFunctionsToExportWithDocs){
-    $api_content += "### $($entry.Name)"
-    if ($entry.Value){
-        $api_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
-    }
-    else{
-        $api_content += ''
-    }
+    $api_content += "- [$($entry.Name)](.\$($entry.Name).md)"
+    # if ($entry.Value){
+    #     $api_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
+    # }
+    # else{
+    #     $api_content += ''
+    # }
 }
-$api_content | Set-Content -Path "${PSScriptRoot}\Tests\APIs\README.md"
+$api_content | Set-Content -Path "${PSScriptRoot}\Docs\APIs\README.md"
 
 # generate Components README.md
 $component_content = @("All ``private Components`` are recored here. (Only for Contributors)")
@@ -47,7 +50,7 @@ foreach ($entry in $local:ModuleInfo.SortedFunctionsNotToExportWithDocs){
     }
 }
 
-$component_content | Set-Content -Path "${PSScriptRoot}\Tests\Components\README.md"
+$component_content | Set-Content -Path "${PSScriptRoot}\Docs\Components\README.md"
 
 
 
