@@ -144,7 +144,7 @@ function Get-SortedNameWithDocFromScript{
 .PARAMETER DocType
     The type of docs, 'Function' or 'Class'.
 .INPUTS
-    String.
+    String[].
     String.
 .OUTPUTS
     System.Collections.DictionaryEntry.
@@ -155,15 +155,14 @@ function Get-SortedNameWithDocFromScript{
     [OutputType([System.Collections.DictionaryEntry])]
     param(
         [Parameter(Mandatory)]
-        [string]$Path,
+        [string[]]$Path,
         [Parameter(Mandatory)]
         [ValidateSet('Function','Class')]
         [string]$DocType
 
     )
-    $source = Get-Item -Path $Path -Include '*.ps1','*.psm1'| ForEach-Object { $_.FullName }
     $name_with_docs = @{}
-    foreach ($item in $source) {
+    foreach ($item in $Path) {
         if ($DocType -eq 'Function'){
             $name_with_docs += Get-FunctionDoc -Path $item
         }else{

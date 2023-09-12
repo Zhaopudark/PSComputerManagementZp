@@ -1,5 +1,6 @@
 # Release v0.0.3
-
+## Release v0.0.3-beta2
+- Adjusted the organization of private components to further reduce coupling.
 ## Release v0.0.3-beta1
 - Move the public API function, `Register-FSLEnvForPwsh` to `Assister.ThirdParty.ps1` for better understanding and for further development.
 - In the future, the `Assister.ThirdParty*` like files will be used to store all customized assistant APIs for third-party tools. Because these APIs are less of a generalization but indispensable.

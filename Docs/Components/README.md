@@ -564,7 +564,7 @@ All `private Components` are recored here. (Only for Contributors)
     The type of docs, 'Function' or 'Class'.
 - **Inputs**
 
-    String.
+    String[].
     String.
 - **Outputs**
 

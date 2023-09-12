@@ -1,13 +1,16 @@
+Get-ChildItem "${PSScriptRoot}\Private" -Recurse -Include '*.ps1','*.psm1' -Exclude '*Logger.ps1' | ForEach-Object { . $_.FullName }
 
-. "${PSScriptRoot}\Private\BasicTools.Doc.ps1"
+
+$scripts_to_export = Get-ChildItem "${PSScriptRoot}\Public" -Recurse -Include '*.ps1','*.psm1'| ForEach-Object { $_.FullName }
+$scripts_not_to_export = Get-ChildItem "${PSScriptRoot}\Private\" -Recurse -Include '*.ps1','*.psm1'| ForEach-Object { $_.FullName }
 
 $local:ModuleInfo = @{
     ModuleName = 'PSComputerManagementZp'
-    ScriptsToExport = Get-Item "${PSScriptRoot}\Public\*.ps1" | ForEach-Object { $_.FullName }
-    ScriptsNotToExport = Get-Item "${PSScriptRoot}\Private\*.ps1" | ForEach-Object { $_.FullName }
-    SortedFunctionsToExportWithDocs = Get-SortedNameWithDocFromScript -Path "${PSScriptRoot}\Public\*.ps1" -DocType 'Function'
-    SortedFunctionsNotToExportWithDocs = Get-SortedNameWithDocFromScript -Path "${PSScriptRoot}\Private\*.ps1" -DocType 'Function'
-    SortedClassesNotToExportWithDocs = Get-SortedNameWithDocFromScript -Path "${PSScriptRoot}\Private\*.ps1" -DocType 'Class'
+    ScriptsToExport = $scripts_to_export
+    ScriptsNotToExport = $scripts_not_to_export
+    SortedFunctionsToExportWithDocs = Get-SortedNameWithDocFromScript -Path $scripts_to_export -DocType 'Function'
+    SortedFunctionsNotToExportWithDocs = Get-SortedNameWithDocFromScript -Path $scripts_not_to_export -DocType 'Function'
+    SortedClassesNotToExportWithDocs = Get-SortedNameWithDocFromScript -Path $scripts_not_to_export -DocType 'Class'
 }
 
 # Module Settings For PSD1
@@ -34,7 +37,5 @@ $local:ModuleSettings = @{
 # see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope)
 # also see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3)
 
-. "${PSScriptRoot}\Private\BasicTools.Version.ps1"
-. "${PSScriptRoot}\Private\BasicTools.Platform.ps1"
-. "${PSScriptRoot}\Private\BasicTools.Logger.ps1" -LoggingPath "${Home}\.log\$($ModuleInfo.ModuleName)" -ModuleVersion $local:ModuleSettings.ModuleVersion
-Get-Item "${PSScriptRoot}\Private\Tools*.ps1" | ForEach-Object { . $_.FullName }
+
+. "${PSScriptRoot}\Private\Bases\Logger.ps1" -LoggingPath "${Home}\.log\$($ModuleInfo.ModuleName)" -ModuleVersion $local:ModuleSettings.ModuleVersion
