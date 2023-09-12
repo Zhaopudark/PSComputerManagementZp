@@ -1,7 +1,11 @@
 $ErrorActionPreference = 'Stop'
 Remove-Module PSComputerManagementZp -Force -ErrorAction SilentlyContinue
 Remove-Module platyPS -Force -ErrorAction SilentlyContinue
-Install-Module platyPS
+
+
+Install-Module -Name platyPS -Scope CurrentUser -Force
+
+Import-Module platyPS -Force
 
 Import-Module "${PSScriptRoot}\Module\PSComputerManagementZp.psm1" -Force
 
