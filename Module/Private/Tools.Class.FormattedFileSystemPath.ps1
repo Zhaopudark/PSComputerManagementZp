@@ -2,8 +2,7 @@
 <#
 .SYNOPSIS
     A class that receives a file system path, formats the path automatically when initialized, holds the formatted path, and provides some useful attributes(properties) simultaneously for a quick check.
-.NOTES
-    Support file system paths only!
+
 .DESCRIPTION
     Automatically format a path to standard format by the following procedures and rules:
     **First**: Preprocess a received path with some literal check (string level, without accessing it by file system):
@@ -75,9 +74,17 @@
     | (Unix) Existing Path      | Given(Input) Path         | Formatted Path    |
     | ------------------------- | ------------------------- | ----------------- |
     | /home/uSer                | /home/uSer                | /home/uSer/       |
+.PARAMETER Path
+    The path to be formatted.
+.INPUTS
+    String.
+.OUTPUTS
+    FormattedFileSystemPath.
+.NOTES
+    Support file system paths only!
 .LINK
-    Refer to the [default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
-    Refer to the [methods](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path.
+    [Default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
+    [Fromatting methods](https://stackoverflow.com/q/76982195/17357963).
 #>
     [ValidateNotNullOrEmpty()][string] $LiteralPath
     [ValidateNotNullOrEmpty()][string] $OriginalPlatform
@@ -317,6 +324,12 @@ function Get-FormattedFileSystemPath{
 .DESCRIPTION
     A function to apply the class FormattedFileSystemPath on a path.
     Return an instance of it
+.PARAMETER Path
+    The path to be formatted.
+.INPUTS
+    String.
+.OUTPUTS
+    FormattedFileSystemPath.
 #>
     param(
         [Parameter(Mandatory)]

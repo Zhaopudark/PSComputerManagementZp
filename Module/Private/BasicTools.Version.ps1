@@ -2,10 +2,12 @@ function Get-PreReleaseString{
 <#
 .DESCRIPTION
     Get the pre-release string from a release note file.
+.PARAMETER ReleaseNotesPath
+    The release note file path.
 .INPUTS
-    A release note file path.
+    String.
 .OUTPUTS
-    A string of the pre-release string.
+    String.
 #>
     [OutputType([string])]
     param(
@@ -40,6 +42,9 @@ function Assert-ReleaseVersionConsistency{
     The version.
 .PARAMETER ReleaseNotesPath
     The release note file path.
+.INPUTS
+    String.
+    String.
 .OUTPUTS
     None.
 #>

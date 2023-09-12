@@ -18,6 +18,12 @@ function Move-Target2Source4SoftLink{
     The source item path.
 .PARAMETER BackupDir
     The backup directory path.
+.INPUTS
+    String.
+    String.
+    String or FormattedFileSystemPath.
+.OUTPUTS
+    None.
 .NOTES
     This function is not generic and is more of an integration for a class of business.
     The following are the main rules of this function:
@@ -62,7 +68,7 @@ function Move-Target2Source4SoftLink{
 
     The other conditions out of the above 36 conditions will throw error as well.
 .LINK
-    Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
+    [Type assignment/converting](https://stackoverflow.com/a/77062276/17357963).
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

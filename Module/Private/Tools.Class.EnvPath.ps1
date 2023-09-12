@@ -1,7 +1,11 @@
 ﻿class EnvPath{
 <#
-.SYNOPSIS
+.DESCRIPTION
     A class that maintains the process, user, and machine level `$Env:PATH`, holds the de-duplicated paths, and provides some useful methods for some scenarios that need to modify the `$Env:PATH`.
+.INPUTS
+    None.
+.OUTPUTS
+    EnvPath.
 .NOTES
     Do not check any path's existence or validity.
 #>
@@ -196,6 +200,10 @@ function Get-EnvPath{
 .DESCRIPTION
     A function to apply the class EnvPath.
     Return an instance of it.
+.INPUTS
+    None.
+.OUTPUTS
+    EnvPath.
 #>
     param()
     return [EnvPath]::new()

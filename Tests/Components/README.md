@@ -2,9 +2,15 @@ All `private Components` are recored here. (Only for Contributors)
 ## Classes
 ### EnvPath
     
-- **Synopsis**
+- **Description**
 
     A class that maintains the process, user, and machine level `$Env:PATH`, holds the de-duplicated paths, and provides some useful methods for some scenarios that need to modify the `$Env:PATH`.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    EnvPath.
 - **Notes**
 
     Do not check any path's existence or validity.
@@ -14,9 +20,7 @@ All `private Components` are recored here. (Only for Contributors)
 - **Synopsis**
 
     A class that receives a file system path, formats the path automatically when initialized, holds the formatted path, and provides some useful attributes(properties) simultaneously for a quick check.
-- **Notes**
-
-    Support file system paths only!
+    
 - **Description**
 
     Automatically format a path to standard format by the following procedures and rules:
@@ -90,10 +94,22 @@ All `private Components` are recored here. (Only for Contributors)
     | (Unix) Existing Path      | Given(Input) Path         | Formatted Path    |
     | ------------------------- | ------------------------- | ----------------- |
     | /home/uSer                | /home/uSer                | /home/uSer/       |
+- **Parameter** `$Path`
+
+    The path to be formatted.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    FormattedFileSystemPath.
+- **Notes**
+
+    Support file system paths only!
 - **Link**
 
-    Refer to the [default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
-    Refer to the [methods](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path.
+    [Default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
+    [Fromatting methods](https://stackoverflow.com/q/76982195/17357963).
     
 ## Functions
 ### Assert-AdminPermission
@@ -113,7 +129,8 @@ All `private Components` are recored here. (Only for Contributors)
 - **Description**
 
     Assert the robocopy command is available.
-    And assert if the current platform is Windows and the current process is in AdminPermission.
+    Assert if the current platform is Windows.
+    Assert if the current process is in AdminPermission
 - **Inputs**
 
     None.
@@ -168,6 +185,10 @@ All `private Components` are recored here. (Only for Contributors)
 - **Parameter** `$ReleaseNotesPath`
 
     The release note file path.
+- **Inputs**
+
+    String.
+    String.
 - **Outputs**
 
     None.
@@ -177,7 +198,6 @@ All `private Components` are recored here. (Only for Contributors)
 - **Synopsis**
 
     Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
-    
 - **Description**
 
     Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
@@ -186,9 +206,18 @@ All `private Components` are recored here. (Only for Contributors)
     2. other path in Non-system disk
     3. path of ${Home}
     4. other path in ${Home}
+- **Parameter** `$Path`
+
+    The path to be checked.
+- **Inputs**
+
+    String or FormattedFileSystemPath.
+- **Outputs**
+
+    None.
 - **Link**
 
-    Refer to the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
+    [Authorization](https://little-train.com/posts/7fdde8eb.html).
     
 ### Copy-DirWithBackup
     
@@ -209,6 +238,15 @@ All `private Components` are recored here. (Only for Contributors)
 - **Parameter** `$Indicator`
 
     The indicator string to indicate the backup directory.
+- **Inputs**
+
+    String or FormattedFileSystemPath.
+    String.
+    String or FormattedFileSystemPath.
+    String.
+- **Outputs**
+
+    None.
 - **Notes**
 
     Only support a simple directory.
@@ -217,9 +255,7 @@ All `private Components` are recored here. (Only for Contributors)
     Patched to avoid Copy-Item's ambiguity:
     If the destination is existing, Copy-Item will merge the source to the destination. (Items within the source will be copied and to the destination, covering the existing items with the same name.)
     If the destination is non-existing, Copy-Item will create a new directory with the source's name.
-- **Link**
-
-    Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
+    
     Refer to the [doc](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy) for more information about Copy-Item.
     |Robocopy args| effections|
     |---|---|
@@ -227,6 +263,10 @@ All `private Components` are recored here. (Only for Contributors)
     | /copyall | Copies all file information (equivalent to /copy:DATSOU).|
     | /dcopy:DATE | Specifies what to copy in directories. D-Data A-Attributes T-Time stamps E-Extended attribute|
     | /log+:<logfile> | Writes the status output to the log file (appends the output to the existing log file).|
+- **Link**
+
+    [Type assignment/converting](https://stackoverflow.com/a/77062276/17357963).
+    [Robocopy](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy).
     
 ### Copy-FileWithBackup
     
@@ -245,6 +285,12 @@ All `private Components` are recored here. (Only for Contributors)
 - **Parameter** `$Indicator`
 
     The indicator string to indicate the backup file.
+- **Inputs**
+
+    String or FormattedFileSystemPath.
+    String.
+    String or FormattedFileSystemPath.
+    String.
 - **Outputs**
 
     None.
@@ -254,7 +300,7 @@ All `private Components` are recored here. (Only for Contributors)
     Do not support a directory, a file symbolic link, or a hard link.
 - **Link**
 
-    Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
+    [Type assignment/converting](https://stackoverflow.com/a/77062276/17357963).
     
 ### Format-Doc2Markdown
     
@@ -280,22 +326,23 @@ All `private Components` are recored here. (Only for Contributors)
     ```
 - **Inputs**
 
-    A powershell doc string.
+    String.
 - **Outputs**
 
-    A formatted string that can be used in markdown directly.
+    String.
     
 ### Get-ClassDoc
     
 - **Description**
 
     Get class docs from a script file.
+    Return a hashtable with class names as keys and class docs as values.
 - **Inputs**
 
-    A script file path.
+    String.
 - **Outputs**
 
-    A hashtable with class names as keys and class docs as values.
+    Hashtable.
     
 ### Get-DefaultSddl
     
@@ -343,11 +390,15 @@ All `private Components` are recored here. (Only for Contributors)
 - **Parameter** `$PathType`
 
     The path type to be checked.
-    
+- **Inputs**
+
+    String.
 - **Outputs**
 
-    `[System.String]` to represtent a SDDL if the `$PathType` is involved in above mappings.
-    `$null` if the `$PathType` is not involved in above mappings.
+    String or Null.
+- **Link**
+
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
     
 ### Get-EnvPath
     
@@ -355,6 +406,12 @@ All `private Components` are recored here. (Only for Contributors)
 
     A function to apply the class EnvPath.
     Return an instance of it.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    EnvPath.
     
 ### Get-FormattedFileSystemPath
     
@@ -362,33 +419,43 @@ All `private Components` are recored here. (Only for Contributors)
 
     A function to apply the class FormattedFileSystemPath on a path.
     Return an instance of it
+- **Parameter** `$Path`
+
+    The path to be formatted.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    FormattedFileSystemPath.
     
 ### Get-FunctionDoc
     
 - **Description**
 
     Get function docs from a script file.
+    Return a hashtable with function names as keys and function docs as values.
 - **Inputs**
 
-    A script file path.
+    String.
 - **Outputs**
 
-    A hashtable with function names as keys and function docs as values.
+    Hashtable.
     
 ### Get-LogFileName
     
 - **Description**
 
-    Get the log file name.
+    Get the log file name according the key info, pre-defined `$LoggingPath` and pre-defined `$ModuleVersion`.
 - **Parameter** `$KeyInfo`
 
-    A string to indicate the key info of the log file.
+    A string to indicate the key info of the log file name.
 - **Inputs**
 
-    A string to indicate the key info of the log file.
+    String.
 - **Outputs**
 
-    A string of the log file name.
+    String.
     
 ### Get-PathType
     
@@ -397,8 +464,7 @@ All `private Components` are recored here. (Only for Contributors)
     Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/7fdde8eb.html).
 - **Description**
 
-    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
-    this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype), this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
     
     | Types Description                                 | Path Example                          |
     | -----------------------------------------------   | --------------------------------------|
@@ -458,41 +524,55 @@ All `private Components` are recored here. (Only for Contributors)
 
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
-    
+- **Inputs**
+
+    String or FormattedFileSystemPath.
 - **Outputs**
 
-    `[System.String]` if `$Path` can be recognized as a customized path type.
-    `$null` when error or the`$Path` cannot be recognized as a customized path type.
+    String or Null.
+- **Link**
+
+    [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
     
 ### Get-PreReleaseString
     
 - **Description**
 
     Get the pre-release string from a release note file.
+- **Parameter** `$ReleaseNotesPath`
+
+    The release note file path.
 - **Inputs**
 
-    A release note file path.
+    String.
 - **Outputs**
 
-    A string of the pre-release string.
+    String.
     
 ### Get-SortedNameWithDocFromScript
     
 - **Description**
 
     Get sorted function names with docs from a script file or script files.
-- **Inputs**
-
-    A script file path or script files path, and the type of docs.
+    Return a hashtable enumerator with sorted function names as keys(names) and function docs as values.
 - **Parameter** `$Path`
 
     The path of a script file or script files.
 - **Parameter** `$DocType`
 
     The type of docs, 'Function' or 'Class'.
+- **Inputs**
+
+    String.
+    String.
 - **Outputs**
 
-    A hashtable enumerator with sorted function names as keys(names) and function docs as values.
+    System.Collections.DictionaryEntry.
+- **Link**
+
+    [Why both `Name` and `Key` are available?](https://stackoverflow.com/a/77083569/17357963)
+    [Types.ps1xml](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_types.ps1xml?view=powershell-7.3)
     
 ### Move-Target2Source4SoftLink
     
@@ -519,6 +599,14 @@ All `private Components` are recored here. (Only for Contributors)
 - **Parameter** `$BackupDir`
 
     The backup directory path.
+- **Inputs**
+
+    String.
+    String.
+    String or FormattedFileSystemPath.
+- **Outputs**
+
+    None.
 - **Notes**
 
     This function is not generic and is more of an integration for a class of business.
@@ -565,19 +653,17 @@ All `private Components` are recored here. (Only for Contributors)
     The other conditions out of the above 36 conditions will throw error as well.
 - **Link**
 
-    Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
+    [Type assignment/converting](https://stackoverflow.com/a/77062276/17357963).
     
 ### Reset-PathAttribute
     
 - **Synopsis**
 
-    Reset the attributes of a path to the original status, when the path matches one of
-    the special path types that are defined in this function.
+    Reset the attributes of a path to the original status, when the path matches one of the special path types that are defined in this function.
     
 - **Description**
 
-    Reset the attributes of $Path to the original status, when it matches one of the following 8 types
-    (appended with corresponding standard attriibuts):
+    Reset the attributes of $Path to the original status, when it matches one of the following 8 types (appended with corresponding standard attriibuts):
     
     | Type      | Specific Path Example           | Default Attributes        |
     | --------- | ------------------------------- | ------------------------- |
@@ -601,6 +687,7 @@ All `private Components` are recored here. (Only for Contributors)
     ```
     
     We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
+    
     So, to reset the attributes to standard status, we cannot directly give the target attributes, but use a specific `$some_attributes`.
     
 - **Parameter** `$Path`
@@ -616,10 +703,12 @@ All `private Components` are recored here. (Only for Contributors)
 
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
+- **Inputs**
+
+    String or FormattedFileSystemPath.
 - **Outputs**
 
     None.
-    
 - **Component**
 
     To set the attributes of `$Path`:
@@ -627,6 +716,9 @@ All `private Components` are recored here. (Only for Contributors)
     ```powershell
     Set-ItemProperty $Path -Name Attributes -Value $some_attributes
     ```
+- **Link**
+
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
     
 ### Test-AdminPermission
     
@@ -638,7 +730,7 @@ All `private Components` are recored here. (Only for Contributors)
     None.
 - **Outputs**
 
-    `$true` if in AdminPermission, otherwise `$false`.
+    Boolean.
     
 ### Test-IsWSL2
     
@@ -650,30 +742,36 @@ All `private Components` are recored here. (Only for Contributors)
     None.
 - **Outputs**
 
-    `$true` if Wsl2, otherwise `$false`.
+    Boolean.
     
 ### Test-Platform
     
 - **Description**
 
-    Test if the current platform is compatible with the arg `Name`.
-    Currently, it only support Windows, Linux and Wsl2.
+    Test if the current platform is compatible with the arg `$Name`.
+    Currently, it only support Windows, MacOS, Linux and Wsl2.
     If `$Verbose` is given, it will show the result.
-- **Inputs**
+- **Parameter** `$Name`
 
-    A string to indicate the platform name.
-- **Outputs**
+    The platform name to be tested.
+- **Parameter** `$Verbose`
 
-    `$true` if compatible, otherwise `$false`.
+    Whether to show the result.
 - **Example**
 
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
     Test-Platform -Name 'MacOS' -Verbose
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    Boolean.
 - **Link**
 
-    Refer to the [doc](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
+    [Automatic Variables](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
     
 ### Write-FileLog
     
@@ -685,29 +783,30 @@ All `private Components` are recored here. (Only for Contributors)
     The message to be logged.
 - **Inputs**
 
-    A string to indicate the log message.
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    If the log file does not exist, it will be created automatically.
-    But the creation results will be muted to avoid some errors about bool function's return value.
+    If the log file does not exist, it will be created automatically. But the creation results will be muted to avoid some errors about bool function's return value.
     
 ### Write-Log
     
 - **Description**
 
-    Write log to a file and output to the console.
+    Can write log to a file and output to the console simultaneously.
+    Logging to a file is the default behavior.
+    Logging to the console is an optional behavior, which can be controlled by the switch parameter `$ShowVerbose`.
 - **Parameter** `$Message`
 
     The message to be logged.
 - **Parameter** `$ShowVerbose`
 
-    Whether to show the message in verbose mode.
+    Whether to show the message to the console in verbose mode.
 - **Inputs**
 
-    A string and a switch.
+    String.
 - **Outputs**
 
     None.

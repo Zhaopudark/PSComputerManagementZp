@@ -11,13 +11,13 @@ $script:ModuleVersion = $ModuleVersion
 function Get-LogFileName{
 <#
 .DESCRIPTION
-    Get the log file name.
+    Get the log file name according the key info, pre-defined `$LoggingPath` and pre-defined `$ModuleVersion`.
 .PARAMETER KeyInfo
-    A string to indicate the key info of the log file.
+    A string to indicate the key info of the log file name.
 .INPUTS
-    A string to indicate the key info of the log file.
+    String.
 .OUTPUTS
-    A string of the log file name.
+    String.
 #>
     [OutputType([string])]
     param(
@@ -39,12 +39,11 @@ function Write-FileLog{
 .PARAMETER Message
     The message to be logged.
 .INPUTS
-    A string to indicate the log message.
+    String.
 .OUTPUTS
     None.
 .NOTES
-    If the log file does not exist, it will be created automatically.
-    But the creation results will be muted to avoid some errors about bool function's return value.
+    If the log file does not exist, it will be created automatically. But the creation results will be muted to avoid some errors about bool function's return value.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([void])]
@@ -65,13 +64,15 @@ function Write-FileLog{
 function Write-Log{
 <#
 .DESCRIPTION
-    Write log to a file and output to the console.
+    Can write log to a file and output to the console simultaneously.
+    Logging to a file is the default behavior.
+    Logging to the console is an optional behavior, which can be controlled by the switch parameter `$ShowVerbose`.
 .PARAMETER Message
     The message to be logged.
 .PARAMETER ShowVerbose
-    Whether to show the message in verbose mode.
+    Whether to show the message to the console in verbose mode.
 .INPUTS
-    A string and a switch.
+    String.
 .OUTPUTS
     None.
 #>

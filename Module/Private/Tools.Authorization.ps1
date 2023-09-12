@@ -2,7 +2,6 @@
 <#
 .SYNOPSIS
     Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
-
 .DESCRIPTION
     Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
     Only the following 4 types of paths are valid:
@@ -10,8 +9,14 @@
         2. other path in Non-system disk
         3. path of ${Home}
         4. other path in ${Home}
+.PARAMETER Path
+    The path to be checked.
+.INPUTS
+    String or FormattedFileSystemPath.
+.OUTPUTS
+    None.
 .LINK
-    Refer to the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
+    [Authorization](https://little-train.com/posts/7fdde8eb.html).
 #>
     param(
         [FormattedFileSystemPath]$Path
@@ -31,12 +36,10 @@
 function Reset-PathAttribute{
 <#
 .SYNOPSIS
-    Reset the attributes of a path to the original status, when the path matches one of
-    the special path types that are defined in this function.
+    Reset the attributes of a path to the original status, when the path matches one of the special path types that are defined in this function.
 
 .DESCRIPTION
-    Reset the attributes of $Path to the original status, when it matches one of the following 8 types
-    (appended with corresponding standard attriibuts):
+    Reset the attributes of $Path to the original status, when it matches one of the following 8 types (appended with corresponding standard attriibuts):
 
     | Type      | Specific Path Example           | Default Attributes        |
     | --------- | ------------------------------- | ------------------------- |
@@ -60,6 +63,7 @@ function Reset-PathAttribute{
     ```
 
     We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
+    
     So, to reset the attributes to standard status, we cannot directly give the target attributes, but use a specific `$some_attributes`.
 
 .PARAMETER Path
@@ -72,15 +76,18 @@ function Reset-PathAttribute{
 .PARAMETER SkipPathCheck
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
+.INPUTS
+    String or FormattedFileSystemPath.
 .OUTPUTS
     None.
-
 .COMPONENT
     To set the attributes of `$Path`:
 
     ```powershell
     Set-ItemProperty $Path -Name Attributes -Value $some_attributes
     ```
+.LINK
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -125,8 +132,7 @@ function Get-PathType{
 .SYNOPSIS
     Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/7fdde8eb.html).
 .DESCRIPTION
-    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
-    this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype), this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
 
     | Types Description                                 | Path Example                          |
     | -----------------------------------------------   | --------------------------------------|
@@ -183,10 +189,13 @@ function Get-PathType{
 .PARAMETER SkipPathCheck
     Switch to disable path check at the beginning.
     If true(given), the path will not be checked at the beginning.
-
+.INPUTS
+    String or FormattedFileSystemPath.
 .OUTPUTS
-    `[System.String]` if `$Path` can be recognized as a customized path type.
-    `$null` when error or the`$Path` cannot be recognized as a customized path type.
+    String or Null.
+.LINK
+    [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
 #>
     [CmdletBinding()]
     [OutputType([string])]
@@ -310,10 +319,12 @@ function Get-DefaultSddl{
 
 .PARAMETER PathType
     The path type to be checked.
-
+.INPUTS
+    String.
 .OUTPUTS
-    `[System.String]` to represtent a SDDL if the `$PathType` is involved in above mappings.
-    `$null` if the `$PathType` is not involved in above mappings.
+    String or Null.
+.LINK
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
 #>
     [CmdletBinding()]
     param(

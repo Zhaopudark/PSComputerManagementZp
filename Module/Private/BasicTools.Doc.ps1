@@ -2,10 +2,11 @@ function Get-FunctionDoc{
 <#
 .DESCRIPTION
     Get function docs from a script file.
+    Return a hashtable with function names as keys and function docs as values.
 .INPUTS
-    A script file path.
+    String.
 .OUTPUTS
-    A hashtable with function names as keys and function docs as values.
+    Hashtable.
 #>
     [CmdletBinding()]
     [OutputType([hashtable])]
@@ -41,10 +42,11 @@ function Get-ClassDoc{
 <#
 .DESCRIPTION
     Get class docs from a script file.
+    Return a hashtable with class names as keys and class docs as values.
 .INPUTS
-    A script file path.
+    String.
 .OUTPUTS
-    A hashtable with class names as keys and class docs as values.
+    Hashtable.
 #>
     [CmdletBinding()]
     [OutputType([hashtable])]
@@ -96,9 +98,9 @@ function Format-Doc2Markdown{
         xxx
     ```
 .INPUTS
-    A powershell doc string.
+    String.
 .OUTPUTS
-    A formatted string that can be used in markdown directly.
+    String.
 #>
     [CmdletBinding()]
     [OutputType([string])]
@@ -136,15 +138,21 @@ function Get-SortedNameWithDocFromScript{
 <#
 .DESCRIPTION
     Get sorted function names with docs from a script file or script files.
-.INPUTS
-    A script file path or script files path, and the type of docs.
+    Return a hashtable enumerator with sorted function names as keys(names) and function docs as values.
 .PARAMETER Path
     The path of a script file or script files.
 .PARAMETER DocType
     The type of docs, 'Function' or 'Class'.
+.INPUTS
+    String.
+    String.
 .OUTPUTS
-    A hashtable enumerator with sorted function names as keys(names) and function docs as values.
+    System.Collections.DictionaryEntry.
+.LINK
+    [Why both `Name` and `Key` are available?](https://stackoverflow.com/a/77083569/17357963)
+    [Types.ps1xml](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_types.ps1xml?view=powershell-7.3)
 #>
+    [OutputType([System.Collections.DictionaryEntry])]
     param(
         [Parameter(Mandatory)]
         [string]$Path,

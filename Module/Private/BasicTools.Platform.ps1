@@ -2,20 +2,24 @@
 function Test-Platform{
 <#
 .DESCRIPTION
-    Test if the current platform is compatible with the arg `Name`.
-    Currently, it only support Windows, Linux and Wsl2.
+    Test if the current platform is compatible with the arg `$Name`.
+    Currently, it only support Windows, MacOS, Linux and Wsl2.
     If `$Verbose` is given, it will show the result.
-.INPUTS
-    A string to indicate the platform name.
-.OUTPUTS
-    `$true` if compatible, otherwise `$false`.
+.PARAMETER Name
+    The platform name to be tested.
+.PARAMETER Verbose
+    Whether to show the result.
 .EXAMPLE
     Test-Platform -Name 'Windows' -Verbose
     Test-Platform -Name 'Wsl2' -Verbose
     Test-Platform -Name 'Linux' -Verbose
     Test-Platform -Name 'MacOS' -Verbose
+.INPUTS
+    String.
+.OUTPUTS
+    Boolean.
 .LINK
-    Refer to the [doc](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
+    [Automatic Variables](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.3&viewFallbackFrom=powershell-6#islinux) for `$IsWindows` and `$IsLinux`.
 #>
     [CmdletBinding()]
     [OutputType([bool])]
@@ -69,7 +73,7 @@ function Test-IsWSL2{
 .INPUTS
     None.
 .OUTPUTS
-    `$true` if Wsl2, otherwise `$false`.
+    Boolean.
 #>
     [CmdletBinding()]
     [OutputType([bool])]
@@ -101,7 +105,7 @@ function Test-AdminPermission {
 .INPUTS
     None.
 .OUTPUTS
-    `$true` if in AdminPermission, otherwise `$false`.
+    Boolean.
 #>
     [CmdletBinding()]
     [OutputType([bool])]
@@ -167,7 +171,8 @@ function Assert-AdminRobocopyAvailable{
 <#
 .DESCRIPTION
     Assert the robocopy command is available.
-    And assert if the current platform is Windows and the current process is in AdminPermission.
+    Assert if the current platform is Windows.
+    Assert if the current process is in AdminPermission
 .INPUTS
     None.
 .OUTPUTS

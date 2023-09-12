@@ -10,13 +10,18 @@ function Copy-FileWithBackup{
     The backup directory path.
 .PARAMETER Indicator
     The indicator string to indicate the backup file.
+.INPUTS
+    String or FormattedFileSystemPath.
+    String.
+    String or FormattedFileSystemPath.
+    String.
 .OUTPUTS
     None.
 .NOTES
     Only support a simple file.
     Do not support a directory, a file symbolic link, or a hard link.
 .LINK
-    Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
+    [Type assignment/converting](https://stackoverflow.com/a/77062276/17357963).
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -71,6 +76,13 @@ function Copy-DirWithBackup{
     The backup directory path.
 .PARAMETER Indicator
     The indicator string to indicate the backup directory.
+.INPUTS
+    String or FormattedFileSystemPath.
+    String.
+    String or FormattedFileSystemPath.
+    String.
+.OUTPUTS
+    None.
 .NOTES
     Only support a simple directory.
     Do not support a file, a directory symbolic link, or a junction point.
@@ -78,8 +90,7 @@ function Copy-DirWithBackup{
     Patched to avoid Copy-Item's ambiguity:
         If the destination is existing, Copy-Item will merge the source to the destination. (Items within the source will be copied and to the destination, covering the existing items with the same name.)
         If the destination is non-existing, Copy-Item will create a new directory with the source's name.
-.LINK
-    Refer to the [question and answer](https://stackoverflow.com/a/77062276/17357963) for type assignment/converting.
+    
     Refer to the [doc](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy) for more information about Copy-Item.
         |Robocopy args| effections|
         |---|---|
@@ -87,6 +98,9 @@ function Copy-DirWithBackup{
         | /copyall | Copies all file information (equivalent to /copy:DATSOU).|
         | /dcopy:DATE | Specifies what to copy in directories. D-Data A-Attributes T-Time stamps E-Extended attribute|
         | /log+:<logfile> | Writes the status output to the log file (appends the output to the existing log file).|
+.LINK
+    [Type assignment/converting](https://stackoverflow.com/a/77062276/17357963).
+    [Robocopy](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy).
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
