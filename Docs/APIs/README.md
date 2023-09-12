@@ -146,13 +146,13 @@ All `public APIs` are recored here.
     This function is used to setup FSL environment variables for pwsh as well as FSL's bash settings in .profile.
     It mimics the following bash settings in .profile:
     
-    
-    bash
+    ```bash
     FSL Setup
     FSLDIR=/home/some_user_name/fsl
     PATH=${FSLDIR}/share/fsl/bin:${PATH}
     export FSLDIR PATH
     ${FSLDIR}/etc/fslconf/fsl.sh
+    ```
     
 - **Parameter** `$FslDir`
 
