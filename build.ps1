@@ -1,29 +1,32 @@
-& "${PSScriptRoot}\build_for_APIs_docs.ps1" # isolate the scope with `&`
+# & "${PSScriptRoot}\build_for_APIs_docs.ps1" # isolate the scope with `&`
 
 $ErrorActionPreference = 'Stop'
+. "${PSScriptRoot}\config.ps1"
 
 . "${PSScriptRoot}\Module\Register.PrivateComponents.ps1"
 
 
 # check release version
-Assert-ReleaseVersionConsistency -Version $local:ModuleSettings.ModuleVersion -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
+Assert-ReleaseVersionConsistency -Version $local:ModuleSettings.ModuleVersion -ReleaseNotesPath $local:ConfigInfo.MDDocs.Release
+
 # check and get pre-release string
-$Prerelease = Get-PreReleaseString -ReleaseNotesPath "${PSScriptRoot}\RELEASE.md"
+$Prerelease = Get-PreReleaseString -ReleaseNotesPath $local:ConfigInfo.MDDocs.Release
 
 
 # generate APIs README.md
 $api_content = @("All ``public APIs`` are recored here.")
 $api_content += "## Functions"
 foreach ($entry in $local:ModuleInfo.SortedFunctionsToExportWithDocs){
-    $api_content += "- [$($entry.Name)](.\$($entry.Name).md)"
-    # if ($entry.Value){
-    #     $api_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
-    # }
-    # else{
-    #     $api_content += ''
-    # }
+    # $api_content += "- [$($entry.Name)](.\$($entry.Name).md)"
+    $api_content += "### $($entry.Name)"
+    if ($entry.Value){
+        $api_content += "$(Format-Doc2Markdown -DocString $entry.Value)"
+    }
+    else{
+        $api_content += ''
+    }
 }
-$api_content | Set-Content -Path "${PSScriptRoot}\Docs\APIs\README.md"
+$api_content | Set-Content -Path $local:ConfigInfo.MDDocs.APIs
 
 # generate Components README.md
 $component_content = @("All ``private Components`` are recored here. (Only for Contributors)")
@@ -50,8 +53,7 @@ foreach ($entry in $local:ModuleInfo.SortedFunctionsNotToExportWithDocs){
     }
 }
 
-$component_content | Set-Content -Path "${PSScriptRoot}\Docs\Components\README.md"
-
+$component_content | Set-Content -Path $local:ConfigInfo.MDDocs.Components
 
 
 if (Test-Platform 'Windows'){

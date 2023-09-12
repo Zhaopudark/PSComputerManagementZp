@@ -9,15 +9,10 @@
 .NOTES
     Only support IPV4.
     Originally, refer to the post [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
-    But there will be a warning like:
-    ```markdown
-    File 'xxx' uses WMI cmdlet. For PowerShell 3.0 and above, use CIM cmdlet, which perform the same tasks as the WMI cmdlets.
-    The CIM cmdlets comply with WS-Management (WSMan) standards and with the Common Information Model (CIM) standard, which enables the cmdlets to use the same techniques
-    to manage Windows computers and those running other operating systems.
-    ```
-    So in this function, `Get-CimInstance` is used to replace `Get-WmiObject`
+    But there will be a `WMI cmdlet` warning to remind you to use `CIM cmdlet` instead of `WMI cmdlet` in PowerShell 3.0 and above.
+    So in this function, `Get-CimInstance` is used to replace the `Get-WmiObject` cmdlet.
 .LINK
-    [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
+    [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952)
     [Select-String](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3)
 #>
     [CmdletBinding()]
@@ -59,7 +54,7 @@ function Get-LocalHostIPV4{
 .NOTES
     Only support IPV4.
 .LINK
-    [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0).
+    [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)
 #>
     [CmdletBinding()]
     param()
@@ -98,7 +93,7 @@ function Set-SystemProxyIPV4ForCurrentUser{
     Only support IPV4.
     Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that is hosted by a Windows 11 `Virtual Machine` `Host Machine`.
 .LINK
-    [Windows core proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE).
+    [Windows core proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

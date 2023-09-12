@@ -8,14 +8,15 @@ function Register-FSLEnvForPwsh{
 
     This function is used to setup FSL environment variables for pwsh as well as FSL's bash settings in .profile.
     It mimics the following bash settings in .profile:
-
-    ```bash
-    # FSL Setup
+    
+    
+    bash
+    FSL Setup
     FSLDIR=/home/some_user_name/fsl
     PATH=${FSLDIR}/share/fsl/bin:${PATH}
     export FSLDIR PATH
-    . ${FSLDIR}/etc/fslconf/fsl.sh
-    ```
+    ${FSLDIR}/etc/fslconf/fsl.sh
+   
 .PARAMETER FslDir
     The FSL installation directory.
 .INPUTS

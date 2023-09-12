@@ -28,7 +28,7 @@ function Reset-Authorization{
 .NOTES
     Only support Windows.
 .LINK
-    [Authorization](https://little-train.com/posts/7fdde8eb.html).
+    [Authorization](https://little-train.com/posts/7fdde8eb.html)
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]

@@ -2,8 +2,9 @@ $ErrorActionPreference = 'Stop'
 Remove-Module PSComputerManagementZp -Force -ErrorAction SilentlyContinue
 Remove-Module platyPS -Force -ErrorAction SilentlyContinue
 
-
-Install-Module -Name platyPS -Scope CurrentUser -Force
+If (!(Get-InstalledModule -Name platyPS)){
+    Install-Module -Name platyPS -Scope CurrentUser -Force
+}
 
 Import-Module platyPS -Force
 
@@ -18,8 +19,11 @@ foreach ($item in Get-Item "${PSScriptRoot}\Docs\APIs\*.md"){
     $fileContent = $fileContent -replace '\\\]', ']'
     $fileContent = $fileContent -replace '\[\[', '['
     $fileContent = $fileContent -replace '\]\(\)', ''
+    $fileContent = $fileContent -replace '### Example[^#]*{{ Add example description here }}',''
     Set-Content -Path $item -Value $fileContent
 }
+
+New-ExternalHelp "${PSScriptRoot}\Docs\APIs" -OutputPath "${PSScriptRoot}\Module\en-US" -Force
 
 Remove-Module PSComputerManagementZp -Force -ErrorAction SilentlyContinue
 Remove-Module platyPS -Force -ErrorAction SilentlyContinue
