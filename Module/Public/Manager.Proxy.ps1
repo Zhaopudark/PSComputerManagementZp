@@ -34,7 +34,7 @@
     }elseif (Test-Platform 'Wsl2'){
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
     }elseif (Test-Platform 'MacOS') {
-        $gateway_ip = $(route get default | grep gateway) #get gateway_ip
+        $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
     }else{
         throw  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
