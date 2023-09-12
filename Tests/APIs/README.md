@@ -6,23 +6,25 @@ All `public APIs` are recored here.
 
     Append a path to the current machine level `$Env:PATH`.
     Before appending, the function will check and de-duplicate the current machine level `$Env:PATH`.
-- **Inputs**
-
-    A string of the path.
 - **Parameter** `$Path`
 
     The path to be appended.
+- **Example**
+
+    Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
+- **Inputs**
+
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    Support Windows only.
+    Only support Windows.
     Need Administrator privilege.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Example**
+- **Link**
 
-    Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Add-PathToCurrentProcessEnvPath
     
@@ -30,15 +32,21 @@ All `public APIs` are recored here.
 
     Append a path to the current process level `$Env:PATH`.
     Before appending, the function will check and de-duplicate the current process level `$Env:PATH`.
-- **Inputs**
+- **Parameter** `$Path`
 
-    A string of the path.
-- **Outputs**
-
-    None.
+    The path to be appended.
 - **Example**
 
     Add-PathToCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    None.
+- **Link**
+
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Add-PathToCurrentUserEnvPath
     
@@ -46,19 +54,24 @@ All `public APIs` are recored here.
 
     Append a path to the current user level `$Env:PATH`.
     Before appending, the function will check and de-duplicate the current user level `$Env:PATH`.
+- **Parameter** `$Path`
+
+    The path to be appended.
+- **Example**
+
+    Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
 - **Inputs**
 
-    A string of the path.
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    Support Windows only.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Example**
+    Only support Windows.
+- **Link**
 
-    Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Get-GatewayIPV4
     
@@ -70,10 +83,10 @@ All `public APIs` are recored here.
     None.
 - **Outputs**
 
-    A string of the gateway IP address.
+    String.
 - **Notes**
 
-    It only support IPV4.
+    Only support IPV4.
     Originally, refer to the post [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
     But there will be a warning like:
     ```markdown
@@ -82,6 +95,9 @@ All `public APIs` are recored here.
     to manage Windows computers and those running other operating systems.
     ```
     So in this function, `Get-CimInstance` is used to replace `Get-WmiObject`
+- **Link**
+
+    [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
     
 ### Get-LocalHostIPV4
     
@@ -93,10 +109,13 @@ All `public APIs` are recored here.
     None.
 - **Outputs**
 
-    A string of the localhost IP address.
+    String.
 - **Notes**
 
-    It only support IPV4.
+    Only support IPV4.
+- **Link**
+
+    [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0).
     
 ### Merge-RedundantEnvPathFromCurrentMachineToCurrentUser
     
@@ -112,15 +131,11 @@ All `public APIs` are recored here.
     None.
 - **Notes**
 
-    Support Windows only.
+    Only support Windows.
     Need Administrator privilege.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Description**
+- **Link**
 
-    Sometimes, we may find some redundant items that both in the machine level and the user level `$Env:PATH`.
-    This may because we have installed some software in different privileges.
-    This function will help us to merge the redundant items from the machine level `$Env:PATH` to the user level.
-    The operation can symplify the `$Env:PATH`.
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Register-FSLEnvForPwsh
     
@@ -142,9 +157,12 @@ All `public APIs` are recored here.
     export FSLDIR PATH
     . ${FSLDIR}/etc/fslconf/fsl.sh
     ```
+- **Parameter** `$FslDir`
+
+    The FSL installation directory.
 - **Inputs**
 
-    A path string of the FSL directory.
+    String.
 - **Outputs**
 
     None.
@@ -169,6 +187,12 @@ All `public APIs` are recored here.
     So, there is no need to setup FSL environment variables for pwsh again.
     This function is just for a record.
     
+    Only support Linux and WSL2.
+- **Link**
+
+    [FSL](https://fsl.fmrib.ox.ac.uk)
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
+    
 ### Remove-EnvProxyIPV4ForShellProcess
     
 - **Description**
@@ -187,21 +211,26 @@ All `public APIs` are recored here.
 
     Remove matched paths from the current machine level `$Env:PATH`.
     Before removing, the function will check and de-duplicate the current machine level `$Env:PATH`.
+- **Parameter** `$Pattern`
+
+    The pattern to be matched to represent the items to be removed.
+- **Example**
+
+    Remove-MatchedPathsFromCurrentMachineEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the machine level `$Env:PATH`.
 - **Inputs**
 
-    A string of pattern.
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    Support Windows only.
+    Only support Windows.
     Need Administrator privilege.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Example**
+- **Link**
 
-    Remove-MatchedPathsFromCurrentMachineEnvPath -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the machine level `$Env:PATH`.
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Remove-MatchedPathsFromCurrentProcessEnvPath
     
@@ -209,16 +238,22 @@ All `public APIs` are recored here.
 
     Remove matched paths from the current process level `$Env:PATH`.
     Before removing, the function will check and de-duplicate the current process level `$Env:PATH`.
-- **Inputs**
+- **Parameter** `$Pattern`
 
-    A string of pattern.
-- **Outputs**
-
-    None.
+    The pattern to be matched to represent the items to be removed.
 - **Example**
 
     Remove-MatchedPathsFromCurrentProcessEnvPath -Pattern 'Git'
     # It will remove all the paths that match the pattern 'Git' in the process level `$Env:PATH`.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    None.
+- **Link**
+
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Remove-MatchedPathsFromCurrentUserEnvPath
     
@@ -226,20 +261,25 @@ All `public APIs` are recored here.
 
     Remove matched paths from the current user level `$Env:PATH`.
     Before removing, the function will check and de-duplicate the current user level `$Env:PATH`.
+- **Parameter** `$Pattern`
+
+    The pattern to be matched to represent the items to be removed.
+- **Example**
+
+    Remove-MatchedPathsFromCurrentUserEnvPath -Pattern 'Git'
+    # It will remove all the paths that match the pattern 'Git' in the user level `$Env:PATH`.
 - **Inputs**
 
-    A string of pattern.
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    Support Windows only.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Example**
+    Only support Windows.
+- **Link**
 
-    Remove-MatchedPathsFromCurrentUserEnvPath -Pattern 'Git'
-    # It will remove all the paths that match the pattern 'Git' in the user level `$Env:PATH`.
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Remove-PathFromCurrentMachineEnvPath
     
@@ -247,20 +287,25 @@ All `public APIs` are recored here.
 
     Remove a path from the current machine level `$Env:PATH`.
     Before removing, the function will check and de-duplicate the current machine level `$Env:PATH`.
+- **Parameter** `$Path`
+
+    The path to be removed.
+- **Example**
+
+    Remove-PathFromCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
 - **Inputs**
 
-    A string of the path.
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    Support Windows only.
+    Only support Windows.
     Need Administrator privilege.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Example**
+- **Link**
 
-    Remove-PathFromCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Remove-PathFromCurrentProcessEnvPath
     
@@ -268,15 +313,21 @@ All `public APIs` are recored here.
 
     Remove a path from the current process level `$Env:PATH`.
     Before removing, the function will check and de-duplicate the current process level `$Env:PATH`.
-- **Inputs**
+- **Parameter** `$Path`
 
-    A string of the path.
-- **Outputs**
-
-    None.
+    The path to be removed.
 - **Example**
 
     Remove-PathFromCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    None.
+- **Link**
+
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Remove-PathFromCurrentUserEnvPath
     
@@ -284,19 +335,24 @@ All `public APIs` are recored here.
 
     Remove a path from the current user level `$Env:PATH`.
     Before removing, the function will check and de-duplicate the current user level `$Env:PATH`.
+- **Parameter** `$Path`
+
+    The path to be removed.
+- **Example**
+
+    Remove-PathFromCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
 - **Inputs**
 
-    A string of the path.
+    String.
 - **Outputs**
 
     None.
 - **Notes**
 
-    Support Windows only.
-    See the [doc](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3) for ShouldProcess warnings given by PSScriptAnalyzer.
-- **Example**
+    Only support Windows.
+- **Link**
 
-    Remove-PathFromCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Remove-SystemProxyIPV4ForCurrentUser
     
@@ -324,15 +380,15 @@ All `public APIs` are recored here.
     2. Get default SDDL of `$Path` by `Get-DefaultSddl` according to `$path_type`
     3. Set SDDL of `$Path` to default SDDL by `Set-Acl`
     
-    Only for window system
-    Only for single user account on window system, i.e. totoally Personal Computer
-    
 - **Parameter** `$Path`
 
     The path to be reset.
 - **Parameter** `$Recurse`
 
     A switch parameter to indicate whether to reset the ACL of all files and directories in the path recursively.
+- **Inputs**
+
+    String or FormattedFileSystemPath.
 - **Outputs**
 
     None.
@@ -344,9 +400,13 @@ All `public APIs` are recored here.
     $new_acl.SetSecurityDescriptorSddlForm($sddl)
     Set-Acl -LiteralPath $Path -AclObject $new_acl
     ```
+- **Notes**
+
+    Only support Windows.
 - **Link**
 
-    Refer to the [post](https://little-train.com/posts/7fdde8eb.html) for more information about this function.
+    [Authorization](https://little-train.com/posts/7fdde8eb.html).
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Set-DirJunctionWithSync
     
@@ -354,6 +414,7 @@ All `public APIs` are recored here.
 
     Set a junction point from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a junction point to the target.
+    Merge, cover and backup may be performed when needed.
 - **Parameter** `$Path`
 
     The path to be set.
@@ -363,9 +424,21 @@ All `public APIs` are recored here.
 - **Parameter** `$BackupDir`
 
     The backup directory path.
+- **Inputs**
+
+    String.
+    String.
+    String.
 - **Outputs**
 
     None.
+- **Notes**
+
+    Only support Windows.
+    Need Administrator privilege.
+- **Link**
+
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Set-DirSymbolicLinkWithSync
     
@@ -373,6 +446,7 @@ All `public APIs` are recored here.
 
     Set a directory symbolic link from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
+    Merge, cover and backup may be performed when needed.
 - **Parameter** `$Path`
 
     The path to be set.
@@ -382,32 +456,47 @@ All `public APIs` are recored here.
 - **Parameter** `$BackupDir`
 
     The backup directory path.
+- **Inputs**
+
+    String.
+    String.
+    String.
 - **Outputs**
 
     None.
+- **Notes**
+
+    Only support Windows.
+    Need Administrator privilege.
+- **Link**
+
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Set-EnvProxyIPV4ForShellProcess
     
 - **Description**
 
     Set environment variables as `ServerIP:PortNumber` for the current shell process.
-    It does not influence system proxy.
-    It only support IPV4.
-    
 - **Parameter** `$ServerIP`
 
     The server IP address for proxy.
-    
 - **Parameter** `$PortNumber`
 
     The port number for proxy.
-    
-- **Outputs**
-
-    None.
 - **Example**
 
     Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890
+- **Inputs**
+
+    String.
+    String or Int.
+- **Outputs**
+
+    None.
+- **Notes**
+
+    Not influence system proxy.
+    Only support IPV4.
     
 ### Set-FileSymbolicLinkWithSync
     
@@ -415,6 +504,7 @@ All `public APIs` are recored here.
 
     Set a file symbolic link from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
+    Merge, cover and backup may be performed when needed.
 - **Parameter** `$Path`
 
     The path to be set.
@@ -424,43 +514,51 @@ All `public APIs` are recored here.
 - **Parameter** `$BackupDir`
 
     The backup directory path.
+- **Inputs**
+
+    String.
+    String.
+    String.
 - **Outputs**
 
     None.
+- **Notes**
+
+    Only support Windows.
+    Need Administrator privilege.
+- **Link**
+
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Set-SystemProxyIPV4ForCurrentUser
     
 - **Description**
 
     Set system proxy as `ServerIP:PortNumber` for the current user.
-    
 - **Parameter** `$ServerIP`
 
     The server IP address for proxy.
-    
 - **Parameter** `$PortNumber`
 
     The port number for proxy.
-    
-- **Outputs**
-
-    None.
-    
 - **Example**
 
     Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890
-    
+- **Inputs**
+
+    String.
+    String or Int.
+- **Outputs**
+
+    None.
 - **Notes**
 
-    It does not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
-    It is not for all users (not on `local machine` level).
+    Not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
+    Not for all users (not on `local machine` level).
     Automatically add bypass list.
-    It only support IPV4.
-    Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that hosted
-    by a Windows 11 `Virtual Machine` `Host Machine`.
+    Only support IPV4.
+    Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that is hosted by a Windows 11 `Virtual Machine` `Host Machine`.
 - **Link**
 
-    Refer to [windows-core-proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
-    Refer to [Chat-GPT](https://chat.openai.com/)
-    
+    [Windows core proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE).
     

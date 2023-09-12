@@ -1,8 +1,8 @@
 function Reset-Authorization{
 <#
 .SYNOPSIS
-Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
-For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/7fdde8eb.html).
+    Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
+    For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/7fdde8eb.html).
 
 .DESCRIPTION
     Reset ACL of `$Path` to its default state by 3 steps:
@@ -10,13 +10,12 @@ For more information on the motivations, rationale, logic, limitations and usage
         2. Get default SDDL of `$Path` by `Get-DefaultSddl` according to `$path_type`
         3. Set SDDL of `$Path` to default SDDL by `Set-Acl`
 
-    Only for window system
-    Only for single user account on window system, i.e. totoally Personal Computer
-
 .PARAMETER Path
     The path to be reset.
 .PARAMETER Recurse
     A switch parameter to indicate whether to reset the ACL of all files and directories in the path recursively.
+.INPUTS
+    String or FormattedFileSystemPath.
 .OUTPUTS
     None.
 .COMPONENT
@@ -26,8 +25,11 @@ For more information on the motivations, rationale, logic, limitations and usage
         $new_acl.SetSecurityDescriptorSddlForm($sddl)
         Set-Acl -LiteralPath $Path -AclObject $new_acl
     ```
+.NOTES
+    Only support Windows.
 .LINK
-    Refer to the [post](https://little-train.com/posts/7fdde8eb.html) for more information about this function.
+    [Authorization](https://little-train.com/posts/7fdde8eb.html).
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

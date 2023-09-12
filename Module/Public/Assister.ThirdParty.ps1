@@ -16,8 +16,10 @@ function Register-FSLEnvForPwsh{
     export FSLDIR PATH
     . ${FSLDIR}/etc/fslconf/fsl.sh
     ```
+.PARAMETER FslDir
+    The FSL installation directory.
 .INPUTS
-    A path string of the FSL directory.
+    String.
 .OUTPUTS
     None.
 .NOTES
@@ -39,6 +41,11 @@ function Register-FSLEnvForPwsh{
 
     So, there is no need to setup FSL environment variables for pwsh again.
     This function is just for a record.
+
+    Only support Linux and WSL2.
+.LINK
+    [FSL](https://fsl.fmrib.ox.ac.uk)
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param ([string]$FslDir)

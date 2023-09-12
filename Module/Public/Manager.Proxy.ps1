@@ -5,9 +5,9 @@
 .INPUTS
     None.
 .OUTPUTS
-    A string of the gateway IP address.
+    String.
 .NOTES
-    It only support IPV4.
+    Only support IPV4.
     Originally, refer to the post [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
     But there will be a warning like:
     ```markdown
@@ -16,20 +16,33 @@
     to manage Windows computers and those running other operating systems.
     ```
     So in this function, `Get-CimInstance` is used to replace `Get-WmiObject`
+.LINK
+    [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952).
 #>
     [CmdletBinding()]
     param()
     if (Test-Platform 'Windows'){
         $wmi = Get-CimInstance win32_networkadapterconfiguration -filter "ipenabled = 'true'"
-        return $wmi.DefaultIPGateway
+        if ($wmi.DefaultIPGateway.Count -gt 0){
+            $gateway_ip = $wmi.DefaultIPGateway[0]
+        }
+        else{
+            $gateway_ip = ''
+        }
     }elseif (Test-Platform 'Linux'){
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
-        return $gateway_ip
     }elseif (Test-Platform 'Wsl2'){
         $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
+    }elseif (Test-Platform 'MacOS') {
+        $gateway_ip = $(Get-Content /etc/resolv.conf |grep -oP '(?<=nameserver\ ).*') #get gateway_ip
+    }else{
+        throw  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        exit -1
+    }
+    if ($gateway_ip -match "^([\d]{1,3}[.]){3}\d{1,3}$"){
         return $gateway_ip
     }else{
-        Write-Log  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+        throw  "Get the gateway ip faild, only support IPV4, but get ``$gateway_ip``."
         exit -1
     }
 }
@@ -40,47 +53,50 @@ function Get-LocalHostIPV4{
 .INPUTS
     None.
 .OUTPUTS
-    A string of the localhost IP address.
+    String.
 .NOTES
-    It only support IPV4.
+    Only support IPV4.
+.LINK
+    [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0).
 #>
     [CmdletBinding()]
     param()
-    $localhostIPv4 = [System.Net.Dns]::GetHostAddresses("localhost") | Where-Object { $_.AddressFamily -eq 'InterNetwork' }
-    if ($localhostIPv4.Count -gt 0) {
-        return $($localhostIPv4[0].IPAddressToString)
+    $localhost_addresses = [System.Net.Dns]::GetHostAddresses("localhost") | Where-Object { $_.AddressFamily -eq 'InterNetwork' }
+    if ($localhost_addresses.Count -gt 0) {
+        $localhost_ip = $localhost_addresses[0].IPAddressToString
     }else {
-        return  $null
+        $localhost_ip = ''
+    }
+    if ($localhost_ip -match "^([\d]{1,3}[.]){3}\d{1,3}$"){
+        return $localhost_ip
+    }else{
+        throw  "Get the localhost ip faild, only support IPV4, but get ``$localhost_ip``."
+        exit -1
     }
 }
 function Set-SystemProxyIPV4ForCurrentUser{
 <#
 .DESCRIPTION
     Set system proxy as `ServerIP:PortNumber` for the current user.
-
 .PARAMETER ServerIP
     The server IP address for proxy.
-
 .PARAMETER PortNumber
     The port number for proxy.
-
-.OUTPUTS
-    None.
-
 .EXAMPLE
     Set-SystemProxyIPV4ForCurrentUser -ServerIP 127.0.0.1 -PortNumber 7890
-
+.INPUTS
+    String.
+    String or Int.
+.OUTPUTS
+    None.
 .NOTES
-    It does not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
-    It is not for all users (not on `local machine` level).
+    Not influence environment variables, such as `$Env:http_proxy`, `$Env:https_proxy`, `$Env:ftp_proxy`, `$Env:socks_proxy` etc.
+    Not for all users (not on `local machine` level).
     Automatically add bypass list.
-    It only support IPV4.
-    Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that hosted
-    by a Windows 11 `Virtual Machine` `Host Machine`.
+    Only support IPV4.
+    Limitation: This function has only been tested on a Windows 11 `Virtual Machine` that is hosted by a Windows 11 `Virtual Machine` `Host Machine`.
 .LINK
-    Refer to [windows-core-proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
-    Refer to [Chat-GPT](https://chat.openai.com/)
-
+    [Windows core proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE).
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -145,19 +161,20 @@ function Set-EnvProxyIPV4ForShellProcess{
 <#
 .DESCRIPTION
     Set environment variables as `ServerIP:PortNumber` for the current shell process.
-    It does not influence system proxy.
-    It only support IPV4.
-
 .PARAMETER ServerIP
     The server IP address for proxy.
-
 .PARAMETER PortNumber
     The port number for proxy.
-
-.OUTPUTS
-    None.
 .EXAMPLE
     Set-EnvProxyIPV4ForShellProcess -ServerIP 127.0.0.1 -PortNumber 7890
+.INPUTS
+    String.
+    String or Int.
+.OUTPUTS
+    None.
+.NOTES
+    Not influence system proxy.
+    Only support IPV4.
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

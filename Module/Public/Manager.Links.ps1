@@ -3,14 +3,24 @@ function Set-DirSymbolicLinkWithSync{
 .DESCRIPTION
     Set a directory symbolic link from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
+    Merge, cover and backup may be performed when needed.
 .PARAMETER Path
     The path to be set.
 .PARAMETER Target
     The target path.
 .PARAMETER BackupDir
     The backup directory path.
+.INPUTS
+    String.
+    String.
+    String.
 .OUTPUTS
     None.
+.NOTES
+    Only support Windows.
+    Need Administrator privilege.
+.LINK
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -34,14 +44,24 @@ function Set-FileSymbolicLinkWithSync{
 .DESCRIPTION
     Set a file symbolic link from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a symbolic link to the target.
+    Merge, cover and backup may be performed when needed.
 .PARAMETER Path
     The path to be set.
 .PARAMETER Target
     The target path.
 .PARAMETER BackupDir
     The backup directory path.
+.INPUTS
+    String.
+    String.
+    String.
 .OUTPUTS
     None.
+.NOTES
+    Only support Windows.
+    Need Administrator privilege.
+.LINK
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -65,14 +85,24 @@ function Set-DirJunctionWithSync{
 .DESCRIPTION
     Set a junction point from the path to the target.
     Then, get a result as $path\rightarrow target$, which means the path is a junction point to the target.
+    Merge, cover and backup may be performed when needed.
 .PARAMETER Path
     The path to be set.
 .PARAMETER Target
     The target path.
 .PARAMETER BackupDir
     The backup directory path.
+.INPUTS
+    String.
+    String.
+    String.
 .OUTPUTS
     None.
+.NOTES
+    Only support Windows.
+    Need Administrator privilege.
+.LINK
+    [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(

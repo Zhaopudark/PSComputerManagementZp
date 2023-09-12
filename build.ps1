@@ -65,7 +65,7 @@ if (Test-Platform 'Windows'){
     $local:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($local:ModuleInfo.ModuleName)"
     $local:ModuleInfo.BuildPath = "/tmp/$($local:ModuleInfo.ModuleName)"
 }else{
-    Write-Error "The current platform, $($PSVersionTable.Platform), has not been supported yet."
+    throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
     exit -1
 }
 
