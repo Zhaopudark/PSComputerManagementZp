@@ -35,7 +35,7 @@
     }elseif (Test-Platform 'Wsl2'){
         $gateway_ip = (Select-String '/etc/resolv.conf' -Pattern "nameserver (.*)").Matches.Groups[1].Value #get gateway_ip
     }elseif (Test-Platform 'MacOS') {
-        $gateway_ip = $(Get-Content /etc/resolv.conf) #get gateway_ip
+        $gateway_ip = (Get-NetRoute -DestinationPrefix 0.0.0.0/0 | Select-Object -ExpandProperty NextHop).ToString() #get gateway_ip
     }else{
         throw  "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         exit -1
