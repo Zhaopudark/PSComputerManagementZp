@@ -9,6 +9,12 @@ BeforeAll {
 }
 
 Describe 'Test Proxy Management' {
+    It 'Test Get-GatewayIPV4' {
+        Get-GatewayIPV4
+    }
+    It 'Test Get-LocalHostIPV4' {
+        Get-LocalHostIPV4
+    }
     It 'Test Set-EnvProxyIPV4ForShellProcess' {
         Set-EnvProxyIPV4ForShellProcess -ServerIP 127.1.2.3 -PortNumber 4567.
         [Environment]::GetEnvironmentVariable('http_proxy') | Should -Be 'http://127.1.2.3:4567'
