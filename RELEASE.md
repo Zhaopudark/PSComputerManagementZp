@@ -1,5 +1,5 @@
 # Release v0.0.3
-## Release v0.0.3-beta2
+## Release v0.0.3-stable
 - Adjusted the organization of private components to further reduce coupling.
 ## Release v0.0.3-beta1
 - Move the public API function, `Register-FSLEnvForPwsh` to `Assister.ThirdParty.ps1` for better understanding and for further development.
