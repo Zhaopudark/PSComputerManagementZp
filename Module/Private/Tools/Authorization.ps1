@@ -63,7 +63,7 @@ function Reset-PathAttribute{
     ```
 
     We can use the command `Set-ItemProperty $Path -Name Attributes -Value $some_attributes`. But `$some_attributes` can only support `Archive, Hidden, Normal, ReadOnly, or System` and their permutations.
-    
+
     So, to reset the attributes to standard status, we cannot directly give the target attributes, but use a specific `$some_attributes`.
 
 .PARAMETER Path

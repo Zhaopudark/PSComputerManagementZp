@@ -90,7 +90,7 @@ function Copy-DirWithBackup{
     Patched to avoid Copy-Item's ambiguity:
         If the destination is existing, Copy-Item will merge the source to the destination. (Items within the source will be copied and to the destination, covering the existing items with the same name.)
         If the destination is non-existing, Copy-Item will create a new directory with the source's name.
-    
+
     Refer to the [doc](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy) for more information about Copy-Item.
         |Robocopy args| effections|
         |---|---|

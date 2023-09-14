@@ -1,3 +1,6 @@
+# Release v0.0.4
+## Release v0.0.4-beta0
+
 # Release v0.0.3
 ## Release v0.0.3-stable
 - Adjusted the organization of private components to further reduce coupling.
@@ -9,10 +12,10 @@
 - Use `config.ps1` as a global configuration file for the whole module.
 
 ## Release v0.0.3-beta0
-- Add supportment for `MacOS`.
+- Add support for `MacOS`.
 - Rename `Write-FileLogs` to `Write-FileLog` and `Write-Logs` to `Write-Log`.
     - There may be a PSScriptAnalyzer warning:
-        ```powershell
+        ```PowerShell
         WARNING: The cmdlet 'Write-Log' is a cmdlet that is included with PowerShell (version core-6.1.0-windows) whose definition should not be overridden.
         ```
     - But it seem in powershell 7.x, there is no built-in `Write-Log` cmdlet. So, it is safe to ignore this warning.
@@ -23,22 +26,21 @@
 - Add a public API function, `Register-FSLEnvForPwsh`, to register the [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/) environment variables for the current PowerShell session.
 - Add a statement about the hard link in `README.md`.
 - Modify all file names for a better understanding.
-- Add `Export-ModuleMember` in `PSComputerManagementZp.psm1` to restrict the exported APIs. Even though it looks be duplicated with `*.psd1`, but it can used to restrict the exported APIs when some one import `*.psm1` directly.
-- Re-construct `Manager.Links`. Now the APIs about `Link Management` have been shrinked as:
+- Add `Export-ModuleMember` in `PSComputerManagementZp.psm1` to restrict the exported APIs. Even though it looks to be duplicated with `*.psd1`, it can used to restrict the exported APIs when someone imports `*.psm1` directly.
+- Re-construct `Manager.Links`. Now the APIs about `Link Management` have been shrunk to:
     - `Set-DirSymbolicLinkWithSync`
     - `Set-FileSymbolicLinkWithSync`
     - `Set-DirJunctionWithSync`
     Since the hard link may bring potential problems, this module does not support the hard link's quick creation and synchronization. Do provide `Set-FileHardLinkWithSync` anymore.
 - Define a mode for **Version Iteration** and write it into root `README.md`
-    - For further development, `RELEASE.md` should have a constructure as:
+    - For further development, `RELEASE.md` should have a structure as:
         ```markdown
         # Release v0.0.3
         ## Release v0.0.3-stable
         ## Release v0.0.3-beta0
         ```
-- The `README.md` file for all putlic APIs can be automatically generated now.
+- The `README.md` file for all public APIs can be automatically generated now.
 - The `README.md` file for all private components can be automatically generated now.
-
 
 # Release v0.0.2
 
