@@ -10,5 +10,6 @@ $local:ConfigInfo= @{
         Components = "${PSScriptRoot}\Docs\Components\README.md"
         APIs = "${PSScriptRoot}\Docs\APIs\README.md"
         Examples = "${PSScriptRoot}\Examples\README.md"
+        Contribution = "${PSScriptRoot}\CONTRIBUTION.md"
     }
 }
