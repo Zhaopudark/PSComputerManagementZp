@@ -98,7 +98,7 @@ function Assert-IsLinuxOrWSL2{
     }
 }
 # Windows Only
-function Test-AdminPermission {
+function Test-AdminPermission{
 <#
 .DESCRIPTION
     Test if the current process is in AdminPermission.
@@ -135,7 +135,7 @@ function Assert-IsWindows{
         throw "The current platform shoule be Windows but it is $($PSVersionTable.Platform)."
     }
 }
-function Assert-AdminPermission {
+function Assert-AdminPermission{
 <#
 .DESCRIPTION
     Assert if the current process is in AdminPermission.
