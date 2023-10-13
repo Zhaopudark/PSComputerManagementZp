@@ -30,13 +30,10 @@
         }else{
             throw "Only Win32NT and Unix are supported, not $($global:PSVersionTable.Platform)."
         }
-        $this.ProcessLevelEnvPath = @([Environment]::GetEnvironmentVariable($this.Indicator,'Process') -Split $this.Separator)
-        $this.UserLevelEnvPath = @([Environment]::GetEnvironmentVariable($this.Indicator,'User') -Split $this.Separator)
-        $this.MachineLevelEnvPath = @([Environment]::GetEnvironmentVariable($this.Indicator,'Machine') -Split $this.Separator)
 
-        $this.ProcessLevelEnvPath = $this.DeEmpty($this.ProcessLevelEnvPath)
-        $this.UserLevelEnvPath = $this.DeEmpty($this.UserLevelEnvPath)
-        $this.MachineLevelEnvPath = $this.DeEmpty($this.MachineLevelEnvPath)
+        $this.ProcessLevelEnvPath = $this.DeEmptyAndDeShadow([Environment]::GetEnvironmentVariable($this.Indicator,'Process') -Split $this.Separator)
+        $this.UserLevelEnvPath = $this.DeEmptyAndDeShadow([Environment]::GetEnvironmentVariable($this.Indicator,'User') -Split $this.Separator)
+        $this.MachineLevelEnvPath = $this.DeEmptyAndDeShadow([Environment]::GetEnvironmentVariable($this.Indicator,'Machine') -Split $this.Separator)
 
         if ($this.OriginalPlatform -eq "Unix"){
             if ($this.UserLevelEnvPath.Count -ne 0){
@@ -66,11 +63,12 @@
             }
         }
     }
-    [string[]] DeEmpty([string[]] $Paths){
+    [string[]] DeEmptyAndDeShadow([string[]] $Paths){
+        # remove '' and '.' paths
         $buf = @()
         foreach ($item in $Paths)
         {
-            if ($item.Trim()){
+            if ($item.Trim('. ')){
                 $buf += $item
             }
         }
