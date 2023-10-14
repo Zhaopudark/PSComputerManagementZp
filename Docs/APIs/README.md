@@ -1,5 +1,20 @@
 All `public APIs` are recored here.
 ## Functions
+### Add-OrUpdateDnsDomainRecord4Aliyun
+    
+- **Description**
+
+    Add or update a DNS domain record for Aliyun.
+- **Notes**
+
+    Only 4 (mandatory) parameters are supported for customization, the rest will follow the default settings.
+- **Link**
+
+    [Aliyun DNS API](https://help.aliyun.com/document_detail/124923.html)
+    [AddDomainRecord](https://help.aliyun.com/document_detail/2355674.html?spm=a2c4g.29772.0.i0)
+    [UpdateDomainRecord](https://help.aliyun.com/document_detail/2355677.html?spm=a2c4g.2355674.0.0.1684f0810Frt6B)
+    [Redirection](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_redirection?view=powershell-7.3#example-3-send-success-warning-and-error-streams-to-a-file)
+    
 ### Add-PathToCurrentMachineEnvPath
     
 - **Description**
@@ -109,6 +124,26 @@ All `public APIs` are recored here.
 - **Notes**
 
     Only support IPV4.
+- **Link**
+
+    [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)
+    
+### Get-TargetIPV6ByPattern
+    
+- **Description**
+
+    Get a target IPV6 address by pattern.
+    If multiple IPV6 addresses are found, return the last one.
+    If the target IPV6 address is not found, throw an exception.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    String.
+- **Notes**
+
+    Only support IPV6. Only support Windows.
 - **Link**
 
     [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)

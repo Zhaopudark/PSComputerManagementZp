@@ -1,6 +1,5 @@
 Get-ChildItem "${PSScriptRoot}\Private" -Recurse -Include '*.ps1','*.psm1' -Exclude '*Logger.ps1' | ForEach-Object { . $_.FullName }
 
-
 $scripts_to_export = Get-ChildItem "${PSScriptRoot}\Public" -Recurse -Include '*.ps1','*.psm1'| ForEach-Object { $_.FullName }
 $scripts_not_to_export = Get-ChildItem "${PSScriptRoot}\Private\" -Recurse -Include '*.ps1','*.psm1'| ForEach-Object { $_.FullName }
 

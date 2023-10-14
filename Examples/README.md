@@ -188,3 +188,69 @@ catch {
     Write-Log  "Operation has been skipped on $Path."
 }
 ```
+
+# About IPv6 DDNS for Aliyun on Windows
+
+With the help of [aliyun/aliyun-cli](https://github.com/aliyun/aliyun-cli), recently, this module can help to set IPv6 `DDNS` for Aliyun on Windows, and register it to Windows scheduled task. The restriction is it can only set very simple IPv6 `DDNS` configuration with `DomainName` and `RecordName`. Other configuration will be in default as those in [Aliyun DNS API](https://help.aliyun.com/document_detail/124923.html).
+
+Here are the steps:
+
+- Run PowerShell with `Administrator` privilege. 
+
+- Install this module [Zhaopudark/PSComputerManagementZp](https://github.com/Zhaopudark/PSComputerManagementZp).
+
+  ```powershell
+  git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
+  cd PSComputerManagementZp
+  ./install.ps1
+  ```
+
+  Make sure the version is at least v0.0.4:
+
+  ```powershell
+  (Get-Module -Name PSComputerManagementZp).Version -ge [System.Version]::new("0.0.4")
+  # should be $true
+  ```
+
+- Install [aliyun/aliyun-cli](https://github.com/aliyun/aliyun-cli) as:
+
+  ```powershell
+  winget search aliyun-cli
+  winget install --id Alibaba.AlibabaCloudCLI 
+  ```
+
+- Restart PowerShell with `Administrator` privilege.
+
+- Consider your target IPv6 is with `xxx 以太网` adapter and begin with `240e`, domain 
+
+  ```powershell
+  
+  $commands = {
+  Import-Module PSComputerManagementZp -Scope Local -Force
+  $ipv6 = (Get-TargetIPV6ByPattern -AdapterPattern '以太网' -AdressPattern '^240e:')
+  Add-OrUpdateDnsDomainRecord4Aliyun -DomainName little-train.com -RecordName research -RecordType AAAA -RecordValue $ipv6
+  Remove-Module PSComputerManagementZp
+  }
+  
+  $triggers = @(New-ScheduledTaskTrigger -AtLogon)
+  $triggers += New-ScheduledTaskTrigger -AtStartup
+  $triggers += New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(5) -RepetitionInterval (New-TimeSpan -Minutes 5)
+  
+  $action = New-ScheduledTaskAction -Execute "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Hidden -Command $commands"
+  
+  $user_id = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+  $principal =  New-ScheduledTaskPrincipal -UserId $user_id -LogonType S4U -RunLevel Highest
+  
+  $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
+  
+  Register-ScheduledTask -TaskName "DDNS" -Action $action -Principal $principal -Settings $settings -Trigger $triggers -Force 
+  
+  Stop-ScheduledTask -TaskName "DDNS" 
+  Start-ScheduledTask -TaskName "DDNS"
+  ```
+
+- Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->DDNS` for checking:
+
+  <img src="./../Assets/Examples.README.assets/image-20231015010748163.png" alt="image-20231015010748163" style="zoom: 33%;" />
+
+  

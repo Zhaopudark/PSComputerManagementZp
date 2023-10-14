@@ -190,3 +190,27 @@ function Assert-AdminRobocopyAvailable{
     }
     Assert-IsWindowsAndAdmin
 }
+
+function Assert-AliyunCLIAvailable{
+<#
+.DESCRIPTION
+    Assert the robocopy command is available.
+    Assert if the current platform is Windows.
+    Assert if the current process is in AdminPermission
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
+    [CmdletBinding()]
+    [OutputType([void])]
+    param()
+    try {
+        aliyun > $null
+    }
+    catch {
+        Write-Verbose "Exception: $PSItem"
+        throw "The aliyun-cli is not available, please install it first."
+    }
+    Assert-IsWindowsAndAdmin
+}

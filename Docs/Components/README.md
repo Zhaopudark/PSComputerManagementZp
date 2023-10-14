@@ -138,6 +138,20 @@ All `private Components` are recored here. (Only for Contributors)
 
     None.
     
+### Assert-AliyunCLIAvailable
+    
+- **Description**
+
+    Assert the robocopy command is available.
+    Assert if the current platform is Windows.
+    Assert if the current process is in AdminPermission
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    None.
+    
 ### Assert-IsLinuxOrWSL2
     
 - **Description**
