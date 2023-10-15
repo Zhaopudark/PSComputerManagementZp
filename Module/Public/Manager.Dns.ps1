@@ -1,9 +1,7 @@
-function Get-TargetIPV6ByPattern{
+function Get-TemporaryIPV6ByPattern{
 <#
 .DESCRIPTION
-    Get a target IPV6 address by pattern.
-    If multiple IPV6 addresses are found, return the last one.
-    If the target IPV6 address is not found, throw an exception.
+    Get one of the temporary IPV6 address by pattern.
 .INPUTS
     None.
 .OUTPUTS
@@ -25,7 +23,8 @@ function Get-TargetIPV6ByPattern{
     Assert-IsWindows
 
     $addresses = Get-NetIPAddress -AddressFamily IPv6 |`
-        Where-Object {($_.InterfaceAlias -match $AdapterPattern) -and ($_.IPAddress -match $AdressPattern)}|`
+        Where-Object {($_.InterfaceAlias -match $AdapterPattern) -and ($_.IPAddress -match $AdressPattern) -and 
+            (($_.PrefixOrigin -eq 'Random') -or ($_.SuffixOrigin -eq 'Random'))}|`
         ForEach-Object {$_.IPAddress}
 
     if ($addresses.Count -eq 0){

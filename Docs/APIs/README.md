@@ -128,13 +128,11 @@ All `public APIs` are recored here.
 
     [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)
     
-### Get-TargetIPV6ByPattern
+### Get-TemporaryIPV6ByPattern
     
 - **Description**
 
-    Get a target IPV6 address by pattern.
-    If multiple IPV6 addresses are found, return the last one.
-    If the target IPV6 address is not found, throw an exception.
+    Get one of the temporary IPV6 address by pattern.
 - **Inputs**
 
     None.
