@@ -221,16 +221,14 @@ Here are the steps:
 
 - Restart PowerShell with `Administrator` privilege.
 
-- Consider your target IPv6 is with `xxx 以太网` adapter and begin with `240e`, domain `xxx.xxx` and record is `abc`.
+- Provided your target IPv6 is with `xxx 以太网` adapter and begin with `240e`, domain `xxx.xxx` and record is `abc`.
 
   ```powershell
   
   $commands = {
   Import-Module PSComputerManagementZp -Scope Local -Force
-  $domain = 'xxx.xxx'
-  $record = 'abc'
   $ipv6 = (Get-TargetIPV6ByPattern -AdapterPattern '以太网' -AdressPattern '^240e:')
-  Add-OrUpdateDnsDomainRecord4Aliyun -DomainName $domain -RecordName abc -RecordType AAAA -RecordValue $record
+  Add-OrUpdateDnsDomainRecord4Aliyun -DomainName 'xxx.xxx' -RecordName 'abc' -RecordType AAAA -RecordValue $ipv6
   Remove-Module PSComputerManagementZp
   }
   
