@@ -32,7 +32,7 @@ function Get-TargetIPV6ByPattern{
         throw "No IPV6 address is found by the pattern, AdapterPattern: $AdapterPattern, AdressPattern: $AdressPattern."
         exit -1
     }elseif ($addresses.Count -gt 1){
-        return $addresses[-1]
+        return $addresses[0]
     }else{
         return $addresses
     }

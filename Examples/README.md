@@ -227,8 +227,10 @@ Here are the steps:
   
   $commands = {
   Import-Module PSComputerManagementZp -Scope Local -Force
+  $domain = 'xxx.xxx'
+  $record = 'abc'
   $ipv6 = (Get-TargetIPV6ByPattern -AdapterPattern '以太网' -AdressPattern '^240e:')
-  Add-OrUpdateDnsDomainRecord4Aliyun -DomainName xxx.xxx -RecordName abc -RecordType AAAA -RecordValue $ipv6
+  Add-OrUpdateDnsDomainRecord4Aliyun -DomainName $domain -RecordName abc -RecordType AAAA -RecordValue $record
   Remove-Module PSComputerManagementZp
   }
   
@@ -236,7 +238,7 @@ Here are the steps:
   $triggers += New-ScheduledTaskTrigger -AtStartup
   $triggers += New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(5) -RepetitionInterval (New-TimeSpan -Minutes 5)
   
-  $action = New-ScheduledTaskAction -Execute "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" -Argument "-WindowStyle Hidden -Command $commands"
+  $action = New-ScheduledTaskAction -Execute "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" -Argument "-NoProfile -WindowStyle Hidden -Command $commands"
   
   $user_id = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
   $principal =  New-ScheduledTaskPrincipal -UserId $user_id -LogonType S4U -RunLevel Highest
