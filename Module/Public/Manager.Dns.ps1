@@ -69,6 +69,8 @@ function Add-OrUpdateDnsDomainRecord4Aliyun{
     $records = $DescribeDomainRecords.DomainRecords.Record | Foreach-Object {$_.RR+$_.Type}
     $index = $records.IndexOf($RecordName+$RecordType)
 
+    Write-Log "Try to add or update the DNS domain record, DomainName: $DomainName, RecordName: $RecordName, RecordType: $RecordType, RecordValue: $RecordValue." -ShowVerbose
+
     if ($index -eq -1){
         # add
         $command = "aliyun alidns AddDomainRecord --DomainName $DomainName --RR $RecordName --Type $RecordType --Value $RecordValue"

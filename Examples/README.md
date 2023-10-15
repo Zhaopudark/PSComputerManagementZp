@@ -227,7 +227,7 @@ Here are the steps:
   
   $commands = {
   Import-Module PSComputerManagementZp -Scope Local -Force
-  $ipv6 = (Get-TargetIPV6ByPattern -AdapterPattern '以太网' -AdressPattern '^240e:')
+  $ipv6 = (Get-TemporaryIPV6ByPattern -AdapterPattern '以太网' -AdressPattern '^240e:')
   Add-OrUpdateDnsDomainRecord4Aliyun -DomainName 'xxx.xxx' -RecordName 'abc' -RecordType AAAA -RecordValue $ipv6
   Remove-Module PSComputerManagementZp
   }
