@@ -2,6 +2,7 @@
 ## Release v0.0.4-beta0
 - Modify the class `EnvPath` for more stability.
 - Start to support setting IPv6 DDNS with Aliyun.
+- Try to support DNS over HTTPS.
 
 # Release v0.0.3
 ## Release v0.0.3-stable
