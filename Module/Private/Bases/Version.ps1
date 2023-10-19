@@ -65,3 +65,35 @@ function Assert-ReleaseVersionConsistency{
         throw "[Invalid release title] The release title in $ReleaseNotesPath is $release_title, but it should be like '# xxx v0.0.1'."
     }
 }
+
+function Format-VersionTo4SegmentFormat{
+<#
+.DESCRIPTION
+    Format a version string like `vX.X.X...` to a fixed format that consists of 4 segments.
+    If there are more than 4 segments, the extra segments will be truncated (the leftmost 4 segments will be retained while others will be droped).
+    If there are less than 4 segments, the missing segments will be appended with `0`.
+.PARAMETER RawVersion
+    The raw version string.
+.INPUTS
+    String.
+.OUTPUTS
+    System.Version.
+#>
+    [OutputType([System.Version])]
+    param (
+        [Parameter(Mandatory)]
+        [string]$RawVersion
+    )
+    if ($RawVersion -match "v(\d+(\.\d+)*)"){
+        $version = $Matches[1]
+        $version_segments = $version -split '\.'
+        while ($version_segments.Count -lt 4) {
+            $version_segments += "0"
+        }
+        $normalized_version = $version_segments[0..3] -join "."
+        return [system.version]::new($normalized_version)
+    }
+    else{
+        throw "Invalid version number: $RawVersion. It should be in the format like vX, vX.X, vX.X.X, vX.X.X.X...."
+    }
+}

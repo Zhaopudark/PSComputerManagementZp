@@ -345,6 +345,23 @@ All `private Components` are recored here. (Only for Contributors)
 
     String.
     
+### Format-VersionTo4SegmentFormat
+    
+- **Description**
+
+    Format a version string like `vX.X.X...` to a fixed format that consists of 4 segments.
+    If there are more than 4 segments, the extra segments will be truncated (the leftmost 4 segments will be retained while others will be droped).
+    If there are less than 4 segments, the missing segments will be appended with `0`.
+- **Parameter** `$RawVersion`
+
+    The raw version string.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    System.Version.
+    
 ### Get-ClassDoc
     
 - **Description**
