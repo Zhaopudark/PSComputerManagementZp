@@ -1,5 +1,6 @@
 # Release v0.0.4
 ## Release v0.0.4-beta0
+- Fix the logic bug of function `Assert-IsLinuxOrWSL2`.
 - Add a component function `Format-VersionTo4Numbers`.
 - Modify the class `EnvPath` for more stability.
 - Start to support setting IPv6 DDNS with Aliyun.

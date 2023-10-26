@@ -93,7 +93,7 @@ function Assert-IsLinuxOrWSL2{
     [CmdletBinding()]
     [OutputType([void])]
     param ()
-    if (!(Test-Platform -Name 'Linux') -or !((Test-Platform -Name 'Wsl2'))){
+    if (!(Test-Platform -Name 'Linux') -and !(Test-Platform -Name 'Wsl2')){
         throw "The current platform shoule be Linux or Wsl2 but it is $($PSVersionTable.Platform)."
     }
 }
