@@ -27,10 +27,14 @@ function Merge-RedundantEnvPathFromCurrentMachineToCurrentUser{
 function Add-PathToCurrentProcessEnvPath{
 <#
 .DESCRIPTION
-    Append a path to the current process level `$Env:PATH`.
-    Before appending, the function will check and de-duplicate the current process level `$Env:PATH`.
+    Add a path to the current process level `$Env:PATH`.
+    Before adding, the function will check and de-duplicate the current process level `$Env:PATH`.
+    The default behavior is to prepend. It can be changed by the given the switch `-IsAppend`.
+    If the path already exists, it will be moved to the head or the tail according to `-IsAppend`.
 .PARAMETER Path
     The path to be appended.
+.PARAMETER IsAppend
+    If the switch is specified, the path will be appended.
 .EXAMPLE
     Add-PathToCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
 .INPUTS
@@ -43,20 +47,25 @@ function Add-PathToCurrentProcessEnvPath{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [string]$Path
+        [string]$Path,
+        [switch]$IsAppend
     )
     $env_paths = [EnvPath]::new()
     if ($PSCmdlet.ShouldProcess("Append $Path to process level `$Env:PATH`.",'','')){
-        $env_paths.AppendProcessLevelEnvPath($Path)
+        $env_paths.AddProcessLevelEnvPath($Path,$IsAppend)
     }
 }
 function Add-PathToCurrentUserEnvPath{
 <#
 .DESCRIPTION
-    Append a path to the current user level `$Env:PATH`.
-    Before appending, the function will check and de-duplicate the current user level `$Env:PATH`.
+    Add a path to the current user level `$Env:PATH`.
+    Before adding, the function will check and de-duplicate the current user level `$Env:PATH`.
+    The default behavior is to prepend. It can be changed by the given the switch `-IsAppend`.
+    If the path already exists, it will be moved to the head or the tail according to `-IsAppend`.
 .PARAMETER Path
     The path to be appended.
+.PARAMETER IsAppend
+    If the switch is specified, the path will be appended.
 .EXAMPLE
     Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'
 .INPUTS
@@ -71,22 +80,27 @@ function Add-PathToCurrentUserEnvPath{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [string]$Path
+        [string]$Path,
+        [switch]$IsAppend
     )
     Assert-IsWindows
     $env_paths = [EnvPath]::new()
     if ($PSCmdlet.ShouldProcess("Append $Path to user level `$Env:PATH`.",'','')){
-        $env_paths.AppendUserLevelEnvPath($Path)
+        $env_paths.AddUserLevelEnvPath($Path,$IsAppend)
     }
 }
 
 function Add-PathToCurrentMachineEnvPath{
 <#
 .DESCRIPTION
-    Append a path to the current machine level `$Env:PATH`.
-    Before appending, the function will check and de-duplicate the current machine level `$Env:PATH`.
+    Add a path to the current machine level `$Env:PATH`.
+    Before adding, the function will check and de-duplicate the current machine level `$Env:PATH`.
+    The default behavior is to prepend. It can be changed by the given the switch `-IsAppend`.
+    If the path already exists, it will be moved to the head or the tail according to `-IsAppend`.
 .PARAMETER Path
     The path to be appended.
+.PARAMETER IsAppend
+    If the switch is specified, the path will be appended.
 .EXAMPLE
     Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
 .INPUTS
@@ -102,12 +116,13 @@ function Add-PathToCurrentMachineEnvPath{
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)]
-        [string]$Path
+        [string]$Path,
+        [switch]$IsAppend
     )
     Assert-IsWindowsAndAdmin
     $env_paths = [EnvPath]::new()
     if ($PSCmdlet.ShouldProcess("Append $Path to machine level `$Env:PATH`.",'','')){
-        $env_paths.AppendMachineLevelEnvPath($Path)
+        $env_paths.AddMachineLevelEnvPath($Path,$IsAppend)
     }
 }
 

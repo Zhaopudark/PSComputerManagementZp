@@ -19,11 +19,16 @@ All `public APIs` are recored here.
     
 - **Description**
 
-    Append a path to the current machine level `$Env:PATH`.
-    Before appending, the function will check and de-duplicate the current machine level `$Env:PATH`.
+    Add a path to the current machine level `$Env:PATH`.
+    Before adding, the function will check and de-duplicate the current machine level `$Env:PATH`.
+    The default behavior is to prepend. It can be changed by the given the switch `-IsAppend`.
+    If the path already exists, it will be moved to the head or the tail according to `-IsAppend`.
 - **Parameter** `$Path`
 
     The path to be appended.
+- **Parameter** `$IsAppend`
+
+    If the switch is specified, the path will be appended.
 - **Example**
 
     Add-PathToCurrentMachineEnvPath -Path 'C:\Program Files\Git\cmd'
@@ -45,11 +50,16 @@ All `public APIs` are recored here.
     
 - **Description**
 
-    Append a path to the current process level `$Env:PATH`.
-    Before appending, the function will check and de-duplicate the current process level `$Env:PATH`.
+    Add a path to the current process level `$Env:PATH`.
+    Before adding, the function will check and de-duplicate the current process level `$Env:PATH`.
+    The default behavior is to prepend. It can be changed by the given the switch `-IsAppend`.
+    If the path already exists, it will be moved to the head or the tail according to `-IsAppend`.
 - **Parameter** `$Path`
 
     The path to be appended.
+- **Parameter** `$IsAppend`
+
+    If the switch is specified, the path will be appended.
 - **Example**
 
     Add-PathToCurrentProcessEnvPath -Path 'C:\Program Files\Git\cmd'
@@ -67,11 +77,16 @@ All `public APIs` are recored here.
     
 - **Description**
 
-    Append a path to the current user level `$Env:PATH`.
-    Before appending, the function will check and de-duplicate the current user level `$Env:PATH`.
+    Add a path to the current user level `$Env:PATH`.
+    Before adding, the function will check and de-duplicate the current user level `$Env:PATH`.
+    The default behavior is to prepend. It can be changed by the given the switch `-IsAppend`.
+    If the path already exists, it will be moved to the head or the tail according to `-IsAppend`.
 - **Parameter** `$Path`
 
     The path to be appended.
+- **Parameter** `$IsAppend`
+
+    If the switch is specified, the path will be appended.
 - **Example**
 
     Add-PathToCurrentUserEnvPath -Path 'C:\Program Files\Git\cmd'

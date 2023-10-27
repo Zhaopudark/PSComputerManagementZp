@@ -16,10 +16,20 @@ Describe 'Test Env Management' {
             $env_paths = Get-xEnvPath
             $count = $env_paths.DeDuplicatedProcessLevelEnvPath.Count
             $env_paths.DeDuplicatedProcessLevelEnvPath | Should -Not -Contain $test_path
-            Add-PathToCurrentProcessEnvPath -Path $test_path
+
             Add-PathToCurrentProcessEnvPath -Path $test_path
             $env_paths = Get-xEnvPath
-            $env_paths.DeDuplicatedProcessLevelEnvPath | Should -Contain $test_path
+            $env_paths.DeDuplicatedProcessLevelEnvPath[0] | Should -Be $test_path
+            $env_paths.DeDuplicatedProcessLevelEnvPath.Count | Should -Be ($count+1)
+
+            Add-PathToCurrentProcessEnvPath -Path $test_path -IsAppend
+            $env_paths = Get-xEnvPath
+            $env_paths.DeDuplicatedProcessLevelEnvPath[-1] | Should -Be $test_path
+            $env_paths.DeDuplicatedProcessLevelEnvPath.Count | Should -Be ($count+1)
+
+            Add-PathToCurrentProcessEnvPath -Path $test_path
+            $env_paths = Get-xEnvPath
+            $env_paths.DeDuplicatedProcessLevelEnvPath[0] | Should -Be $test_path
             $env_paths.DeDuplicatedProcessLevelEnvPath.Count | Should -Be ($count+1)
 
             Remove-PathFromCurrentProcessEnvPath -Path $test_path
@@ -28,10 +38,8 @@ Describe 'Test Env Management' {
             $env_paths.DeDuplicatedProcessLevelEnvPath.Count | Should -Be $count
 
             Add-PathToCurrentProcessEnvPath -Path $test_path
-            Add-PathToCurrentProcessEnvPath -Path $test_path
-            Add-PathToCurrentProcessEnvPath -Path $test_path
             $env_paths = Get-xEnvPath
-            $env_paths.DeDuplicatedProcessLevelEnvPath | Should -Contain $test_path
+            $env_paths.DeDuplicatedProcessLevelEnvPath[0] | Should -Be $test_path
             $env_paths.DeDuplicatedProcessLevelEnvPath.Count | Should -Be ($count+1)
 
             Remove-MatchedPathsFromCurrentProcessEnvPath -Pattern $guid
@@ -43,10 +51,20 @@ Describe 'Test Env Management' {
             $env_paths = Get-xEnvPath
             $count = $env_paths.DeDuplicatedUserLevelEnvPath.Count
             $env_paths.DeDuplicatedUserLevelEnvPath | Should -Not -Contain $test_path
-            Add-PathToCurrentUserEnvPath -Path $test_path
+
             Add-PathToCurrentUserEnvPath -Path $test_path
             $env_paths = Get-xEnvPath
-            $env_paths.DeDuplicatedUserLevelEnvPath | Should -Contain $test_path
+            $env_paths.DeDuplicatedUserLevelEnvPath[0] | Should -Be $test_path
+            $env_paths.DeDuplicatedUserLevelEnvPath.Count | Should -Be ($count+1)
+
+            Add-PathToCurrentUserEnvPath -Path $test_path -IsAppend
+            $env_paths = Get-xEnvPath
+            $env_paths.DeDuplicatedUserLevelEnvPath[-1] | Should -Be $test_path
+            $env_paths.DeDuplicatedUserLevelEnvPath.Count | Should -Be ($count+1)
+
+            Add-PathToCurrentUserEnvPath -Path $test_path
+            $env_paths = Get-xEnvPath
+            $env_paths.DeDuplicatedUserLevelEnvPath[0] | Should -Be $test_path
             $env_paths.DeDuplicatedUserLevelEnvPath.Count | Should -Be ($count+1)
 
             Remove-PathFromCurrentUserEnvPath -Path $test_path
@@ -55,10 +73,8 @@ Describe 'Test Env Management' {
             $env_paths.DeDuplicatedUserLevelEnvPath.Count | Should -Be $count
 
             Add-PathToCurrentUserEnvPath -Path $test_path
-            Add-PathToCurrentUserEnvPath -Path $test_path
-            Add-PathToCurrentUserEnvPath -Path $test_path
             $env_paths = Get-xEnvPath
-            $env_paths.DeDuplicatedUserLevelEnvPath | Should -Contain $test_path
+            $env_paths.DeDuplicatedUserLevelEnvPath[0] | Should -Be $test_path
             $env_paths.DeDuplicatedUserLevelEnvPath.Count | Should -Be ($count+1)
 
             Remove-MatchedPathsFromCurrentUserEnvPath -Pattern $guid
@@ -70,10 +86,20 @@ Describe 'Test Env Management' {
             $env_paths = Get-xEnvPath
             $count = $env_paths.DeDuplicatedMachineLevelEnvPath.Count
             $env_paths.DeDuplicatedMachineLevelEnvPath | Should -Not -Contain $test_path
-            Add-PathToCurrentMachineEnvPath -Path $test_path
+
             Add-PathToCurrentMachineEnvPath -Path $test_path
             $env_paths = Get-xEnvPath
-            $env_paths.DeDuplicatedMachineLevelEnvPath | Should -Contain $test_path
+            $env_paths.DeDuplicatedMachineLevelEnvPath[0] | Should -Be $test_path
+            $env_paths.DeDuplicatedMachineLevelEnvPath.Count | Should -Be ($count+1)
+
+            Add-PathToCurrentMachineEnvPath -Path $test_path -IsAppend
+            $env_paths = Get-xEnvPath
+            $env_paths.DeDuplicatedMachineLevelEnvPath[-1] | Should -Be $test_path
+            $env_paths.DeDuplicatedMachineLevelEnvPath.Count | Should -Be ($count+1)
+
+            Add-PathToCurrentMachineEnvPath -Path $test_path
+            $env_paths = Get-xEnvPath
+            $env_paths.DeDuplicatedMachineLevelEnvPath[0] | Should -Be $test_path
             $env_paths.DeDuplicatedMachineLevelEnvPath.Count | Should -Be ($count+1)
 
             Remove-PathFromCurrentMachineEnvPath -Path $test_path
@@ -82,10 +108,8 @@ Describe 'Test Env Management' {
             $env_paths.DeDuplicatedMachineLevelEnvPath.Count | Should -Be $count
 
             Add-PathToCurrentMachineEnvPath -Path $test_path
-            Add-PathToCurrentMachineEnvPath -Path $test_path
-            Add-PathToCurrentMachineEnvPath -Path $test_path
             $env_paths = Get-xEnvPath
-            $env_paths.DeDuplicatedMachineLevelEnvPath | Should -Contain $test_path
+            $env_paths.DeDuplicatedMachineLevelEnvPath[0] | Should -Be $test_path
             $env_paths.DeDuplicatedMachineLevelEnvPath.Count | Should -Be ($count+1)
 
             Remove-MatchedPathsFromCurrentMachineEnvPath -Pattern $guid
