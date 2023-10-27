@@ -1,11 +1,11 @@
 # Release v0.0.4
 ## Release v0.0.4-stable
-- It may be difficult to support configuring the DNS over HTTPS by PowerShell well. So, this feature has been removed from current plan.
-## Release v0.0.4-beta1
+
 - Modify the underlying implementation of `Add-PathToCurrentProcessEnvPath`, `Add-PathToCurrentUserEnvPath`, and `Add-PathToCurrentMachineEnvPath` and change their default behaviors:
     - Now, by default, they will add the target path to the beginning instead of the end of the `$Env:Path` as before.
     - Now, if given the switch parameter `-IsAppend`, they will add the target path to the end of the `$Env:Path`.
     - Now, if the path already exists in the `$Env:Path`, it will be tweaked (before, it will just be skipped simply) to the beginning or the end of the `$Env:Path` according to `-IsAppend`.
+    
 
 ## Release v0.0.4-beta0
 - Fix the logic bug of function `Assert-IsLinuxOrWSL2`.
