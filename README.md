@@ -1,7 +1,8 @@
 # <img src="https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/av_colors_128.svg?sanitize=true" alt="logo" style="zoom:50%;" /> PSComputerManagementZp
 
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
-[![GitHub tag](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp?logo=github)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
+[![GitHub release (with filter)](https://img.shields.io/github/v/release/Zhaopudark/PSComputermanagementZp?logo=github)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
+[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp?logo=github)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
 [![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/PSComputerManagementZp?logo=powershell&label=PowerShell%20Gallery%20downloads)](https://www.powershellgallery.com/packages/PSComputerManagementZp)
 [![GitHub Release Downloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total?logo=github&label=Github%20Release%20downloads)
 ](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
