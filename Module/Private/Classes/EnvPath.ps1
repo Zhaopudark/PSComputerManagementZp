@@ -124,33 +124,42 @@
         $this.SetEnvPath($this.MachineLevelEnvPath,'Machine')
         Write-Log "[`$Env:PATH` Modifed] The items duplicated across 'Machine' level and 'User' level `$Env:PATH` have been merged into 'User' level `$Env:PATH`." -ShowVerbose
     }
-    [string[]] Append([string[]] $Paths, [string] $Level,[string] $Path){
+    [string[]] Insert([string[]] $Paths, [string] $Level,[string] $Path,[bool] $IsAppend){
         $buf = $Paths.Clone()
         if (-not $buf.Contains($Path)){
-            $buf += $Path
+            if ($IsAppend){
+                $buf += $Path
+                Write-Log "[`$Env:PATH` Modifed] The $Path will been appended into $Level level `$Env:PATH`." -ShowVerbose
+            }else{
+                $buf = @($Path)+$buf
+                Write-Log "[`$Env:PATH` Modifed] The $Path will been prepended into $Level level `$Env:PATH`." -ShowVerbose
+            }
         }else{
             Write-Log "[`$Env:PATH` Duplicated] The $Path in '$Level' level is existing already." -ShowVerbose
         }
+       
         return $buf
     }
-
-    [void] AppendProcessLevelEnvPath([string] $Path){
+    
+    [void] AddProcessLevelEnvPath([string] $Path, [bool] $IsAppend){
         $this.DeDuplicateProcessLevelEnvPath()
-        $this.ProcessLevelEnvPath = $this.Append($this.ProcessLevelEnvPath,'Process',$Path)
+        $this.ProcessLevelEnvPath = $this.Insert($this.ProcessLevelEnvPath,'Process',$Path,$IsAppend)
         $this.SetEnvPath($this.ProcessLevelEnvPath,'Process')
-        Write-Log "[`$Env:PATH` Modifed] The $Path has been appended into 'Process' level `$Env:PATH`." -ShowVerbose
+        Write-Log "[`$Env:PATH` Modifed] The addition has been done on 'Process' level `$Env:PATH`." -ShowVerbose
     }
-    [void] AppendUserLevelEnvPath([string] $Path){
+
+    [void] AddUserLevelEnvPath([string] $Path, [bool] $IsAppend){
         $this.DeDuplicateUserLevelEnvPath()
-        $this.UserLevelEnvPath = $this.Append($this.UserLevelEnvPath,'User',$Path)
+        $this.UserLevelEnvPath = $this.Insert($this.UserLevelEnvPath,'User',$Path,$IsAppend)
         $this.SetEnvPath($this.UserLevelEnvPath,'User')
-        Write-Log "[`$Env:PATH` Modifed] The $Path has been appended into 'User' level `$Env:PATH`." -ShowVerbose
+        Write-Log "[`$Env:PATH` Modifed] The addition has been done on 'User' level `$Env:PATH`." -ShowVerbose
     }
-    [void] AppendMachineLevelEnvPath([string] $Path){
+
+    [void] AddMachineLevelEnvPath([string] $Path, [bool] $IsAppend){
         $this.DeDuplicateMachineLevelEnvPath()
-        $this.MachineLevelEnvPath = $this.Append($this.MachineLevelEnvPath,'Machine',$Path)
+        $this.MachineLevelEnvPath = $this.Insert($this.MachineLevelEnvPath,'Machine',$Path,$IsAppend)
         $this.SetEnvPath($this.MachineLevelEnvPath,'Machine')
-        Write-Log "[`$Env:PATH` Modifed] The $Path has been appended into 'Machine' level `$Env:PATH`." -ShowVerbose
+        Write-Log "[`$Env:PATH` Modifed] The addition has been done on 'Machine' level `$Env:PATH`." -ShowVerbose
     }
 
     [string[]] Remove([string[]] $Paths, [string] $Level, [string] $Path, [bool] $IsPattern){
