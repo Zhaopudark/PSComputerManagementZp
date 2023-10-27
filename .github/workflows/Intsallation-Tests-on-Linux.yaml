@@ -7,7 +7,7 @@ on:
       - test
 
 jobs:
-  tests-on-linux:
+  installation-tests-on-linux:
     runs-on: ubuntu-latest 
     steps:
     - name: Checkout repository

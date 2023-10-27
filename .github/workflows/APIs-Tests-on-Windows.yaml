@@ -7,7 +7,7 @@ on:
       - test
 
 jobs:     
-  tests-on-windows:
+  api-tests-on-windows:
     runs-on: windows-latest 
     steps:
     - name: Checkout repository
