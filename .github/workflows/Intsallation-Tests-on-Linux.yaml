@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+      - test
 
 jobs:
-  tests-on-linux:
+  installation-tests-on-linux:
     runs-on: ubuntu-latest 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: install module 
       shell: pwsh
