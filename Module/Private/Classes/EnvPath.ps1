@@ -125,22 +125,35 @@
         Write-Log "[`$Env:PATH` Modifed] The items duplicated across 'Machine' level and 'User' level `$Env:PATH` have been merged into 'User' level `$Env:PATH`." -ShowVerbose
     }
     [string[]] Insert([string[]] $Paths, [string] $Level,[string] $Path,[bool] $IsAppend){
-        $buf = $Paths.Clone()
-        if (-not $buf.Contains($Path)){
-            if ($IsAppend){
-                $buf += $Path
-                Write-Log "[`$Env:PATH` Modifed] The $Path will been appended into $Level level `$Env:PATH`." -ShowVerbose
+        $buf = @()
+        $exist = $false
+        foreach ($item in $Paths) # extract the duplicated path
+        {
+            if ($item -eq $Path){
+                $exist = $true
+                if ($IsAppend){
+                    Write-Log "[`$Env:PATH` Adjustment] The $Path in '$Level' level already exists and will be tweaked to the end." -ShowVerbose
+                }else{
+                    Write-Log "[`$Env:PATH` Adjustment] The $Path in '$Level' level already exists and will be tweaked to the beginning." -ShowVerbose
+                }
             }else{
-                $buf = @($Path)+$buf
-                Write-Log "[`$Env:PATH` Modifed] The $Path will been prepended into $Level level `$Env:PATH`." -ShowVerbose
+                $buf += $item
+            }
+        }
+        if ($IsAppend){
+            $buf += $Path
+            if (-not $exist){
+                Write-Log "[`$Env:PATH` To Modify] The $Path will been appended into $Level level `$Env:PATH`." -ShowVerbose
             }
         }else{
-            Write-Log "[`$Env:PATH` Duplicated] The $Path in '$Level' level is existing already." -ShowVerbose
-        }
-       
+            $buf = @($Path)+$buf
+            if (-not $exist){
+                Write-Log "[`$Env:PATH` To Modify] The $Path will been prepended into $Level level `$Env:PATH`." -ShowVerbose
+            }
+        }       
         return $buf
     }
-    
+
     [void] AddProcessLevelEnvPath([string] $Path, [bool] $IsAppend){
         $this.DeDuplicateProcessLevelEnvPath()
         $this.ProcessLevelEnvPath = $this.Insert($this.ProcessLevelEnvPath,'Process',$Path,$IsAppend)
