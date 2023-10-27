@@ -1,5 +1,5 @@
 # Release v0.0.4
-## Release v0.0.4-beta0
+## Release v0.0.4-beta1
 - Modify the underlying implementation of `Add-PathToCurrentProcessEnvPath`, `Add-PathToCurrentUserEnvPath` and `Add-PathToCurrentMachineEnvPath` and change their default behavior:
     - Now, by default, they will add the target path to the beginning instead of the end of the `$Env:Path` as before.
     - Now, if given the switch parameter `-IsAppend`, they will add the target path to the end of the `$Env:Path`.
