@@ -1,6 +1,8 @@
 # Release v0.0.5
 ## Release v0.0.5-beta0
-
+- Use a rotating mechanism to manage logs to avoid the log file becoming too large.
+    - Now, the log file will be rotated if its size is larger than 10MB.
+    - And, the same log file will be rotated 10 times at most.
 # Release v0.0.4
 ## Release v0.0.4-stable
 

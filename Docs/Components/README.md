@@ -375,6 +375,19 @@ All `private Components` are recored here. (Only for Contributors)
 
     Hashtable.
     
+### Get-CurrentLogFileNameInRotatingList
+    
+- **Description**
+
+    Get the current log file name in a fixed and internal rotating list.
+    The current (target) log file is the one that is the most recently modified and whose size is less than 10MB.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    String.
+    
 ### Get-DefaultSddl
     
 - **Synopsis**
@@ -473,7 +486,7 @@ All `private Components` are recored here. (Only for Contributors)
 
     Hashtable.
     
-### Get-LogFileName
+### Get-LogFileNameWithKeyInfo
     
 - **Description**
 
