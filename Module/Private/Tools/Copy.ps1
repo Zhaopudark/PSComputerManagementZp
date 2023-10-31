@@ -135,7 +135,7 @@ function Copy-DirWithBackup{
             $destination_backup = "$BackupDir/$Indicator-$($destination.ToShortName())"
             try {
                 Assert-AdminRobocopyAvailable
-                $log_file = Get-LogFileName "Robocopy Copy-DirWithBackup"
+                $log_file = Get-LogFileNameWithKeyInfo "Robocopy Copy-DirWithBackup"
                 Robocopy $source $source_backup /e /copyall /dcopy:DATE /log+:"$log_file"
                 Robocopy $destination $destination_backup /e /copyall /dcopy:DATE /log+:"$log_file"
                 Robocopy $source $destination /e /copyall /dcopy:DATE /log+:"$log_file"
