@@ -3,7 +3,6 @@ name: Installation Tests On MacOS
 on:
   push:
     branches:
-      - main
       - dev
 
 jobs:
