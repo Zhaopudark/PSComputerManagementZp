@@ -1,6 +1,6 @@
 # Release v0.0.5
 ## Release v0.0.5-beta0
-- Use a rotation mechanism to manage logs to prevent log files from becoming too large.
+- Use rotation logs to prevent files from becoming too large.
     - Now, if the log file is larger than 10MB, a new log file will be generated with the identifier `.<index>.`.
     - Allows to keep up to 9 older log files in addition to the latest log file.
 # Release v0.0.4

@@ -3,7 +3,6 @@ name: APIs Tests on Windows
 on:
   push:
     branches:
-      - main
       - dev
 
 jobs:     
