@@ -33,6 +33,7 @@ function Reset-Authorization{
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
+        [Parameter(Mandatory)]
         [FormattedFileSystemPath]$Path,
         [switch]$Recurse
     )

@@ -49,7 +49,10 @@ function Register-FSLEnvForPwsh{
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]
-    param ([string]$FslDir)
+    param (
+        [Parameter(Mandatory)]
+        [string]$FslDir
+        )
     Assert-IsLinuxOrWSL2
     if ($PSCmdlet.ShouldProcess("Setup FSL for pwsh.",'','')){
         # FSL Setup

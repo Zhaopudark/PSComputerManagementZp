@@ -14,9 +14,9 @@ function Get-TemporaryIPV6ByPattern{
     [CmdletBinding()]
     [OutputType([string])]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$AdapterPattern,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$AdressPattern
 
     )
@@ -50,13 +50,13 @@ function Add-OrUpdateDnsDomainRecord4Aliyun{
 #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$DomainName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$RecordName,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$RecordType,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$RecordValue
     )
     Assert-AliyunCLIAvailable

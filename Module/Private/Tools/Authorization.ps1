@@ -19,6 +19,7 @@
     [Authorization](https://little-train.com/posts/7fdde8eb.html).
 #>
     param(
+        [Parameter(Mandatory)]
         [FormattedFileSystemPath]$Path
     )
     if ($Path.IsInSystemVolumeInfo){
@@ -91,6 +92,7 @@ function Reset-PathAttribute{
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
+        [Parameter(Mandatory)]
         [FormattedFileSystemPath]$Path,
         [switch]$SkipPlatformCheck,
         [switch]$SkipPathCheck
