@@ -79,6 +79,7 @@ function Write-Log{
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([void])]
     param(
+        [Parameter(Mandatory)]
         [string]$Message,
         [switch]$ShowVerbose
     )
