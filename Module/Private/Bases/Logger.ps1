@@ -58,12 +58,13 @@ function Get-CurrentLogFileNameInRotatingList{
             }
         }
     }
-    if (Test-Path -LiteralPath $script:basic_log_files_list[$tmp_index]){
-        if ((Get-Item -LiteralPath $script:basic_log_files_list[$tmp_index]).Length /1MB -gt 10){
-            return $script:basic_log_files_list[($tmp_index + 1)%10]
-        }else{
-            return $script:basic_log_files_list[$tmp_index]
+    if ((Test-Path -LiteralPath $script:basic_log_files_list[$tmp_index]) -and
+        ((Get-Item -LiteralPath $script:basic_log_files_list[$tmp_index]).Length /1MB -gt 10)){
+        if ((Test-Path -LiteralPath $script:basic_log_files_list[($tmp_index + 1)%10]) -and
+            ((Get-Item -LiteralPath $script:basic_log_files_list[($tmp_index + 1)%10]).Length /1MB -gt 10)){
+            Remove-Item $script:basic_log_files_list[($tmp_index + 1)%10]                                                          
         }
+        return $script:basic_log_files_list[($tmp_index + 1)%10]
     }else{
         return $script:basic_log_files_list[$tmp_index]
     }
