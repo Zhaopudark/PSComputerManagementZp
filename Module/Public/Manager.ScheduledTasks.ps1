@@ -27,6 +27,7 @@ function Register-ProgramIntoTaskScheduler{
     String.
     String.
     String.
+    String.
     TimeSpan.
     Switch.
     Switch.
@@ -98,6 +99,7 @@ function Register-PwshCommandsAsRepetedSchedulerTask{
 .PARAMETER AtStartup
     A switch parameter to indicate whether to add a trigger at startup.
 .INPUTS
+    String.
     String.
     String.
     ScriptBlock.
