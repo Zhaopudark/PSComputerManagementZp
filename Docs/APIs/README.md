@@ -238,6 +238,47 @@ All `public APIs` are recored here.
     [FSL](https://fsl.fmrib.ox.ac.uk)
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
+### Register-PwshCommandsAsRepetedSchedulerTask
+    
+- **Description**
+
+    Register pwsh commands as a task into windows task scheduler as `$TaskName` within root\`$TaskPath`.
+    The task will be triggered at once and then repeat with the interval.
+    Additional triggers can be specified by `$AtLogon` and `$AtStartup`.
+- **Parameter** `$TaskName`
+
+    The name of the task.
+- **Parameter** `$TaskPath`
+
+    The target path of the task.
+- **Parameter** `$Commands`
+
+    The pwsh commands to be executed.
+- **Parameter** `$RepetitionInterval`
+
+    The interval of repetition.
+- **Parameter** `$AtLogon`
+
+    A switch parameter to indicate whether to add a trigger at logon.
+- **Parameter** `$AtStartup`
+
+    A switch parameter to indicate whether to add a trigger at startup.
+- **Inputs**
+
+    String.
+    String.
+    String.
+    TimeSpan.
+    Switch.
+    Switch.
+- **Outputs**
+
+    None.
+- **Notes**
+
+    Only support Windows.
+    Need Administrator privilege.
+    
 ### Remove-EnvProxyIPV4ForShellProcess
     
 - **Description**
