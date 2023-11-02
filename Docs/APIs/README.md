@@ -278,6 +278,7 @@ All `public APIs` are recored here.
     String.
     String.
     String.
+    String.
     TimeSpan.
     Switch.
     Switch.
@@ -319,6 +320,7 @@ All `public APIs` are recored here.
     A switch parameter to indicate whether to add a trigger at startup.
 - **Inputs**
 
+    String.
     String.
     String.
     ScriptBlock.
