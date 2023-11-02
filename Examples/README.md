@@ -208,7 +208,7 @@ Here are the steps:
   Make sure the version is at least v0.0.5:
 
   ```powershell
-  (Get-Module -Name PSComputerManagementZp).Version -ge [System.Version]::new("0.0.4")
+  (Get-Module -Name PSComputerManagementZp).Version -ge [System.Version]::new("0.0.5")
   # should be $true
   ```
 
