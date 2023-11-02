@@ -238,6 +238,54 @@ All `public APIs` are recored here.
     [FSL](https://fsl.fmrib.ox.ac.uk)
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
+### Register-ProgramIntoTaskScheduler
+    
+- **Description**
+
+    Register a program into windows task scheduler as `$TaskName` within root\`$TaskPath`.
+    Support 3 simple triggers: `RepetitionInterval`, `AtLogon`, and`AtStartup`.
+- **Parameter** `$TaskName`
+
+    The name of the task.
+- **Parameter** `$TaskPath`
+
+    The target path of the task.
+- **Parameter** `$ProgramPath`
+
+    The path of the program.
+- **Parameter** `$ProgramArguments`
+
+    The arguments of the program.
+- **Parameter** `$WorkingDirectory`
+
+    The working directory of the program.
+- **Parameter** `$RepetitionInterval`
+
+    The interval of repetition.
+- **Parameter** `$AtLogon`
+
+    A switch parameter to indicate whether to add a trigger at logon.
+- **Parameter** `$AtStartup`
+
+    A switch parameter to indicate whether to add a trigger at startup.
+- **Inputs**
+
+    String.
+    String.
+    String.
+    String.
+    String.
+    TimeSpan.
+    Switch.
+    Switch.
+- **Outputs**
+
+    None.
+- **Notes**
+
+    Only support Windows.
+    Need Administrator privilege.
+    
 ### Register-PwshCommandsAsRepetedSchedulerTask
     
 - **Description**
@@ -267,7 +315,7 @@ All `public APIs` are recored here.
 
     String.
     String.
-    String.
+    ScriptBlock.
     TimeSpan.
     Switch.
     Switch.
