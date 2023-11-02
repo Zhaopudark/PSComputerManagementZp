@@ -231,10 +231,10 @@ Here are the steps:
   Add-OrUpdateDnsDomainRecord4Aliyun -DomainName 'xxx.xxx' -RecordName 'abc' -RecordType AAAA -RecordValue $ipv6
   Remove-Module PSComputerManagementZp
   }
-  Register-PwshCommandsAsRepetedSchedulerTask  -TaskName 'DDNS' -TaskPath 'PSComputerManagementZp' -Commands $commands -RepetitionInterval (New-TimeSpan -Minutes 5) -AtLogon -AtStartup
+  Register-PwshCommandsAsRepetedSchedulerTask -TaskName 'DDNS' -TaskPath 'PSComputerManagementZp' -LogonType S4U -Commands $commands -RepetitionInterval (New-TimeSpan -Minutes 5) -AtLogon -AtStartup
   
-  Stop-ScheduledTask -TaskName "DDNS" 
-  Start-ScheduledTask -TaskName "DDNS"
+  Stop-ScheduledTask -TaskName "PSComputerManagementZp\DDNS" 
+  Start-ScheduledTask -TaskName "PSComputerManagementZp\DDNS"
   ```
 
 - Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->PSComputerManagementZp->DDNS` for checking:

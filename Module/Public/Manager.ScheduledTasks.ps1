@@ -7,6 +7,8 @@ function Register-ProgramIntoTaskScheduler{
     The name of the task.
 .PARAMETER TaskPath
     The target path of the task.
+.PARAMETER LogonType
+    The logon type of the task. Only support `Interactive`, `S4U`.
 .PARAMETER ProgramPath
     The path of the program.
 .PARAMETER ProgramArguments
@@ -40,6 +42,8 @@ function Register-ProgramIntoTaskScheduler{
         [string]$TaskName,
         [Parameter(Mandatory)]
         [string]$TaskPath,
+        [Parameter(Mandatory)][ValidateSet('Interactive','S4U')]
+        [string]$LogonType,
         [Parameter(Mandatory)]
         [string]$ProgramPath,
         [string]$ProgramArguments,
@@ -55,7 +59,8 @@ function Register-ProgramIntoTaskScheduler{
         $triggers += New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(5) -RepetitionInterval $RepetitionInterval
     }
     if ($AtLogon){
-        $triggers += New-ScheduledTaskTrigger -AtLogon
+        $user_name = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+        $triggers += New-ScheduledTaskTrigger -AtLogon -User $user_name
     }
     if ($AtStartup){
         $triggers += New-ScheduledTaskTrigger -AtStartup
@@ -64,7 +69,7 @@ function Register-ProgramIntoTaskScheduler{
         throw "At least one of the parameters `RepetitionInterval`, `AtLogon` and `AtStartup` should be specified to make a trigger."
     } 
     $user_id = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-    $principal =  New-ScheduledTaskPrincipal -UserId $user_id -LogonType S4U -RunLevel Highest
+    $principal =  New-ScheduledTaskPrincipal -UserId $user_id -LogonType $LogonType -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
     
     if($PSCmdlet.ShouldProcess("Register task `($TaskName)` into $TaskPath of ScheduledTasks",'','')){
@@ -88,6 +93,8 @@ function Register-PwshCommandsAsRepetedSchedulerTask{
     The interval of repetition.
 .PARAMETER AtLogon
     A switch parameter to indicate whether to add a trigger at logon.
+.PARAMETER LogonType
+    The logon type of the task. Only support `Interactive`, `S4U`.
 .PARAMETER AtStartup
     A switch parameter to indicate whether to add a trigger at startup.
 .INPUTS
@@ -109,6 +116,8 @@ function Register-PwshCommandsAsRepetedSchedulerTask{
         [string]$TaskName,
         [Parameter(Mandatory)]
         [string]$TaskPath,
+        [Parameter(Mandatory)][ValidateSet('Interactive','S4U')]
+        [string]$LogonType,
         [Parameter(Mandatory)]
         [scriptblock]$Commands,
         [Parameter(Mandatory)]
@@ -122,5 +131,5 @@ function Register-PwshCommandsAsRepetedSchedulerTask{
         -ProgramPath "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" `
         -ProgramArguments "-NoProfile -WindowStyle Hidden -Command $Commands" `
         -WorkingDirectory ${Home} `
-        -RepetitionInterval $RepetitionInterval -AtLogon:$AtLogon -AtStartup:$AtStartup
+        -RepetitionInterval $RepetitionInterval -AtLogon:$AtLogon -LogonType $LogonType -AtStartup:$AtStartup
 }
