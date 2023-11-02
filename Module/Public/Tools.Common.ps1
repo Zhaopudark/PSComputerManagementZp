@@ -1,5 +1,5 @@
 function Get-TempPath{
-    [OutputType([FormattedFileSystemPath])]
+    [OutputType([string])]
     param ()
     try {
         if (Test-Platform 'Windows'){
@@ -30,7 +30,7 @@ function Get-ModuleBuildDir{
 .LINK
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
 #>
-    [OutputType([FormattedFileSystemPath])]
+    [OutputType([string])]
     param()
     return [FormattedFileSystemPath]::new($(Get-TempPath))
 }
@@ -39,7 +39,7 @@ function Get-ModuleInstallDir{
 .LINK
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
 #>
-    [OutputType([FormattedFileSystemPath])]
+    [OutputType([string])]
     param()
     try {
         $windows_path = "$(Split-Path -Path $PROFILE.CurrentUserAllHosts -Parent)\Modules\"
