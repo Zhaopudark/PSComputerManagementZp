@@ -205,7 +205,7 @@ Here are the steps:
   ./install.ps1
   ```
 
-  Make sure the version is at least v0.0.4:
+  Make sure the version is at least v0.0.5:
 
   ```powershell
   (Get-Module -Name PSComputerManagementZp).Version -ge [System.Version]::new("0.0.4")
@@ -231,27 +231,14 @@ Here are the steps:
   Add-OrUpdateDnsDomainRecord4Aliyun -DomainName 'xxx.xxx' -RecordName 'abc' -RecordType AAAA -RecordValue $ipv6
   Remove-Module PSComputerManagementZp
   }
-  
-  $triggers = @(New-ScheduledTaskTrigger -AtLogon)
-  $triggers += New-ScheduledTaskTrigger -AtStartup
-  $triggers += New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(5) -RepetitionInterval (New-TimeSpan -Minutes 5)
-  
-  $action = New-ScheduledTaskAction -Execute "${Env:ProgramFiles}\PowerShell\7\pwsh.exe" -Argument "-NoProfile -WindowStyle Hidden -Command $commands"
-  
-  $user_id = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-  $principal =  New-ScheduledTaskPrincipal -UserId $user_id -LogonType S4U -RunLevel Highest
-  
-  $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
-  
-  Register-ScheduledTask -TaskName "DDNS" -Action $action -Principal $principal -Settings $settings -Trigger $triggers -Force 
+  Register-PwshCommandsAsRepetedSchedulerTask  -TaskName 'DDNS' -TaskPath 'PSComputerManagementZp' -Commands $commands -RepetitionInterval (New-TimeSpan -Minutes 5) -AtLogon -AtStartup
   
   Stop-ScheduledTask -TaskName "DDNS" 
   Start-ScheduledTask -TaskName "DDNS"
-  
   ```
 
-- Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->DDNS` for checking:
+- Then, open `Computer Management->System Tools->Task Scheduler->Task Scheduler Library->PSComputerManagementZp->DDNS` for checking:
 
-  <img src="./../Assets/Examples.README.assets/image-20231015010748163.png" alt="image-20231015010748163" style="zoom: 33%;" />
-
+  <img src="./../Assets/Examples.README.assets/image-20231102094445378.png" alt="image-20231102094445378" style="zoom: 50%;" />
+  
   
