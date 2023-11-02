@@ -54,26 +54,8 @@ foreach ($entry in $local:ModuleInfo.SortedFunctionsNotToExportWithDocs){
 }
 
 $component_content | Set-Content -Path $local:ConfigInfo.MDDocs.Components
-
-
-if (Test-Platform 'Windows'){
-    $local:ModuleInfo.InstallPath = "$(Split-Path -Path $PROFILE -Parent)\Modules\$($local:ModuleInfo.ModuleName)"
-    $local:maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
-    $local:ModuleInfo.BuildPath = "$local:maybe_c`:\temp\$($local:ModuleInfo.ModuleName)"
-}elseif (Test-Platform 'Wsl2'){
-    $local:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($local:ModuleInfo.ModuleName)"
-    $local:ModuleInfo.BuildPath = "/tmp/$($local:ModuleInfo.ModuleName)"
-}elseif (Test-Platform 'Linux'){
-    $local:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($local:ModuleInfo.ModuleName)"
-    $local:ModuleInfo.BuildPath = "/tmp/$($local:ModuleInfo.ModuleName)"
-}elseif (Test-Platform 'MacOS'){
-    $local:ModuleInfo.InstallPath = "${Home}/.local/share/powershell/Modules/$($local:ModuleInfo.ModuleName)"
-    $local:ModuleInfo.BuildPath = "/tmp/$($local:ModuleInfo.ModuleName)"
-}else{
-    throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
-    exit -1
-}
-
+$local:ModuleInfo.InstallPath = "$(Get-ModuleInstallDir)\$($local:ModuleInfo.ModuleName)"
+$local:ModuleInfo.BuildPath = "$(Get-ModuleBuildDir)\$($local:ModuleInfo.ModuleName)"
 
 if (!(Test-Path -LiteralPath $local:ModuleInfo.BuildPath)){
     New-Item -Path $local:ModuleInfo.BuildPath -ItemType Directory | Out-Null

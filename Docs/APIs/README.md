@@ -143,6 +143,18 @@ All `public APIs` are recored here.
 
     [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)
     
+### Get-ModuleBuildDir
+    
+- **Link**
+
+    [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
+    
+### Get-ModuleInstallDir
+    
+- **Link**
+
+    [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
+    
 ### Get-TemporaryIPV6ByPattern
     
 - **Description**
@@ -161,6 +173,8 @@ All `public APIs` are recored here.
 
     [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)
     
+### Get-TempPath
+
 ### Merge-RedundantEnvPathFromCurrentMachineToCurrentUser
     
 - **Description**

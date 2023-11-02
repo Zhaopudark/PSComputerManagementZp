@@ -38,3 +38,5 @@ $local:ModuleSettings = @{
 
 
 . "${PSScriptRoot}\Private\Bases\Logger.ps1" -LoggingPath "${Home}\.log\$($ModuleInfo.ModuleName)" -ModuleVersion $local:ModuleSettings.ModuleVersion
+
+Get-ChildItem "${PSScriptRoot}\Public" -Recurse -Include '*.ps1','*.psm1' | ForEach-Object { . $_.FullName }
