@@ -124,7 +124,6 @@ function Write-Log{
     $time_stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
     $message = "[${time_stamp}] ${Message}"
     Write-FileLog $message
-    if($ShowVerbose){
-        Write-Verbose $message -Verbose
-    }
+    Write-Verbose $message -Verbose:$ShowVerbose
+  
 }

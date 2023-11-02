@@ -3,7 +3,8 @@
 - Use rotation logs to prevent files from becoming too large.
     - Now, if the log file is larger than 10MB, a new log file will be generated with the identifier `.<index>.`.
     - Allows to keep up to 9 older log files in addition to the latest log file.
-- Add a public API function `Register-PwshCommandsAsRepetedSchedulerTask` to register PowerShell commands as a repeated schedule task.
+
+- Add public API functions `Register-ProgramIntoTaskScheduler` and `Register-PwshCommandsAsRepetedSchedulerTask` to register tasks into task scheduler.
     - It can help users to register many repeted tasks, such as `DDNS`, `Auto-Backup`, etc.
 - Simplify the `DDNS` part of `Examples/README.md` with the new APIs.
 
