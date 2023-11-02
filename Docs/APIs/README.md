@@ -250,6 +250,9 @@ All `public APIs` are recored here.
 - **Parameter** `$TaskPath`
 
     The target path of the task.
+- **Parameter** `$LogonType`
+
+    The logon type of the task. Only support `Interactive`, `S4U`.
 - **Parameter** `$ProgramPath`
 
     The path of the program.
@@ -308,6 +311,9 @@ All `public APIs` are recored here.
 - **Parameter** `$AtLogon`
 
     A switch parameter to indicate whether to add a trigger at logon.
+- **Parameter** `$LogonType`
+
+    The logon type of the task. Only support `Interactive`, `S4U`.
 - **Parameter** `$AtStartup`
 
     A switch parameter to indicate whether to add a trigger at startup.
