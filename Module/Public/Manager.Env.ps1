@@ -1,5 +1,3 @@
-
-
 function Merge-RedundantEnvPathFromCurrentMachineToCurrentUser{
 <#
 .DESCRIPTION
