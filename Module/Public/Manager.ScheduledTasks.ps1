@@ -67,7 +67,7 @@ function Register-ProgramIntoTaskScheduler{
     $principal =  New-ScheduledTaskPrincipal -UserId $user_id -LogonType S4U -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
     
-    if($PSCmdlet.ShouldProcess("Register pwsh commands as task `($TaskName)` into $TaskPath of ScheduledTasks",'','')){
+    if($PSCmdlet.ShouldProcess("Register task `($TaskName)` into $TaskPath of ScheduledTasks",'','')){
         Register-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Action $action -Principal $principal -Settings $settings -Trigger $triggers -Force 
     }    
 }
@@ -103,6 +103,7 @@ function Register-PwshCommandsAsRepetedSchedulerTask{
     Only support Windows.
     Need Administrator privilege.
 #>
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         [Parameter(Mandatory)]
         [string]$TaskName,
