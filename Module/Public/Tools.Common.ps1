@@ -25,7 +25,7 @@ function Get-TempPath{
         exit -1
     }
 }
-function Get-ModuleBuildDir{
+function Get-SelfBuildDir{
 <#
 .LINK
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
@@ -34,7 +34,7 @@ function Get-ModuleBuildDir{
     param()
     return [FormattedFileSystemPath]::new($(Get-TempPath))
 }
-function Get-ModuleInstallDir{
+function Get-SelfInstallDir{
 <#
 .LINK
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
