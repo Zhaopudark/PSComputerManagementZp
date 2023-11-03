@@ -28,7 +28,7 @@ BeforeAll {
 }
 
 Describe 'Test Link Management' {
-    Context 'On Windows' -Skip:(!$IsWindows){
+    Context 'On Windows'{
         It 'Test Set-DirSymbolicLinkWithSync' {
             Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_symbolick_dir\dir1"
@@ -51,7 +51,7 @@ Describe 'Test Link Management' {
             "$backup2\dir2" | Should -Exist
             "$backup2\dir2\file22.txt" | Should -Exist
         }
-        It 'Test Set-DirJunctionWithSync' {
+        It 'Test Set-DirJunctionWithSync' -Skip:(!$IsWindows){
             Set-DirJunctionWithSync -Path "$test_path\test_junction\dir3"  -Target "$test_path\test_junction\dir4" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_junction\dir3"
             $item.LinkType | Should -Be 'Junction'
@@ -89,18 +89,18 @@ Describe 'Test Link Management' {
             }
         }
     }
-    Context 'On non-Windows' -Skip:$IsWindows{
-        It 'Test Set-DirSymbolicLinkWithSync' {
-            {Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -BackupDir "$test_path\backup" }| Should -Throw
-        }
-        It 'Test Set-DirJunctionWithSync' {
-            {Set-DirJunctionWithSync -Path "$test_path\test_symbolick_dir\dir3"  -Target "$test_path\test_symbolick_dir\dir4" -BackupDir "$test_path\backup" }| Should -Throw
-        }
-        It 'Test Set-FileSymbolicLinkWithSync' {
-            {Set-FileSymbolicLinkWithSync -Path "$test_path\file_symbolic_link"  -Target "$test_path\file_for_symbolic_link.txt" -BackupDir "$test_path\backup"}| Should -Throw
-        }
+    # Context 'On non-Windows' -Skip:$IsWindows{
+    #     It 'Test Set-DirSymbolicLinkWithSync' {
+    #         {Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -BackupDir "$test_path\backup" }| Should -Throw
+    #     }
+    #     It 'Test Set-DirJunctionWithSync' {
+    #         {Set-DirJunctionWithSync -Path "$test_path\test_symbolick_dir\dir3"  -Target "$test_path\test_symbolick_dir\dir4" -BackupDir "$test_path\backup" }| Should -Throw
+    #     }
+    #     It 'Test Set-FileSymbolicLinkWithSync' {
+    #         {Set-FileSymbolicLinkWithSync -Path "$test_path\file_symbolic_link"  -Target "$test_path\file_for_symbolic_link.txt" -BackupDir "$test_path\backup"}| Should -Throw
+    #     }
 
-    }
+    # }
 
 }
 

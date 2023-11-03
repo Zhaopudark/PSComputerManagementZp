@@ -77,6 +77,18 @@ All `private Components` are recorded here. (Only for Contributors)
 
     None.
     
+### Assert-IsWindowsAndAdminIfOnWindows
+    
+- **Description**
+
+    Assert if the current platform is Windows and the current process is in AdminPermission.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    None.
+    
 ### Assert-ReleaseVersionConsistency
     
 - **Description**

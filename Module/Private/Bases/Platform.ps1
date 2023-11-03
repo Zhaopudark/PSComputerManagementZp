@@ -162,10 +162,28 @@ function Assert-IsWindowsAndAdmin{
     None.
 #>
     [CmdletBinding()]
-    [OutputType([bool])]
+    [OutputType([void])]
     param()
     Assert-IsWindows
     Assert-AdminPermission
+}
+
+function Assert-IsWindowsAndAdminIfOnWindows{
+<#
+.DESCRIPTION
+    Assert if the current platform is Windows and the current process is in AdminPermission.
+.INPUTS
+    None.
+.OUTPUTS
+    None.
+#>
+    [CmdletBinding()]
+    [OutputType([void])]
+    param()
+    if (Test-Platform -Name 'Windows'){
+        Assert-IsWindows
+        Assert-AdminPermission
+    }
 }
 function Assert-AdminRobocopyAvailable{
 <#
