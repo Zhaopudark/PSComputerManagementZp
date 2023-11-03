@@ -6,6 +6,8 @@ On this page, there are some perhaps useful samples or usages with the module `P
 
 **Fundamental**: Modify `Current User` level registry items  `HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings` to set and unset system level proxy.
 
+**Note**: ==This module is not a proxy tool, but a tool to help you configure the system level proxy. So, you should have a proxy server first.==
+
 ## Set system proxy IPV4 by `Localhost` with `PortNumber`
 
 Please run PowerShell with `Administrator` privilege. 
