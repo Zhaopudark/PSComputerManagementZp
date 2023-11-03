@@ -1,4 +1,6 @@
 # Release v0.0.5
+## Release v0.0.5-beta1
+- Fix some documentation problems.
 ## Release v0.0.5-beta0
 - Use rotation logs to prevent files from becoming too large.
     - Now, if the log file is larger than 10MB, a new log file will be generated with the identifier `.<index>.`.
