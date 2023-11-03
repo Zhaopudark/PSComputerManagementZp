@@ -215,18 +215,16 @@
     }
 }
 
-function Get-EnvPath{
-<#
-.DESCRIPTION
-    A function to apply the class EnvPath.
-    Return an instance of it.
-.INPUTS
-    None.
-.OUTPUTS
-    EnvPath.
-#>
-    param()
-    return [EnvPath]::new()
-}
-
-Export-ModuleMember -Function 'Get-EnvPath'
+# function Get-EnvPath{
+# <#
+# .DESCRIPTION
+#     A function to apply the class EnvPath.
+#     Return an instance of it.
+# .INPUTS
+#     None.
+# .OUTPUTS
+#     EnvPath.
+# #>
+#     param()
+#     return [EnvPath]::new()
+# }
