@@ -337,3 +337,5 @@ function Get-FormattedFileSystemPath{
     )
     return [FormattedFileSystemPath]::new($Path)
 }
+
+Export-ModuleMember -Function 'Get-FormattedFileSystemPath'

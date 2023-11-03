@@ -228,3 +228,5 @@ function Get-EnvPath{
     param()
     return [EnvPath]::new()
 }
+
+Export-ModuleMember -Function 'Get-EnvPath'

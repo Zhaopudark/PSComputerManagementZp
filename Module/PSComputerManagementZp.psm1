@@ -2,6 +2,13 @@
 # see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3#using-dot-source-notation-with-scope)
 # also see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_scopes?view=powershell-7.3)
 
+# NOTE: To specilize classes and their import procedures, we define and store them in `*.psm1` files.
+# And import them by using `using module` syntax instead of `.` source syntax.
+# see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_using?view=powershell-7.3#module-syntax)
+# also see the [doc](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_classes?view=powershell-7.3#importing-classes-from-a-powershell-module)
+using module ".\Classes\EnvPath.psm1"
+using module ".\Classes\FormattedFileSystemPath.psm1"
+
 # ${PSScriptRoot}\Private\Bases\Logger.ps1 is a special script, which needs status given.
 Get-ChildItem "${PSScriptRoot}\Private" -Recurse -Include '*.ps1','*.psm1' -Exclude '*Logger.ps1' | ForEach-Object { . $_.FullName }
 
