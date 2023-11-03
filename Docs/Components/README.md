@@ -444,6 +444,35 @@ All `private Components` are recored here. (Only for Contributors)
 
     [Authorization](https://little-train.com/posts/7fdde8eb.html)
     
+### Get-EnvPath
+    
+- **Description**
+
+    A function to apply the class EnvPath.
+    Return an instance of it.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    EnvPath.
+    
+### Get-FormattedFileSystemPath
+    
+- **Description**
+
+    A function to apply the class FormattedFileSystemPath on a path.
+    Return an instance of it
+- **Parameter** `$Path`
+
+    The path to be formatted.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    FormattedFileSystemPath.
+    
 ### Get-FunctionDoc
     
 - **Description**

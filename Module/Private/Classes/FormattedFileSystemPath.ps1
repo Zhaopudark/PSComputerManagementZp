@@ -319,21 +319,21 @@
     }
 }
 
-# function Get-FormattedFileSystemPath{
-# <#
-# .DESCRIPTION
-#     A function to apply the class FormattedFileSystemPath on a path.
-#     Return an instance of it
-# .PARAMETER Path
-#     The path to be formatted.
-# .INPUTS
-#     String.
-# .OUTPUTS
-#     FormattedFileSystemPath.
-# #>
-#     param(
-#         [Parameter(Mandatory)]
-#         [string]$Path
-#     )
-#     return [FormattedFileSystemPath]::new($Path)
-# }
+function Get-FormattedFileSystemPath{
+<#
+.DESCRIPTION
+    A function to apply the class FormattedFileSystemPath on a path.
+    Return an instance of it
+.PARAMETER Path
+    The path to be formatted.
+.INPUTS
+    String.
+.OUTPUTS
+    FormattedFileSystemPath.
+#>
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path
+    )
+    return [FormattedFileSystemPath]::new($Path)
+}
