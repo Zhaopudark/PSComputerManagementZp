@@ -31,8 +31,7 @@ function Set-DirSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$BackupDir
     )
-    Assert-IsWindowsAndAdmin
-
+    Assert-IsWindowsAndAdminIfOnWindows
     if ($PSCmdlet.ShouldProcess("Set a directory symbolic link from $Path to $Source, as $Path->$Target",'','')){
         Move-Target2Source4SoftLink -Target $Path -Source $Target -BackupDir $BackupDir
         $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target
@@ -72,7 +71,7 @@ function Set-FileSymbolicLinkWithSync{
         [Parameter(Mandatory)]
         [string]$BackupDir
     )
-    Assert-IsWindowsAndAdmin
+    Assert-IsWindowsAndAdminIfOnWindows
     if ($PSCmdlet.ShouldProcess("Set a file symbolic link from $Path to $Source, as $Path->$Target",'','')){
         Move-Target2Source4SoftLink -Target $Path -Source $Target -BackupDir $BackupDir
         $link = New-Item -ItemType SymbolicLink -Path $Path -Target $Target
