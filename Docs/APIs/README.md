@@ -5,6 +5,18 @@ All `public APIs` are recored here.
 - **Description**
 
     Add or update a DNS domain record for Aliyun.
+- **Parameter** `$DomainName`
+
+    The domain name.
+- **Parameter** `$RecordName`
+
+    The record name.
+- **Parameter** `$RecordType`
+
+    The record type.
+- **Parameter** `$RecordValue`
+
+    The record value.
 - **Notes**
 
     Only 4 (mandatory) parameters are supported for customization, the rest will follow the default settings.
@@ -143,13 +155,13 @@ All `public APIs` are recored here.
 
     [GetHostAddresses](https://learn.microsoft.com/en-us/dotnet/api/system.net.dns.gethostaddresses?view=net-7.0)
     
-### Get-ModuleBuildDir
+### Get-SelfBuildDir
     
 - **Link**
 
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
     
-### Get-ModuleInstallDir
+### Get-SelfInstallDir
     
 - **Link**
 
@@ -160,6 +172,12 @@ All `public APIs` are recored here.
 - **Description**
 
     Get one of the temporary IPV6 address by pattern.
+- **Parameter** `$AdapterPattern`
+
+    The adapter pattern help to recognize the adapter.
+- **Parameter** `$AdressPattern`
+
+    The address pattern help to recognize the address.
 - **Inputs**
 
     None.

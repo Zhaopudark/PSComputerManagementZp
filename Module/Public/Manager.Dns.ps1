@@ -2,6 +2,10 @@ function Get-TemporaryIPV6ByPattern{
 <#
 .DESCRIPTION
     Get one of the temporary IPV6 address by pattern.
+.PARAMETER AdapterPattern
+    The adapter pattern help to recognize the adapter.
+.PARAMETER AdressPattern
+    The address pattern help to recognize the address.
 .INPUTS
     None.
 .OUTPUTS
@@ -40,6 +44,14 @@ function Add-OrUpdateDnsDomainRecord4Aliyun{
 <#
 .DESCRIPTION
     Add or update a DNS domain record for Aliyun.
+.PARAMETER DomainName
+    The domain name.
+.PARAMETER RecordName
+    The record name.
+.PARAMETER RecordType
+    The record type.
+.PARAMETER RecordValue
+    The record value.
 .NOTES
     Only 4 (mandatory) parameters are supported for customization, the rest will follow the default settings.
 .LINK

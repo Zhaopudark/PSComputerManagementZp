@@ -7,6 +7,10 @@
 - Add public API functions `Register-ProgramIntoTaskScheduler` and `Register-PwshCommandsAsRepetedSchedulerTask` to register tasks into task scheduler.
     - It can help users to register many repeted tasks, such as `DDNS`, `Auto-Backup`, etc.
 - Simplify the `DDNS` part of `Examples/README.md` with the new APIs.
+- Add public API functions `Get-TempPath`, `Get-SelfInstallDir`, `Get-SelfBuildDir`.
+- Change and fix the `tmp` path, which is used across this module, to the system's default temp path by `Get-TempPath`.
+    - Now, in Windows, the `tmp` path used across this module is `$Env:TEMP` by default, instead of `C:\temp\` as before. 
+- Tweak the organization of public and private APIs for simplification.
 
 # Release v0.0.4
 ## Release v0.0.4-stable

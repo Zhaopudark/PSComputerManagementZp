@@ -1,4 +1,4 @@
 $ErrorActionPreference_backup = $ErrorActionPreference
 $ErrorActionPreference = 'Stop'
 Import-Module PSComputerManagementZp -Force
-Import-Module "${PSScriptRoot}\Mimic.psm1" -Prefix 'x'
+Import-Module "${PSScriptRoot}\..\..\Module\PSComputerManagementZp.psm1" -Prefix 'x'

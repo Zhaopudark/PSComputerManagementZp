@@ -13,9 +13,8 @@ All tests have been partitioned into 3 parts:
     - Excluding:
         - All public components
     - Testing configuration, adding components to testing scope(environment):
-        - Only private components are allowed. Can use a command like `. "${PSScriptRoot}\..\..\Module\Register.PrivateComponents.ps1"`.
+        - Only private components are allowed.
         - Forbid any public component. Avoid commands like `Import-Module PSComputerManagementZp`.
-        - Ensure that all functionalities of private components are not affected by what is defined in each testing scope.
 
 3. [APIs Tests](/.github/workflows/APIs-Tests.yaml), testing all the public components of the project.
     - Paths: /Tests/APIs/*.Tests.ps1
@@ -27,6 +26,4 @@ All tests have been partitioned into 3 parts:
         - All private components
     - Testing configuration, adding components to testing scope(environment):
         - Only public components are allowed. Can use a command like `Import-Module PSComputerManagementZp`.
-        - Forbid any private component. Avoid direct commands like `. "${PSScriptRoot}\..\..\Module\Register.PrivateComponents.ps1"`.
-        - If some private components are needed, mimic them with a different name before using them.
-        - Ensure that all functionalities of public components are not affected by what is defined in each testing scope.
+        - Forbid any direct private component. Import them with a special prefix before using them.

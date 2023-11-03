@@ -1,10 +1,10 @@
 . "${PSScriptRoot}\build.ps1"
 
-if (!(Test-Path -LiteralPath $local:ModuleInfo.InstallPath)){
-    New-Item -Path $local:ModuleInfo.InstallPath -ItemType Directory | Out-Null
+if (!(Test-Path -LiteralPath $ModuleInfo.InstallPath)){
+    New-Item -Path $ModuleInfo.InstallPath -ItemType Directory | Out-Null
 }
-if (Test-Path -LiteralPath "$($local:ModuleInfo.InstallPath)\$($local:ModuleSettings.ModuleVersion)"){
-    Remove-Item "$($local:ModuleInfo.InstallPath)\$($local:ModuleSettings.ModuleVersion)" -Force -Recurse
+if (Test-Path -LiteralPath "$($ModuleInfo.InstallPath)\$($ModuleSettings.ModuleVersion)"){
+    Remove-Item "$($ModuleInfo.InstallPath)\$($ModuleSettings.ModuleVersion)" -Force -Recurse
 }
 
-Copy-Item -Path "$($local:ModuleInfo.BuildPath)\$($local:ModuleSettings.ModuleVersion)" -Destination "$($local:ModuleInfo.InstallPath)\$($local:ModuleSettings.ModuleVersion)" -Recurse -Force
+Copy-Item -Path "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)" -Destination "$($ModuleInfo.InstallPath)\$($ModuleSettings.ModuleVersion)" -Recurse -Force
