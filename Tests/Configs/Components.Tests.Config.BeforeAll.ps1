@@ -1,3 +1,3 @@
 $ErrorActionPreference_backup = $ErrorActionPreference
 $ErrorActionPreference = 'Stop'
-. "${PSScriptRoot}\..\..\Module\Register.PrivateComponents.ps1"
+Import-Module "${PSScriptRoot}\..\..\Module\PSComputerManagementZp.psm1" -Force -Scope Local
