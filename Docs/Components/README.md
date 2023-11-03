@@ -1,5 +1,116 @@
 All `private Components` are recored here. (Only for Contributors)
 ## Classes
+### EnvPath
+    
+- **Description**
+
+    A class that maintains the process, user, and machine level `$Env:PATH`, holds the de-duplicated paths, and provides some useful methods for some scenarios that need to modify the `$Env:PATH`.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    EnvPath.
+- **Notes**
+
+    Do not check any path's existence or validity.
+    
+### FormattedFileSystemPath
+    
+- **Synopsis**
+
+    A class that receives a file system path, formats the path automatically when initialized, holds the formatted path, and provides some useful attributes(properties) simultaneously for a quick check.
+    
+- **Description**
+
+    Automatically format a path to standard format by the following procedures and rules:
+    **First**: Preprocess a received path with some literal check (string level, without accessing it by file system):
+    - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
+    - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
+    - Reduce any consecutive colons to a single `:`
+    - Strip any trailing slashs.
+    - According to the platform, append a single `\` or `/` if the path ends with a colon.
+    - Reduce any consecutive slashes to a single one, and convert them to `\` or `/`, according to the platform.
+    - Convert the drive name to initial capital letter.
+    - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash `\` or `/`,
+    according to the platform will be added at the head.
+    
+    **Second**: Test the preprocessed path with file system access:
+    - Check if the path exists in file system. If not, throw an error.
+    - Check if the path is with wildcard characters by file system. If so, throw an error.
+    - It means a path (an instance of this class) represents only a path, not a group of paths.
+    
+    **Third** Format the path with file system access:
+    - Convert it to an absolute one.
+    - Convert it to an original-case one.
+    - Even though, by [default](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity), items in NTFS of Windows is not case-sensitive, but actually it has the ability to be case-sensitive.
+    - And, in NTFS of Windows, two paths with only case differences can represent the same item, i.g., `c:\uSeRs\usER\TesT.tXt` and `C:\Users\User\test.txt`.
+    - Furthermore, by `explorer.exe`, we can see that the original case of a path. If we change its case, the original case will be changed too.
+    - So, NTFS does save and maintain the original case of a path. It just be intentionally case-insensitive rather than incapable of being case-sensitive.
+    - This class use the methods [here](https://stackoverflow.com/q/76982195/17357963) to get the original case of a path, then maintian it.
+    
+    **#TODO **:
+    - Cross-platform support.
+    - Currently, this class is only adapative on each single platform, but not cross-platform.
+    - But for preliminary process, the source's platform will be detected and recorded in the property `OriginalPlatform`.
+    
+    **Some properties of the path are also provided**:
+    1. LiteralPath: The formatted path.
+    2. OriginalPlatform: The platform of the source path.
+    3. Slash: The slash of the path.
+    4. Attributes: The attributes of the path.
+    5. Linktype: The link type of the path.
+    6. LinkTarget: The link target of the path.
+    7. Qualifier: The qualifier of the path.
+    8. QualifierRoot: The root of the qualifier of the path.
+    9. DriveFormat: The format of the drive of the path.
+    10. IsDir: If the path is a directory.
+    11. IsFile: If the path is a file.
+    12. IsDriveRoot: If the path is the root of a drive.
+    13. IsBeOrInSystemDrive: If the path is in the system drive.
+    14. IsInHome: If the path is in the home directory.
+    15. IsHome: If the path is the home directory.
+    16. IsDesktopINI: If the path is a desktop.ini file.
+    (Windows only):
+    17. IsSystemVolumeInfo: If the path is the System Volume Information directory.
+    18. IsInSystemVolumeInfo: If the path is in the System Volume Information directory.
+    19. IsRecycleBin: If the path is the Recycle Bin directory.
+    20. IsInRecycleBin: If the path is in the Recycle Bin directory.
+    21. IsSymbolicLink: If the path is a symbolic link.
+    22. IsJunction: If the path is a junction.
+    23. IsHardLink: If the path is a hard link.
+    
+- **Example**
+
+    Not usage examples, but a demonstration about the path formatting:
+    
+    | (Windows) Existing Path   | Given(Input) Path         | Formatted Path    |
+    | ------------------------- | ------------------------- | ----------------- |
+    | C:\Users                  | c:\uSeRs                  | C:\Users\         |
+    | C:\Users                  | C:\uSers                  | C:\Users\         |
+    | C:\Users\test.txt         | c:\uSeRs\usER\TesT.tXt    | C:\Users\test.txt |
+    | C:\Users\test.txt         | C:\uSeRs\user\TEST.TxT    | C:\Users\test.txt |
+    
+    | (Unix) Existing Path      | Given(Input) Path         | Formatted Path    |
+    | ------------------------- | ------------------------- | ----------------- |
+    | /home/uSer                | /home/uSer                | /home/uSer/       |
+- **Parameter** `$Path`
+
+    The path to be formatted.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    FormattedFileSystemPath.
+- **Notes**
+
+    Support file system paths only!
+- **Link**
+
+    [Default case-sensitive](https://learn.microsoft.com/zh-cn/windows/wsl/case-sensitivity).
+    [Fromatting methods](https://stackoverflow.com/q/76982195/17357963).
+    
 ## Functions
 ### Assert-AdminPermission
     
@@ -332,6 +443,35 @@ All `private Components` are recored here. (Only for Contributors)
 - **Link**
 
     [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    
+### Get-EnvPath
+    
+- **Description**
+
+    A function to apply the class EnvPath.
+    Return an instance of it.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    EnvPath.
+    
+### Get-FormattedFileSystemPath
+    
+- **Description**
+
+    A function to apply the class FormattedFileSystemPath on a path.
+    Return an instance of it
+- **Parameter** `$Path`
+
+    The path to be formatted.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    FormattedFileSystemPath.
     
 ### Get-FunctionDoc
     
