@@ -99,7 +99,7 @@ There are two ways to install and use this module. Make sure your PowerShell ver
 
 # Limitations or Risks
 
-- May not be compatible with other software, CLI tools, CLI commands or PowerShell Modules. Such as, if you have enabled `system proxy` in `Clash`, there is no need to use the case [Set IPV4 system proxy by `Localhost` with `PortNumber`](#Set-system-proxy-IPV4-by-Localhost-with-PortNumber).
+- May not be compatible with other software, CLI tools, CLI commands or PowerShell Modules. Such as, if you have enabled `system proxy` in some tools, there is no need to use the case [Set IPV4 system proxy by `Localhost` with `PortNumber`](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Examples/README.md#set-system-proxy-ipv4-by-localhost-with-portnumber).
 - This module can modify the `User` and `Machine` level environment variables in some cases, which should be noticed.
 
 # Usage
@@ -112,9 +112,11 @@ Generally, the prerequisites are:
 - Some cases need `Administrator` privilege.
 
 ## Usage Examples
-The following is an example: Set system proxy IPV4 by `Localhost` with `PortNumber`
+The following is an example: Set system proxy IPV4 by `Localhost` with `PortNumber`.
 
 **Fundamental**: Modify `Current User` level registry items  `HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings` to set and unset system level proxy.
+
+**Note**: ==This module is not a proxy tool, but a tool to help you configure the system level proxy. So, you should have a proxy server first.==
 
 Please run PowerShell with `Administrator` privilege. 
 
