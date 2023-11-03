@@ -33,7 +33,7 @@ Describe 'Test Link Management' {
             Set-DirSymbolicLinkWithSync -Path "$test_path\test_symbolick_dir\dir1"  -Target "$test_path\test_symbolick_dir\dir2" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_symbolick_dir\dir1"
             $item.LinkType | Should -Be 'SymbolicLink'
-            $item.LinkTarget | Should -Be "$test_path\test_symbolick_dir\dir2"
+            $item.LinkTarget | Should -Be (Get-FormattedFileSystemPath "$test_path\test_symbolick_dir\dir2").ToString()
             "$test_path\test_symbolick_dir\dir1" | Should -Exist
             "$test_path\test_symbolick_dir\dir2\file1.txt" | Should -Exist
             "$test_path\test_symbolick_dir\dir2\dir1" | Should -Exist
@@ -55,7 +55,7 @@ Describe 'Test Link Management' {
             Set-DirJunctionWithSync -Path "$test_path\test_junction\dir3"  -Target "$test_path\test_junction\dir4" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\test_junction\dir3"
             $item.LinkType | Should -Be 'Junction'
-            $item.LinkTarget | Should -Be "$test_path\test_junction\dir4"
+            $item.LinkTarget | Should -Be (Get-FormattedFileSystemPath "$test_path\test_junction\dir4").ToString()
             "$test_path\test_junction\dir3" | Should -Exist
             "$test_path\test_junction\dir4\file3.txt" | Should -Exist
             "$test_path\test_junction\dir4\dir3" | Should -Exist
@@ -77,7 +77,7 @@ Describe 'Test Link Management' {
             Set-FileSymbolicLinkWithSync -Path "$test_path\file_for_symboliclink1.txt"  -Target "$test_path\file_for_symboliclink2.txt" -BackupDir "$test_path\backup"
             $item = Get-ItemProperty "$test_path\file_for_symboliclink1.txt"
             $item.LinkType | Should -Be 'SymbolicLink'
-            $item.LinkTarget | Should -Be "$test_path\file_for_symboliclink2.txt"
+            $item.LinkTarget | Should -Be (Get-FormattedFileSystemPath "$test_path\file_for_symboliclink2.txt").ToString()
             "$test_path\file_for_symboliclink1.txt" | Should -Exist
             "$test_path\file_for_symboliclink2.txt" | Should -Exist
 
