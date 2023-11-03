@@ -1,4 +1,4 @@
-All `private Components` are recored here. (Only for Contributors)
+All `private Components` are recorded here. (Only for Contributors)
 ## Classes
 ### EnvPath
     

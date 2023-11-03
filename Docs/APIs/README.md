@@ -1,4 +1,4 @@
-All `public APIs` are recored here.
+All `public APIs` are recorded here.
 ## Functions
 ### Add-OrUpdateDnsDomainRecord4Aliyun
     

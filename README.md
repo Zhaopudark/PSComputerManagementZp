@@ -54,7 +54,6 @@ This customized PowerShell Module, `PSComputerManagementZp`, derives from my sce
 - [x] Format path for both Windows and WSL2.
 - [x] Deal with authorization problems on the Windows file system.
 - [x] Set DDNS. (Only support Aliyun DDNS now)
-- [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
 
 Some features are also available on WSL2 and Linux.
 
@@ -112,6 +111,7 @@ Generally, the prerequisites are:
 - Make sure your PowerShell version is 7.0 or later.
 - Some cases need `Administrator` privilege.
 
+## Usage Examples
 The following is an example: Set system proxy IPV4 by `Localhost` with `PortNumber`
 
 **Fundamental**: Modify `Current User` level registry items  `HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings` to set and unset system level proxy.

@@ -26,7 +26,7 @@ Assert-ReleaseVersionConsistency -Version $ModuleSettings.ModuleVersion -Release
 $Prerelease = Get-PreReleaseString -ReleaseNotesPath $ConfigInfo.MDDocs.Release
 
 # generate APIs README.md
-$api_content = @("All ``public APIs`` are recored here.")
+$api_content = @("All ``public APIs`` are recorded here.")
 $api_content += "## Functions"
 foreach ($entry in $ModuleInfo.SortedFunctionsToExportWithDocs){
     # $api_content += "- [$($entry.Name)](.\$($entry.Name).md)"
@@ -41,7 +41,7 @@ foreach ($entry in $ModuleInfo.SortedFunctionsToExportWithDocs){
 $api_content | Set-Content -Path $ConfigInfo.MDDocs.APIs
 
 # generate Components README.md
-$component_content = @("All ``private Components`` are recored here. (Only for Contributors)")
+$component_content = @("All ``private Components`` are recorded here. (Only for Contributors)")
 
 $component_content += "## Classes"
 foreach ($entry in $ModuleInfo.SortedClassesNotToExportWithDocs){
