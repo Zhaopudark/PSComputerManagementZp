@@ -53,7 +53,7 @@ function Get-SelfInstallDir{
             if (!(Test-Path -LiteralPath $non_windows_path)){
                 New-Item -Path $non_windows_path -ItemType Directory -Force | Out-Null
             }
-            return [FormattedFileSystemPath]::new($panon_windows_pathth)
+            return [FormattedFileSystemPath]::new($non_windows_path)
         }elseif (Test-Platform 'Linux'){
             if (!(Test-Path -LiteralPath $non_windows_path )){
                 New-Item -Path $non_windows_path -ItemType Directory -Force | Out-Null
