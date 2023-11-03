@@ -115,6 +115,35 @@ All `public APIs` are recorded here.
 
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
+### Get-EnvPath
+    
+- **Description**
+
+    A function to apply the class EnvPath.
+    Return an instance of it.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    EnvPath.
+    
+### Get-FormattedFileSystemPath
+    
+- **Description**
+
+    A function to apply the class FormattedFileSystemPath on a path.
+    Return an instance of it
+- **Parameter** `$Path`
+
+    The path to be formatted.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    FormattedFileSystemPath.
+    
 ### Get-GatewayIPV4
     
 - **Description**

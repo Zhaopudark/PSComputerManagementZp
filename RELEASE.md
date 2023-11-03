@@ -1,6 +1,10 @@
 # Release v0.0.5
 ## Release v0.0.5-beta1
 - Fix some documentation problems.
+- Now the 2 classes, `EnvPath` and `FormattedFileSystemPath`, are moved to be public APIs, along with their getting functions, `Get-EnvPath` and `Get-FormattedFileSystemPath`.
+    - But for usage, only the getting functions are recommended.
+    - Because these 2 classes are not able to be used directly by the syntax `[class_name]` in PowerShell, since the mechanism in [Using](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_using?view=powershell-7.3#module-syntax) and [Classes](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_classes?view=powershell-7.3#importing-classes-from-a-powershell-module).
+
 ## Release v0.0.5-beta0
 - Use rotation logs to prevent files from becoming too large.
     - Now, if the log file is larger than 10MB, a new log file will be generated with the identifier `.<index>.`.
