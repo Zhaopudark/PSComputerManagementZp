@@ -16,7 +16,7 @@ Describe 'Test Proxy Management' {
         Get-LocalHostIPV4
     }
     It 'Test Set-EnvProxyIPV4ForShellProcess' {
-        Set-EnvProxyIPV4ForShellProcess -ServerIP 127.1.2.3 -PortNumber 4567.
+        Set-EnvProxyIPV4ForShellProcess -ServerIP 127.1.2.3 -PortNumber 4567
         [Environment]::GetEnvironmentVariable('http_proxy') | Should -Be 'http://127.1.2.3:4567'
         [Environment]::GetEnvironmentVariable('https_proxy') | Should -Be 'http://127.1.2.3:4567'
         [Environment]::GetEnvironmentVariable('all_proxy') | Should -Be 'http://127.1.2.3:4567'
