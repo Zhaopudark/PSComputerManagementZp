@@ -1,5 +1,5 @@
 # Release v0.0.5
-## Release v0.0.5-beta1
+## Release v0.0.5-stable
 - Fix some documentation problems.
 - Now the 2 classes, `EnvPath` and `FormattedFileSystemPath`, are moved to be public APIs, along with their getting functions, `Get-EnvPath` and `Get-FormattedFileSystemPath`.
     - But for usage, only the getting functions are recommended.
