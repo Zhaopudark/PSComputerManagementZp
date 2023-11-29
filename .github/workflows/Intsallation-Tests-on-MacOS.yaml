@@ -19,3 +19,7 @@ jobs:
         "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
         Import-Module PSComputerManagementZp
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
