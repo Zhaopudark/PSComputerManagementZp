@@ -19,6 +19,7 @@ jobs:
         "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
         $config = New-PesterConfiguration
+        $config.Run.PassThru = $true
         $config.Run.Path = './Tests/Components/'
         $config.CodeCoverage.Enabled = $true
         Invoke-Pester -Configuration $config
