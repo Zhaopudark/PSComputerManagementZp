@@ -22,7 +22,6 @@ jobs:
         $config.Run.PassThru = $true
         $config.Run.Path = './Tests/Components/'
         $config.CodeCoverage.Enabled = $false
-        $config.TestResult.Enabled = $true
         Invoke-Pester -Configuration $config
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
