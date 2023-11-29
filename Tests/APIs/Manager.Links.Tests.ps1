@@ -1,6 +1,4 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.BeforeAll.ps1"
-
     $guid = [guid]::NewGuid()
     $test_path = "${Home}\$guid"
     New-Item -Path $test_path -ItemType Directory -Force
@@ -93,6 +91,4 @@ Describe 'Test Link Management' {
 
 AfterAll {
     Remove-Item -Path $test_path -Force -Recurse
-
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.AfterAll.ps1"
 }

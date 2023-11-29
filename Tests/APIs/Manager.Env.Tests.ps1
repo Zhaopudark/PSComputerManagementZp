@@ -1,6 +1,4 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.BeforeAll.ps1"
-
     $user_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','User')
     $machine_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Machine')
     $process_env_paths_backup = [Environment]::GetEnvironmentVariable('PATH','Process')
@@ -147,6 +145,4 @@ AfterAll {
     [Environment]::SetEnvironmentVariable('PATH',$user_env_paths_backup ,'User')
     [Environment]::SetEnvironmentVariable('PATH',$machine_env_paths_backup,'Machine')
     [Environment]::SetEnvironmentVariable('PATH',$process_env_paths_backup,'Process')
-
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.AfterAll.ps1"
 }

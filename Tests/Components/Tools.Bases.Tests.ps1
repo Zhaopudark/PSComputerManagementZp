@@ -1,6 +1,4 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\Configs\Components.Tests.Config.BeforeAll.ps1"
-
     $guid = [guid]::NewGuid()
     $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
@@ -23,6 +21,4 @@ Describe '[Test Bases Tools]' {
 
 AfterAll {
     Remove-Item -Path $test_path -Force -Recurse
-
-    . "${PSScriptRoot}\..\Configs\Components.Tests.Config.AfterAll.ps1"
 }

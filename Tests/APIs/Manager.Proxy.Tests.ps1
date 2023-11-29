@@ -1,6 +1,4 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.BeforeAll.ps1"
-
     $process_env_http_proxy_backup = [Environment]::GetEnvironmentVariable('http_proxy')
     $process_env_https_proxy_backup = [Environment]::GetEnvironmentVariable('https_proxy')
     $process_env_all_proxy_backup = [Environment]::GetEnvironmentVariable('all_proxy')
@@ -40,6 +38,4 @@ AfterAll {
     [Environment]::SetEnvironmentVariable('all_proxy',$process_env_all_proxy_backup)
     [Environment]::SetEnvironmentVariable('ftp_proxy',$process_env_ftp_proxy_backup)
     [Environment]::SetEnvironmentVariable('socks_proxy',$process_env_socks_proxy_backup)
-
-    . "${PSScriptRoot}\..\Configs\APIs.Tests.Config.AfterAll.ps1"
 }
