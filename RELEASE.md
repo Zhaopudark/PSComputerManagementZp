@@ -1,5 +1,6 @@
 # Release v0.0.6
 ## Release v0.0.6-beta0
+- Support [Codecov](https://docs.codecov.com/docs) and add its badge.
 # Release v0.0.5
 ## Release v0.0.5-stable
 - Fix some documentation problems.
