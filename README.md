@@ -13,6 +13,8 @@
 [![GitHub Release Downloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total?logo=github&label=Github%20Release%20downloads)
 ](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
 [![GitHub](https://img.shields.io/github/license/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE)
+[![Codecov](https://img.shields.io/codecov/c/github/Zhaopudark/PSComputerManagementZp?label=Codecov-on-Windows)](https://app.codecov.io/gh/Zhaopudark/PSComputerManagementZp)
+
 
 [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md)
 [![Public-Examples](https://img.shields.io/badge/Public-Examples-royalblue)](Examples/README.md)
