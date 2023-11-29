@@ -18,7 +18,10 @@ jobs:
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
         ./install.ps1
-        Invoke-Pester './Tests/Components/'  -Passthru
+        $config = New-PesterConfiguration
+        $config.Run.Path = './Tests/Components/'
+        $config.CodeCoverage.Enabled = $true
+        Invoke-Pester -Configuration $config
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
