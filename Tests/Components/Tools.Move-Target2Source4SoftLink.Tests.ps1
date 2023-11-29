@@ -1,6 +1,4 @@
 BeforeAll {
-    . "${PSScriptRoot}\..\Configs\Components.Tests.Config.BeforeAll.ps1"
-
     $guid = [guid]::NewGuid()
     $test_path = "${Home}/$guid"
     New-Item -Path $test_path -ItemType Directory -Force
@@ -392,6 +390,4 @@ Describe '[Test Move-Target2Source4SoftLink on different conditions of Target an
 
 AfterAll {
     Remove-Item -Path $test_path -Force -Recurse
-
-    . "${PSScriptRoot}\..\Configs\Components.Tests.Config.AfterAll.ps1"
 }
