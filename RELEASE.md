@@ -1,3 +1,5 @@
+# Release v0.0.6
+## Release v0.0.6-beta0
 # Release v0.0.5
 ## Release v0.0.5-stable
 - Fix some documentation problems.
