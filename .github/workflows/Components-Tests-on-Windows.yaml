@@ -23,9 +23,20 @@ jobs:
         $config.Run.PassThru = $true
         $config.Run.Path = './Tests/Components/'
         $config.CodeCoverage.Path = "./Module/Private"
+        $config.CodeCoverage.OutputPath = 'coverage-private.xml'
         $config.CodeCoverage.Enabled = $true
         $config.Output.Verbosity = "Detailed"
         Invoke-Pester -Configuration $config
+
+        $config = New-PesterConfiguration
+        $config.Run.PassThru = $true
+        $config.Run.Path = './Tests/APIs/'
+        $config.CodeCoverage.Path = "./Module/Public"
+        $config.CodeCoverage.OutputPath = 'coverage-public.xml'
+        $config.CodeCoverage.Enabled = $true
+        $config.Output.Verbosity = "Detailed"
+        Invoke-Pester -Configuration $config
+
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
