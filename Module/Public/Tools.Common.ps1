@@ -23,9 +23,9 @@ function Get-TempPath{
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         }
-        Write-Host "!!!!"  -Verbose
-        Write-Host "!!!!"  -Verbose
-        Write-Host "!!!!"  -Verbose
+        Write-Host "!!!!"  
+        Write-Host "!!!!"  
+        Write-Host "!!!!" 
     }
     catch {
         Write-Log $_.Exception.Message -ShowVerbose
