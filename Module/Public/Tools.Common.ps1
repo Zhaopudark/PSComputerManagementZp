@@ -4,7 +4,7 @@ function Get-TempPath{
     try {
         # Write-Warning "!!!!"  
         # Write-Warning "!!!!"  
-        Write-Host "!!?!" -Verbose
+        Write-Host "!!?!" 
         if (Test-Platform 'Windows'){
             if (!$Env:TEMP -or !$Env:TMP){
                 throw "Get the temp path faild, on Windows, the environment variable TEMP or TMP should both exist."
