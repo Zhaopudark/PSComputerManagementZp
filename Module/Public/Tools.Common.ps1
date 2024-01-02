@@ -25,7 +25,7 @@ function Get-TempPath{
         }
         Write-Warning "!!!!"  
         Write-Warning "!!!!"  
-        Write-Warning "!!!!" 
+        Write-Warning "!!!!" -Verbose
     }
     catch {
         Write-Log $_.Exception.Message -ShowVerbose
