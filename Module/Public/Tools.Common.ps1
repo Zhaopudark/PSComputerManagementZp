@@ -2,6 +2,9 @@ function Get-TempPath{
     [OutputType([string])]
     param ()
     try {
+        # Write-Warning "!!!!"  
+        # Write-Warning "!!!!"  
+        Write-Host "!!?!" -Verbose
         if (Test-Platform 'Windows'){
             if (!$Env:TEMP -or !$Env:TMP){
                 throw "Get the temp path faild, on Windows, the environment variable TEMP or TMP should both exist."
@@ -23,9 +26,7 @@ function Get-TempPath{
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         }
-        Write-Warning "!!!!"  
-        Write-Warning "!!!!"  
-        Write-Warning "!!!!" -Verbose
+       
     }
     catch {
         Write-Log $_.Exception.Message -ShowVerbose
