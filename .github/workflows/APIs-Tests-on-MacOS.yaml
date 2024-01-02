@@ -22,5 +22,5 @@ jobs:
         $config = New-PesterConfiguration
         $config.Run.PassThru = $true
         $config.Run.Path = './Tests/APIs/'
-        $config.Output.Verbosity = "Detailed"
+        $config.Output.Verbosity = "All"
         Invoke-Pester -Configuration $config

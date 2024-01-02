@@ -4,9 +4,9 @@ function Get-TempPath{
     try {
         if (Test-Platform 'Windows'){
             # $temp_path = [FormattedFileSystemPath]::new("/tmp")
-            Write-Host "????" -Verbose
-            Write-Host $temp_path -Verbose
-            Write-Host "!!!!"  -Verbose
+            # Write-Warning "????" -Verbose
+            Write-Warning "$temp_path" -Verbose
+            Write-Warning "!!!!"  -Verbose
             if (!$Env:TEMP -or !$Env:TMP){
                 throw "Get the temp path faild, on Windows, the environment variable TEMP or TMP should both exist."
             }
