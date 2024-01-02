@@ -41,6 +41,7 @@ function Get-SelfBuildDir{
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
 #>
     [OutputType([string])]
+    [ValidateNotNullOrEmpty()]
     param()
     return [FormattedFileSystemPath]::new($(Get-TempPath))
 }
@@ -50,6 +51,7 @@ function Get-SelfInstallDir{
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
 #>
     [OutputType([string])]
+    [ValidateNotNullOrEmpty()]
     param()
     try {
         $windows_path = "$(Split-Path -Path $PROFILE.CurrentUserAllHosts -Parent)\Modules\"
