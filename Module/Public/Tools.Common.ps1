@@ -11,10 +11,19 @@ function Get-TempPath{
             }
             return [FormattedFileSystemPath]::new($Env:TEMP)
         }elseif (Test-Platform 'Wsl2'){
+            if (!(Test-Path -LiteralPath '/tmp' -Container)){
+                New-Item -Path '/tmp' -ItemType Directory -Force | Out-Null
+            }
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'Linux'){
+            if (!(Test-Path -LiteralPath '/tmp' -Container)){
+                New-Item -Path '/tmp' -ItemType Directory -Force | Out-Null
+            }
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'MacOS'){
+            if (!$Env:TMPDIR){
+                throw "Get the temp path faild, on MacOS, the environment variable TMPDIR should exist."
+            }
             return [FormattedFileSystemPath]::new($Env:TMPDIR)
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
