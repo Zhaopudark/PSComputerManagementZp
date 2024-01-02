@@ -20,19 +20,19 @@ BeforeAll {
 Describe '[Test PathTools]' {
     Context '[Test the formatting feature of FormattedFileSystemPath]' {
         It '[Test on Windows dir]' -Skip:(!$IsWIndows){
-            $path = [FormattedFileSystemPath]::new("${test_path}/tEsT_diR")
+            $path = Get-FormattedFileSystemPath "${test_path}/tEsT_diR"
             $path | Should -BeExactly "${Home}\$guid\test_dir"
         }
         It '[Test on Windows file]' -Skip:(!$IsWIndows){
-            $path = [FormattedFileSystemPath]::new("${test_path}/teSt.tXt")
+            $path = Get-FormattedFileSystemPath "${test_path}/teSt.tXt"
             $path | Should -BeExactly "${Home}\$guid\test.txt"
         }
         It '[Test on Non-Windows dir]' -Skip:($IsWindows){
-            $path = [FormattedFileSystemPath]::new("${test_path}\test_dir")
+            $path = Get-FormattedFileSystemPath "${test_path}\test_dir"
             $path | Should -BeExactly "${Home}/$guid/test_dir"
         }
         It '[Test on Non-Windows file]' -Skip:($IsWindows){
-            $path = [FormattedFileSystemPath]::new("${test_path}\test.txt")
+            $path = Get-FormattedFileSystemPath "${test_path}\test.txt"
             $path | Should -BeExactly "${Home}/$guid/test.txt"
         }
         It '[Test on windows drive, single slash]' -Skip:(!$IsWIndows){
@@ -40,82 +40,83 @@ Describe '[Test PathTools]' {
             $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
             $maybe_c_lower = (Get-ItemProperty ${Home}).PSDrive.Name.ToLower()
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:\")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:\"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:/")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:/"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c_lower`:\")
+            $path = Get-FormattedFileSystemPath "$maybe_c_lower`:\"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c_lower`:/")
+            $path = Get-FormattedFileSystemPath "$maybe_c_lower`:/"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c_lower`:")
+            $path = Get-FormattedFileSystemPath "$maybe_c_lower`:"
             $path | Should -BeExactly "$maybe_c`:\"
         }
         It '[Test on windows drive, multiple slashs]' -Skip:(!$IsWIndows){
 
             $maybe_c = (Get-ItemProperty ${Home}).PSDrive.Name
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:\\")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:\\"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`://")
+            $path = Get-FormattedFileSystemPath "$maybe_c`://"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:\\\\")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:\\\\"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:////")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:////"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:/\/\/\/\/\/\/\/")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:/\/\/\/\/\/\/\/"
             $path | Should -BeExactly "$maybe_c`:\"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_c`:\/\/\/\/\/\/\/\")
+            $path = Get-FormattedFileSystemPath "$maybe_c`:\/\/\/\/\/\/\/\"
             $path | Should -BeExactly "$maybe_c`:\"
+           
 
         }
         It '[Test on Non-Windows drive, single slash]' -Skip:($IsWIndows){
             $maybe_root = (Get-ItemProperty ${Home}).PSDrive.Name # / on Linux and Wsl2, not '/root'
-            $path = [FormattedFileSystemPath]::new("$maybe_root")
+            $path = Get-FormattedFileSystemPath "$maybe_root"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root/")
+            $path = Get-FormattedFileSystemPath "$maybe_root/"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root\")
+            $path = Get-FormattedFileSystemPath "$maybe_root\"
             $path | Should -BeExactly "$maybe_root"
         }
         It '[Test on Non-Windows drive, multiple slashs]' -Skip:($IsWIndows){
             $maybe_root = (Get-ItemProperty ${Home}).PSDrive.Name # / on Linux and Wsl2, not '/root'
-            $path = [FormattedFileSystemPath]::new("$maybe_root\\")
+            $path = Get-FormattedFileSystemPath "$maybe_root\\"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root//")
+            $path = Get-FormattedFileSystemPath "$maybe_root//"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root\\\\")
+            $path = Get-FormattedFileSystemPath "$maybe_root\\\\"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root////")
+            $path = Get-FormattedFileSystemPath "$maybe_root////"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root/\/\/\/\/\/\/\/")
+            $path = Get-FormattedFileSystemPath "$maybe_root/\/\/\/\/\/\/\/"
             $path | Should -BeExactly "$maybe_root"
 
-            $path = [FormattedFileSystemPath]::new("$maybe_root\/\/\/\/\/\/\/\")
+            $path = Get-FormattedFileSystemPath "$maybe_root\/\/\/\/\/\/\/\"
             $path | Should -BeExactly "$maybe_root"
         }
     }
     Context '[Test the attributes of FormattedFileSystemPath]' {
         It '[Test on Windows]' -Skip:(!$IsWIndows){
-            $path = [FormattedFileSystemPath]::new("${Home}")
+            $path = Get-FormattedFileSystemPath "${Home}"
             $path.OriginalPlatform | Should -BeExactly 'Win32NT'
             $path.Slash | Should -BeExactly '\'
             $path.Attributes | Should -BeExactly 'Directory'
@@ -140,7 +141,7 @@ Describe '[Test PathTools]' {
             $path.IsHardLink | Should -BeFalse
 
 
-            $path = [FormattedFileSystemPath]::new("$test_path\hardlink")
+            $path = Get-FormattedFileSystemPath "$test_path\hardlink"
             $path.OriginalPlatform | Should -BeExactly 'Win32NT'
             $path.Slash | Should -BeExactly '\'
             $path.Attributes | Should -BeExactly 'Archive'
@@ -164,7 +165,7 @@ Describe '[Test PathTools]' {
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeTrue
 
-            $path = [FormattedFileSystemPath]::new("$test_path\junction")
+            $path = Get-FormattedFileSystemPath "$test_path\junction"
             $path.OriginalPlatform | Should -BeExactly 'Win32NT'
             $path.Slash | Should -BeExactly '\'
             $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
@@ -189,7 +190,7 @@ Describe '[Test PathTools]' {
             $path.IsHardLink | Should -BeFalse
 
 
-            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_dir")
+            $path = Get-FormattedFileSystemPath "$test_path\symbolick_dir"
             $path.OriginalPlatform | Should -BeExactly 'Win32NT'
             $path.Slash | Should -BeExactly '\'
             $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
@@ -213,7 +214,7 @@ Describe '[Test PathTools]' {
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeFalse
 
-            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
+            $path = Get-FormattedFileSystemPath "$test_path\symbolick_file"
             $path.OriginalPlatform | Should -BeExactly 'Win32NT'
             $path.Slash | Should -BeExactly '\'
             $path.Attributes | Should -BeExactly 'Archive, ReparsePoint'
@@ -238,7 +239,7 @@ Describe '[Test PathTools]' {
             $path.IsHardLink | Should -BeFalse
         }
         It '[Test on Non-Windows]' -Skip:($IsWIndows){
-            $path = [FormattedFileSystemPath]::new("${Home}")
+            $path = Get-FormattedFileSystemPath "${Home}"
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
             $path.Attributes | Should -BeExactly 'Directory'
@@ -263,7 +264,7 @@ Describe '[Test PathTools]' {
             $path.IsHardLink | Should -BeFalse
 
 
-            $path = [FormattedFileSystemPath]::new("$test_path\hardlink")
+            $path = Get-FormattedFileSystemPath "$test_path\hardlink"
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
             $path.Attributes | Should -BeExactly 'Normal' # different from 'Archive' that in Windows NTFS
@@ -288,7 +289,7 @@ Describe '[Test PathTools]' {
             $path.IsHardLink | Should -BeTrue
 
             # 'ext2' does not support junction
-            # $path = [FormattedFileSystemPath]::new("$test_path\junction")
+            # $path = Get-FormattedFileSystemPath "$test_path\junction")
             # $path.OriginalPlatform | Should -BeExactly 'Unix'
             # $path.Slash | Should -BeExactly '/'
             # $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
@@ -313,7 +314,7 @@ Describe '[Test PathTools]' {
             # $path.IsHardLink | Should -BeFalse
 
 
-            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_dir")
+            $path = Get-FormattedFileSystemPath "$test_path\symbolick_dir"
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
             $path.Attributes | Should -BeExactly 'Directory, ReparsePoint'
@@ -337,7 +338,7 @@ Describe '[Test PathTools]' {
             $path.IsJunction | Should -BeFalse
             $path.IsHardLink | Should -BeFalse
 
-            $path = [FormattedFileSystemPath]::new("$test_path\symbolick_file")
+            $path = Get-FormattedFileSystemPath "$test_path\symbolick_file"
             $path.OriginalPlatform | Should -BeExactly 'Unix'
             $path.Slash | Should -BeExactly '/'
             $path.Attributes | Should -BeExactly 'ReparsePoint' # different from 'Archive, ReparsePoint' that in Windows NTFS

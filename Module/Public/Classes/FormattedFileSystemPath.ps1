@@ -6,20 +6,35 @@
 .DESCRIPTION
     Automatically format a path to standard format by the following procedures and rules:
     **First**: Preprocess a received path with some literal check (string level, without accessing it by file system):
-        - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
-        - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
-        - Reduce any consecutive colons to a single `:`
-        - Strip any trailing slashs.
-        - According to the platform, append a single `\` or `/` if the path ends with a colon.
-        - Reduce any consecutive slashes to a single one, and convert them to `\` or `/`, according to the platform.
-        - Convert the drive name to initial capital letter.
-        - If there are no colons in the path, or there is no slash at the beginning, it will be treated as a relative path. Then a slash `\` or `/`,
-            according to the platform will be added at the head.
+        - Check:
+            - Check if it contains wildcard characters `*`, `?` or `[]`. If so, throw an error.
+            - Check if it contains more than 1 group of consecutive colons. If so, throw an error.
+        - Normalize at a preliminary level:
+            - Reduce any consecutive colons to a single `:`
+            - Strip any trailing slashs.
+            - According to the platform, append a single `\` or `/` if the path ends with a colon.
+            - Convert all slashes to `\` or `/`, according to the platform.
+        - Define the following three path types
+            - Absolute path: 
+                On Windows: A path that contains a colon `:` and with a letter in the range `A-Z` or `a-z` at the beginning, i.g., `C:\Users\User\test.txt`.
+                On Unix: A path that starts with a slash `/`.
+            - Relative path:
+                On Windows: A path that does not contain any colon and does not start with a slash `\`.
+                On Unix: A path that does not start with a slash `/`.
+            - Universal Naming Convention (UNC) path (network path):
+                On Windows: A path that does not contain any colon and does start with a double slash `\\`.
+                On Unix: A path that starts with a double slash `//`.
+            - If no matched path type, throw an error.
+        - Normalize at a deeper level:
+            - Reduce any consecutive slashes to a single one.
+                - If is absolute path, convert the drive name to initial capital letter.
+                - If is UNC path, add a slash (according to the platform) to the beginning to meet `double slashes`.
+                - If is relative path, add a dot with a slash (according to the platform) to the beginning.
 
     **Second**: Test the preprocessed path with file system access:
         - Check if the path exists in file system. If not, throw an error.
         - Check if the path is with wildcard characters by file system. If so, throw an error.
-        - It means a path (an instance of this class) represents only a path, not a group of paths.
+            - It means a path (an instance of this class) represents only a path, not a group of paths.
 
     **Third** Format the path with file system access:
         - Convert it to an absolute one.
@@ -92,9 +107,9 @@
     [AllowNull()][string] $Attributes
     [AllowNull()][string] $Linktype = $null
     [AllowNull()][string] $LinkTarget = $null
-    [ValidateNotNullOrEmpty()][string] $Qualifier
-    [ValidateNotNullOrEmpty()][string] $QualifierRoot
-    [ValidateNotNullOrEmpty()][string] $DriveFormat
+    [AllowNull()][string] $Qualifier
+    [AllowNull()][string] $QualifierRoot
+    [AllowNull()][string] $DriveFormat
     [ValidateNotNullOrEmpty()][bool] $IsDir
     [ValidateNotNullOrEmpty()][bool] $IsFile
     [ValidateNotNullOrEmpty()][bool] $IsDriveRoot
@@ -126,8 +141,8 @@
         if(!(Test-Path -LiteralPath $Path)){
             throw (New-Object System.Management.Automation.ItemNotFoundException "Path '$Path' not found.")
         }
-        if ($this.GetQualifier($Path).Provider.Name -ne 'FileSystem'){
-            throw "Only FileSystem provider is supported, not $($this.GetQualifier($Path).Provider.Name)."
+        if ($this.GetQualifier($Path).Provider.Name -notin @('FileSystem',$null)){
+            throw "Only paths in FileSystem provider or UNC are supported, not $($this.GetQualifier($Path).Provider.Name)."
         }
         $this.LiteralPath = $this.FormatPath($Path)
         $this.Attributes = (Get-ItemProperty $this.LiteralPath).Attributes
@@ -243,33 +258,69 @@
 
     }
     [string] PreProcess([string] $Path){
-        return [FormattedFileSystemPath]::FormatLiteralPath($Path,$this.Slash)
+        return [FormattedFileSystemPath]::FormatLiteralPath($this.OriginalPlatform,$Path,$this.Slash)
     }
-    static [string] FormatLiteralPath([string] $Path, [string] $Slash){
+    static [string] FormatLiteralPath([string]$PathPlatform,[string] $Path, [string] $Slash){
         # Format $Path on Literal level, without any check or validation through file system.
         # See .DESCRIPTION-1 of this class for the details of the formatting rules.
         # It can be used as pre-procession of a path before it is passed to $this.FormatPath().
+        ## Check
         if ($Path -match '[\*\?\[\]]'){
             throw "Only literal path is supported, not $($Path) with wildcard characters `*`, `?` or `[]`."
         }
-
         if ($Path -match '(:+)([^:]+)(:+)'){
             throw "The $($Path) should not contain more than 1 group of consecutive colons."
         }
-
+        ## Normalize at a preliminary level
         $Path = $Path -replace '[:]+', ':'
-
-        $Path = $Path -replace '([^\\\/])([\\\/])+$', { $_.Groups[1].Value.ToUpper()} # Trim the end '\/' but remain the former characters.
-
+        $Path = $Path -replace '([^\\/])([\\/])+$', { $_.Groups[1].Value} # Trim the end '\/' but remain the former characters.
         if ($Path -match ":$") {
             $Path = $Path + $Slash
         }
-
-        $Path = $Path -replace '[/\\]+', $Slash
-        $Path = $Path -replace '^([A-Za-z])([A-Za-z]*)(:)', { $_.Groups[1].Value.ToUpper() + $_.Groups[2].Value.ToLower() + $_.Groups[3].Value}
-
-        if (($Path -notmatch ':') -and ($Path -match '^[A-Za-z]')){
+        $Path = $Path -replace '[\\/]', $Slash
+        
+    
+        $PathType = $null
+        if ($PathPlatform -eq 'Win32NT'){
+            if ($Path.Contains(':')){
+                if ($Path -match '^[A-Za-z]:'){
+                    $PathType = 'Absolute'
+                }
+                else{
+                    throw "The $($Path) is not supported as the class FormattedFileSystemPath defined."
+                }
+            }else{
+                if ($Path -match '^\\{2,}[^\\]'){
+                    $PathType = 'UNC'
+                }elseif ($Path -match '^[^\\/:*?"<>|]+'){
+                    $PathType = 'Relative'
+                }
+                else{
+                    throw "The $($Path) is not supported as the class FormattedFileSystemPath defined."
+                }
+            }
+        }elseif(!$Path.Contains(':')){  
+            if ($Path -match '^/'){
+                $PathType = 'Absolute'
+            }elseif ($Path -match '^/{2,}[^/]'){
+                $PathType = 'UNC'
+            }elseif ($Path -match '^[^/\0]+'){
+                $PathType = 'Relative'
+            }
+            else{
+                throw "The $($Path) is not supported as the class FormattedFileSystemPath defined."
+            }
+        }
+        # Normalize at a deeper level
+        $Path = $Path -replace '[\\/]+', $Slash
+        if ($PathType -eq 'Absolute'){
+            $Path = $Path.Substring(0,1).ToUpper() + $Path.Substring(1)
+        }elseif ($PathType -eq 'UNC'){
             $Path = $Slash + $Path
+        }elseif ($PathType -eq 'Relative'){
+            $Path = '.' + $Slash + $Path
+        }else{
+            throw "The $($Path) is not supported as the class FormattedFileSystemPath defined."
         }
 
         return $Path
