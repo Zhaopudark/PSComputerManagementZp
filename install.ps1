@@ -1,5 +1,7 @@
 . "${PSScriptRoot}\build.ps1"
 
+Write-Log "ModuleInfo:$($ModuleInfo)" -ShowVerbose
+
 if (!(Test-Path -LiteralPath $ModuleInfo.InstallPath)){
     New-Item -Path $ModuleInfo.InstallPath -ItemType Directory | Out-Null
 }
