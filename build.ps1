@@ -69,8 +69,8 @@ $component_content | Set-Content -Path $ConfigInfo.MDDocs.Components
 $ModuleInfo.InstallPath = "$(Get-SelfInstallDir)\$($ModuleInfo.ModuleName)"
 $ModuleInfo.BuildPath = "$(Get-SelfBuildDir)\$($ModuleInfo.ModuleName)"
 
-Write-Warning "ModuleInfo.InstallPath:$($ModuleInfo.InstallPath)"
-Write-Warning "ModuleInfo.BuildPath:$($ModuleInfo.BuildPath)"
+Write-Log "ModuleInfo.InstallPath:$($ModuleInfo.InstallPath)" -ShowVerbose
+Write-Log "ModuleInfo.BuildPath:$($ModuleInfo.BuildPath)" -ShowVerbose
 
 if (!(Test-Path -LiteralPath $ModuleInfo.BuildPath)){
     New-Item -Path $ModuleInfo.BuildPath -ItemType Directory | Out-Null
