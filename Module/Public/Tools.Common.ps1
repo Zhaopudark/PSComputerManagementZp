@@ -2,7 +2,7 @@ function Get-TempPath{
     [OutputType([string])]
     param ()
     try {
-        if (Test-Platform 'Windows'){   
+        if (Test-Platform 'Windows'){
             if (!$Env:TEMP -or !$Env:TMP){
                 throw "Get the temp path faild, on Windows, the environment variable TEMP or TMP should both exist."
             }
@@ -15,13 +15,10 @@ function Get-TempPath{
         }elseif (Test-Platform 'Linux'){
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'MacOS'){
-            $temp_path = [FormattedFileSystemPath]::new("/tmp")
-            Write-Warning "$($temp_path -eq $null)" -Verbose
             return [FormattedFileSystemPath]::new("/tmp")
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         }
-       
     }
     catch {
         Write-Log $_.Exception.Message -ShowVerbose
