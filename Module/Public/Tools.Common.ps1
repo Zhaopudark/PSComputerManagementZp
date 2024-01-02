@@ -1,5 +1,5 @@
 function Get-TempPath{
-    [OutputType([string])]
+    [OutputType([ValidateNotNullOrEmpty()][string])]
     param ()
     try {
         if (Test-Platform 'Windows'){
@@ -11,12 +11,12 @@ function Get-TempPath{
             }
             return [FormattedFileSystemPath]::new($Env:TEMP)
         }elseif (Test-Platform 'Wsl2'){
-            if (!(Test-Path -LiteralPath '/tmp' -Container)){
+            if (!(Test-Path -LiteralPath '/tmp' -PathType Container)){
                 New-Item -Path '/tmp' -ItemType Directory -Force | Out-Null
             }
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'Linux'){
-            if (!(Test-Path -LiteralPath '/tmp' -Container)){
+            if (!(Test-Path -LiteralPath '/tmp' -PathType Container)){
                 New-Item -Path '/tmp' -ItemType Directory -Force | Out-Null
             }
             return [FormattedFileSystemPath]::new("/tmp")
@@ -39,7 +39,7 @@ function Get-SelfBuildDir{
 .LINK
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
 #>
-    [OutputType([string])]
+    [OutputType([ValidateNotNullOrEmpty()][string])]
     param()
     return [FormattedFileSystemPath]::new($(Get-TempPath))
 }
@@ -48,7 +48,7 @@ function Get-SelfInstallDir{
 .LINK
     [PSModulePath](https://learn.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_psmodulepath?view=powershell-7.3)
 #>
-    [OutputType([string])]
+    [OutputType([ValidateNotNullOrEmpty()][string])]
     param()
     try {
         $windows_path = "$(Split-Path -Path $PROFILE.CurrentUserAllHosts -Parent)\Modules\"
