@@ -7,6 +7,4 @@ if (Test-Path -LiteralPath "$($ModuleInfo.InstallPath)\$($ModuleSettings.ModuleV
     Remove-Item "$($ModuleInfo.InstallPath)\$($ModuleSettings.ModuleVersion)" -Force -Recurse
 }
 
-Write-Host "ModuleInfo.BuildPath:$($ModuleInfo.InstallPath)"
-Write-Host "ModuleInfo.BuildPath:$($ModuleInfo.BuildPath)"
 Copy-Item -Path "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)" -Destination "$($ModuleInfo.InstallPath)\$($ModuleSettings.ModuleVersion)" -Recurse -Force
