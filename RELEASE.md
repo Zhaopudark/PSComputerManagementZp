@@ -1,6 +1,9 @@
 # Release v0.0.6
 ## Release v0.0.6-beta0
 - Support [Codecov](https://docs.codecov.com/docs) and add its badge.
+- Now, Universal Naming Convention (UNC) paths, such as `\\wsl.localhost\Ubuntu\home\xxx` can be recognized and formatted correctly by `Get-FormattedFileSystemPath` on Windows.
+- Risks: To support UNC paths, the class `FormattedFileSystemPath` has been modified. However, it may bring some potential risks because the tests cannot cover all scenarios. So, it is only recommended to use the `Get-FormattedFileSystemPath` function as the testing scenarios in `Tests\APIs\Class.FormattedFileSystemPath.Tests.ps1`.
+
 # Release v0.0.5
 ## Release v0.0.5-stable
 - Fix some documentation problems.
