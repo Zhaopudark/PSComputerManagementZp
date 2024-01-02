@@ -15,7 +15,7 @@ function Get-TempPath{
         }elseif (Test-Platform 'Linux'){
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'MacOS'){
-            return [FormattedFileSystemPath]::new("/tmp")
+            return [FormattedFileSystemPath]::new($Env:TMPDIR)
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         }
