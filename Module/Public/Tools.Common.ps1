@@ -22,10 +22,11 @@ function Get-TempPath{
             }
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'MacOS'){
-            if (!$Env:TMPDIR){
-                throw "Get the temp path faild, on MacOS, the environment variable TMPDIR should exist."
-            }
-            return [FormattedFileSystemPath]::new($Env:TMPDIR)
+            # if (!$Env:TMPDIR){
+            #     throw "Get the temp path faild, on MacOS, the environment variable TMPDIR should exist."
+            # }
+            # return [FormattedFileSystemPath]::new($Env:TMPDIR)
+            return [FormattedFileSystemPath]::new("/tmp")
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
         }
