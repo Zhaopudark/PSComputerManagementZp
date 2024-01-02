@@ -16,7 +16,7 @@ function Get-TempPath{
             return [FormattedFileSystemPath]::new("/tmp")
         }elseif (Test-Platform 'MacOS'){
             $temp_path = [FormattedFileSystemPath]::new("/tmp")
-            Write-Verbose $temp_path
+            Write-Host $temp_path -Verbose
             return [FormattedFileSystemPath]::new("/tmp")
         }else{
             throw "The current platform, $($PSVersionTable.Platform), has not been supported yet."
