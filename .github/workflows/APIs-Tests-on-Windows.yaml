@@ -1,9 +1,10 @@
 name: APIs Tests on Windows
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Components Tests On Windows"]
+    types:
+      - completed
 
 jobs:     
   api-tests-on-windows:

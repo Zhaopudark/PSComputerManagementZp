@@ -1,9 +1,10 @@
 name: APIs Tests on MacOS
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Components Tests On MacOS"]
+    types:
+      - completed
 
 jobs:
   api-tests-on-macos:

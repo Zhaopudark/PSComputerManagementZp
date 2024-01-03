@@ -1,9 +1,10 @@
 name: APIs Tests on Linux
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Components Tests On Linux"]
+    types:
+      - completed
 
 jobs:
   api-tests-on-linux:

@@ -1,9 +1,10 @@
 name: Components Tests on Linux
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Installation Tests On Linux"]
+    types:
+      - completed
 
 jobs:
   component-tests-on-linux:

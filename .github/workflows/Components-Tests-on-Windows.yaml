@@ -1,9 +1,10 @@
 name: Components Tests on Windows
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Installation Tests On Windows"]
+    types:
+      - completed
 
 jobs:
   component-tests-on-windows:

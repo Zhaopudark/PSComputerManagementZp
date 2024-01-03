@@ -1,9 +1,10 @@
 name: Components Tests on MacOS
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_run:
+    workflows: ["Installation Tests On MacOS"]
+    types:
+      - completed
 
 jobs:
   component-tests-on-macos:
