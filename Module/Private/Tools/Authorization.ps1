@@ -1,9 +1,9 @@
 ﻿function Assert-ValidPath4Authorization{
 <#
 .SYNOPSIS
-    Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/ebaccba2.html).
 .DESCRIPTION
-    Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/ebaccba2.html).
     Only the following 4 types of paths are valid:
         1. root path of Non-system disk
         2. other path in Non-system disk
@@ -16,7 +16,7 @@
 .OUTPUTS
     None.
 .LINK
-    [Authorization](https://little-train.com/posts/7fdde8eb.html).
+    [Authorization](https://little-train.com/posts/ebaccba2.html).
 #>
     param(
         [Parameter(Mandatory)]
@@ -54,7 +54,7 @@ function Reset-PathAttribute{
     | File      | `X:\*some_hardlink`             | Archive                   |
 
     Here the `X` represents any drive disk letter. And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
-    Other directories' attributes will not be reset. And other files' attributes will not be reset. See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
+    Other directories' attributes will not be reset. And other files' attributes will not be reset. See the [post](https://little-train.com/posts/ebaccba2.html) for more details.
 
     Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
     ```powershell
@@ -88,7 +88,7 @@ function Reset-PathAttribute{
     Set-ItemProperty $Path -Name Attributes -Value $some_attributes
     ```
 .LINK
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
 #>
     [CmdletBinding(SupportsShouldProcess)]
     param(
@@ -132,9 +132,9 @@ function Reset-PathAttribute{
 function Get-PathType{
 <#
 .SYNOPSIS
-    Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/ebaccba2.html).
 .DESCRIPTION
-    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype), this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype), this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/ebaccba2.html).
 
     | Types Description                                 | Path Example                          |
     | -----------------------------------------------   | --------------------------------------|
@@ -197,7 +197,7 @@ function Get-PathType{
     String or Null.
 .LINK
     [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
 #>
     [CmdletBinding()]
     [OutputType([string])]
@@ -326,7 +326,7 @@ function Get-DefaultSddl{
 .OUTPUTS
     String or Null.
 .LINK
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
 #>
     [CmdletBinding()]
     param(
