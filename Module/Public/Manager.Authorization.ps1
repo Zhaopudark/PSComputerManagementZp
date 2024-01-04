@@ -2,7 +2,7 @@ function Reset-Authorization{
 <#
 .SYNOPSIS
     Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
-    For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/7fdde8eb.html).
+    For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/ebaccba2.html).
 
 .DESCRIPTION
     Reset ACL of `$Path` to its default state by 3 steps:
@@ -28,7 +28,7 @@ function Reset-Authorization{
 .NOTES
     Only support Windows.
 .LINK
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
 #>
     [CmdletBinding(SupportsShouldProcess)]

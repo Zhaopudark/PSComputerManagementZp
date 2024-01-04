@@ -72,7 +72,7 @@ function Add-OrUpdateDnsDomainRecord4Aliyun{
         [string]$RecordValue
     )
     Assert-AliyunCLIAvailable
-    $DescribeDomainRecords = aliyun alidns DescribeDomainRecords --DomainName little-train.com | ConvertFrom-Json
+    $DescribeDomainRecords = aliyun alidns DescribeDomainRecords --DomainName $DomainName | ConvertFrom-Json
     $name_type_records = @()
     foreach($item in $DescribeDomainRecords.DomainRecords.Record){
         $name_type_records += $item.RR+$item.Type
