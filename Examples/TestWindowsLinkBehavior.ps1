@@ -1,7 +1,7 @@
 # This test is not for CI/CD because it need atleast 2 dirves, such as C: and D:
 # To find more conclusions on NTFS and ReFS respectively, this test can be run twice.
 # One is C:(NTFS)|D:(NTFS) and the other is C:(NTFS)|D:(ReFS)
-# For more information, see the [post](https://little-train.com/posts/f76966e4.html).
+# For more information, see the [post](https://little-train.com/posts/e1329018.html).
 BeforeAll {
     $guid = [guid]::NewGuid()
     function Test-LinkAclBeahvior([string]$Link,[string]$Source){
