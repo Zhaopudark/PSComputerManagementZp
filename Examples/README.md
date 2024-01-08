@@ -161,7 +161,7 @@ Then, open `Windows Settings->Network & Internet->Proxy` for checking:
 
 # About Reset Authorization on Windows
 
-For more information on the motivation, rationale, logic, and usage of function `Reset-Authorization`, see the [post](https://little-train.com/posts/7fdde8eb.html)
+For more information on the motivation, rationale, logic, and usage of function `Reset-Authorization`, see the [post](https://little-train.com/posts/ebaccba2.html)
 
 Please run PowerShell with `Administrator` privilege. 
 
