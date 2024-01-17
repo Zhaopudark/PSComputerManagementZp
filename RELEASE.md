@@ -1,3 +1,7 @@
+# PSComputerManagementZp 0.0.7
+## Release 0.0.7b0
+- Fix some building bugs of this module.
+
 # PSComputerManagementZp 0.0.6
 ## Release 0.0.6
 - Normalize version numbers and status in `RELEASE.md` by Pythonic [Semantic Versioning](https://semver.org/) style as [PEP440](https://peps.python.org/pep-0440/).

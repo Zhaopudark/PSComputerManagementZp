@@ -16,9 +16,9 @@ jobs:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
     - name: Install dependencies
-      run: pip install -r helper/requirements.txt
+      run: pip install -r ./Scripts/requirements.txt
     - name: Build and publish
       shell: pwsh
       run: |
-        ./build.ps1
+        ./Scripts/build.ps1
         Publish-Module -Path /tmp/PSComputerManagementZp -NuGetApiKey ${{ secrets.NUGET_KEY }} -Verbose

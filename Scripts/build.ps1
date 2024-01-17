@@ -1,35 +1,33 @@
 # & "${PSScriptRoot}\build_for_APIs_docs.ps1" # isolate the scope with `&`
 $ErrorActionPreference = 'Stop'
 
+$root_path = (Get-Item "${PSScriptRoot}\..").FullName
 $ConfigInfo= @{
-    PrivateComponentsTestsDir = "${PSScriptRoot}\Tests\Components"
-    PublicAPIsTestsDir = "${PSScriptRoot}\Tests\APIs"
-    PrivateComponentsDocsDir = "${PSScriptRoot}\Docs\Components"
-    PublicAPIsDocsDir = "${PSScriptRoot}\Docs\APIs"
+    PrivateComponentsTestsDir = "${root_path}\Tests\Components"
+    PublicAPIsTestsDir = "${root_path}\Tests\APIs"
+    PrivateComponentsDocsDir = "${root_path}\Docs\Components"
+    PublicAPIsDocsDir = "${root_path}\Docs\APIs"
     MDDocs = @{
-        Root = "${PSScriptRoot}\README.md"
-        Release = "${PSScriptRoot}\RELEASE.md"
-        Tests = "${PSScriptRoot}\Tests\README.md"
-        Components = "${PSScriptRoot}\Docs\Components\README.md"
-        APIs = "${PSScriptRoot}\Docs\APIs\README.md"
-        Examples = "${PSScriptRoot}\Examples\README.md"
-        Contribution = "${PSScriptRoot}\CONTRIBUTION.md"
+        Root = "${root_path}\README.md"
+        Release = "${root_path}\RELEASE.md"
+        Tests = "${root_path}\Tests\README.md"
+        Components = "${root_path}\Docs\Components\README.md"
+        APIs = "${root_path}\Docs\APIs\README.md"
+        Examples = "${root_path}\Examples\README.md"
+        Contribution = "${root_path}\CONTRIBUTION.md"
     }
 }
 
-Import-Module "${PSScriptRoot}\Module\PSComputerManagementZp.psm1" -Force -Scope Local
+Import-Module "${root_path}\Module\PSComputerManagementZp.psm1" -Force -Scope Local
 
 # check release version
-
-python "${PSScriptRoot}/helper/check_release_version.py" $ModuleSettings.ModuleVersion (Get-Item $ConfigInfo.MDDocs.Release).FullName
-
+$maybe_prerelease = python "${root_path}/Scripts/check_release_version.py" $ModuleSettings.ModuleVersion (Get-Item $ConfigInfo.MDDocs.Release).FullName
 if ($LastExitCode -ne 0){
-    throw "The release version in $($ConfigInfo.MDDocs.Release) is not consistent with the given version in ${PSScriptRoot}\Module\PSComputerManagementZp.psm1."
+    throw "The release version in $($ConfigInfo.MDDocs.Release) is not consistent with the given version in ${root_path}\Module\PSComputerManagementZp.psm1."
 }
-# Assert-ReleaseVersionConsistency -Version $ModuleSettings.ModuleVersion -ReleaseNotesPath $ConfigInfo.MDDocs.Release
-
-# check and get pre-release string
-$Prerelease = Get-PreReleaseString -ReleaseNotesPath $ConfigInfo.MDDocs.Release
+if($maybe_prerelease){
+    $ModuleSettings.Prerelease = $maybe_prerelease
+}
 
 # generate APIs README.md
 $api_content = @("All ``public APIs`` are recorded here.")
@@ -75,8 +73,6 @@ $component_content | Set-Content -Path $ConfigInfo.MDDocs.Components
 $ModuleInfo.InstallPath = "$(Get-SelfInstallDir)\$($ModuleInfo.ModuleName)"
 $ModuleInfo.BuildPath = "$(Get-SelfBuildDir)\$($ModuleInfo.ModuleName)"
 
-
-
 if (!(Test-Path -LiteralPath $ModuleInfo.BuildPath)){
     New-Item -Path $ModuleInfo.BuildPath -ItemType Directory | Out-Null
 }
@@ -85,11 +81,8 @@ if (Test-Path -LiteralPath "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVer
 }
 New-Item -Path "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)" -ItemType Directory | Out-Null
 
-Copy-Item -Path "${PSScriptRoot}\Module\*" -Destination "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)" -Recurse -Force
+Copy-Item -Path "${root_path}\Module\*" -Destination "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)" -Recurse -Force
 
 $ModuleSettings.Path = "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)\$($ModuleInfo.ModuleName).psd1"
-if ($Prerelease -and ($Prerelease -ne 'stable')){
-    $ModuleSettings.Prerelease = $Prerelease
-}
 
 New-ModuleManifest  @ModuleSettings
