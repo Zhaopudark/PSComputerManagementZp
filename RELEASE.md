@@ -1,5 +1,5 @@
 # PSComputerManagementZp 0.0.6
-## Release 0.0.6b1
+## Release 0.0.6
 - Normalize version numbers and status in `RELEASE.md` by Pythonic [Semantic Versioning](https://semver.org/) style as [PEP440](https://peps.python.org/pep-0440/).
 
 ## Release 0.0.6b0
