@@ -21,7 +21,7 @@ Import-Module "${PSScriptRoot}\Module\PSComputerManagementZp.psm1" -Force -Scope
 
 # check release version
 
-python "${PSScriptRoot}\helper\check_release_version.py" $ModuleSettings.ModuleVersion (Get-Item $ConfigInfo.MDDocs.Release).FullName
+python "${PSScriptRoot}/helper/check_release_version.py" $ModuleSettings.ModuleVersion (Get-Item $ConfigInfo.MDDocs.Release).FullName
 
 if ($LastExitCode -ne 0){
     throw "The release version in $($ConfigInfo.MDDocs.Release) is not consistent with the given version in ${PSScriptRoot}\Module\PSComputerManagementZp.psm1."
