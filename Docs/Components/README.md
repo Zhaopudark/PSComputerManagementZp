@@ -112,10 +112,10 @@ All `private Components` are recorded here. (Only for Contributors)
     
 - **Synopsis**
 
-    Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Check if a path is valid as the rule defined in the [post](https://little-train.com/posts/ebaccba2.html).
 - **Description**
 
-    Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Check if $Path is valid as the rule defined in the [post](https://little-train.com/posts/ebaccba2.html).
     Only the following 4 types of paths are valid:
     1. root path of Non-system disk
     2. other path in Non-system disk
@@ -132,7 +132,7 @@ All `private Components` are recorded here. (Only for Contributors)
     None.
 - **Link**
 
-    [Authorization](https://little-train.com/posts/7fdde8eb.html).
+    [Authorization](https://little-train.com/posts/ebaccba2.html).
     
 ### Copy-DirWithBackup
     
@@ -343,7 +343,7 @@ All `private Components` are recorded here. (Only for Contributors)
     String or Null.
 - **Link**
 
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
     
 ### Get-FunctionDoc
     
@@ -377,10 +377,10 @@ All `private Components` are recorded here. (Only for Contributors)
     
 - **Synopsis**
 
-    Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Get a customized path type of a fileSystem path(disk, directory, file, link, etc.), according to the `Types of Items` described in the [post](https://little-train.com/posts/ebaccba2.html).
 - **Description**
 
-    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype), this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/7fdde8eb.html).
+    Basing on [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype), this function defines 38 types of items, including the 28 types of items that defined in the [post](https://little-train.com/posts/ebaccba2.html).
     
     | Types Description                                 | Path Example                          |
     | -----------------------------------------------   | --------------------------------------|
@@ -449,7 +449,7 @@ All `private Components` are recorded here. (Only for Contributors)
 - **Link**
 
     [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
     
 ### Get-PreReleaseString
     
@@ -593,7 +593,7 @@ All `private Components` are recorded here. (Only for Contributors)
     | File      | `X:\*some_hardlink`             | Archive                   |
     
     Here the `X` represents any drive disk letter. And, if `X` represents the system disk drive letter, the path should only be or in `${Home}`.
-    Other directories' attributes will not be reset. And other files' attributes will not be reset. See the [post](https://little-train.com/posts/7fdde8eb.html) for more details.
+    Other directories' attributes will not be reset. And other files' attributes will not be reset. See the [post](https://little-train.com/posts/ebaccba2.html) for more details.
     
     Many (perhaps all) attributes can be find by `[enum]::GetValues([System.IO.FileAttributes])`:
     ```powershell
@@ -634,7 +634,7 @@ All `private Components` are recorded here. (Only for Contributors)
     ```
 - **Link**
 
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
     
 ### Test-AdminPermission
     

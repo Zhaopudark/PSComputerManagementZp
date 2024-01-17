@@ -5,11 +5,9 @@ Contributions are welcome. But recently, the introduction and documentation are 
 A simple way to contribute is to open an issue to report bugs or request new features.
 
 Here are some formative rules for this module's development:
-- **Version Iteration**: To be consistent with both [PowerShell Gallery](https://www.powershellgallery.com/) and GitHub's pre-release feature of repositories, this module has supported pre-release with suffix labels such as `beta0`, `beta1`, etc. Take the version `v0.0.3-beta0` as an example:
-  -  The character `v` is used only for GitHub as an indicator of tags. The actual version is `0.0.3-beta0`, which is the same as the one in [PowerShell Gallery](https://www.powershellgallery.com/).
-  - Only `-betaX`, where `X` is a non-negative integer, is supported as a suffix label. For example, `-beta0`, `-beta1` etc. are supported, while `-beta-0`, `-beta-1` etc. are not supported.
+- **Version Iteration**: Use [Semantic Versioning](https://semver.org/) to iterate versions.:
+  - Even though this is a PowerShell, it prefers to use a Pythonic style as [PEP440](https://peps.python.org/pep-0440/).
   - Many tests on both APIs and components have been made, and they also have been run and passed on `GitHub Actions`. So it can be considered that `alpha` tests have been done. As a consequence, only `beta` tests are needed.
-  - If a stable version, the suffix label should be removed. For example, the version `v0.0.3` means the stable version `0.0.3`.
 
 - **Coding:**
     - **Variable Naming**: `snake_case` is used to indicate private variables while `PascalCase` is used for non-private variables. So, in code style consistency, please consider the above rule.
