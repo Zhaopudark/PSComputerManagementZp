@@ -8,11 +8,17 @@ jobs:
   publish-to-gallery:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-      - name: Build and publish
-        shell: pwsh
-        run: |
-          ./build.ps1
-          Publish-Module -Path /tmp/PSComputerManagementZp -NuGetApiKey ${{ secrets.NUGET_KEY }} -Verbose
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip' # caching pip dependencies
+    - name: Install dependencies
+      run: pip install -r helper/requirements.txt
+    - name: Build and publish
+      shell: pwsh
+      run: |
+        ./build.ps1
+        Publish-Module -Path /tmp/PSComputerManagementZp -NuGetApiKey ${{ secrets.NUGET_KEY }} -Verbose
