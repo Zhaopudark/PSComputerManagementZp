@@ -574,7 +574,7 @@ All `public APIs` are recorded here.
 - **Synopsis**
 
     Reset the ACL and attributes of a path to its default state if we have already known the default state exactly.
-    For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/7fdde8eb.html).
+    For more information on the motivations, rationale, logic, limitations and usage of this function, see the [post](https://little-train.com/posts/ebaccba2.html).
     
 - **Description**
 
@@ -608,7 +608,7 @@ All `public APIs` are recorded here.
     Only support Windows.
 - **Link**
 
-    [Authorization](https://little-train.com/posts/7fdde8eb.html)
+    [Authorization](https://little-train.com/posts/ebaccba2.html)
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
 ### Set-DirJunctionWithSync

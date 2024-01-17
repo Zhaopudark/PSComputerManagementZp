@@ -20,7 +20,13 @@ $ConfigInfo= @{
 Import-Module "${PSScriptRoot}\Module\PSComputerManagementZp.psm1" -Force -Scope Local
 
 # check release version
-Assert-ReleaseVersionConsistency -Version $ModuleSettings.ModuleVersion -ReleaseNotesPath $ConfigInfo.MDDocs.Release
+
+python "${PSScriptRoot}/helper/check_release_version.py" $ModuleSettings.ModuleVersion (Get-Item $ConfigInfo.MDDocs.Release).FullName
+
+if ($LastExitCode -ne 0){
+    throw "The release version in $($ConfigInfo.MDDocs.Release) is not consistent with the given version in ${PSScriptRoot}\Module\PSComputerManagementZp.psm1."
+}
+# Assert-ReleaseVersionConsistency -Version $ModuleSettings.ModuleVersion -ReleaseNotesPath $ConfigInfo.MDDocs.Release
 
 # check and get pre-release string
 $Prerelease = Get-PreReleaseString -ReleaseNotesPath $ConfigInfo.MDDocs.Release

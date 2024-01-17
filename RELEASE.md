@@ -1,11 +1,14 @@
-# Release v0.0.6
-## Release v0.0.6-beta0
+# PSComputerManagementZp 0.0.6
+## Release 0.0.6b1
+- Normalize version numbers and status in `RELEASE.md` by Pythonic [Semantic Versioning](https://semver.org/) style as [PEP440](https://peps.python.org/pep-0440/).
+
+## Release 0.0.6b0
 - Support [Codecov](https://docs.codecov.com/docs) and add its badge.
 - Now, Universal Naming Convention (UNC) paths, such as `\\wsl.localhost\Ubuntu\home\xxx` can be recognized and formatted correctly by `Get-FormattedFileSystemPath` on Windows.
 - Risks: To support UNC paths, the class `FormattedFileSystemPath` has been modified. However, it may bring some potential risks because the tests cannot cover all scenarios. So, it is only recommended to use the `Get-FormattedFileSystemPath` function as the testing scenarios in [`Tests\APIs\Class.FormattedFileSystemPath.Tests.ps1`](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/Class.FormattedFileSystemPath.Tests.ps1).
 
-# Release v0.0.5
-## Release v0.0.5-stable
+# PSComputerManagementZp 0.0.5
+## Release 0.0.5
 - Fix some documentation problems.
 - Now the 2 classes, `EnvPath` and `FormattedFileSystemPath`, are moved to be public APIs, along with their getting functions, `Get-EnvPath` and `Get-FormattedFileSystemPath`.
     - But for usage, only the getting functions are recommended.
@@ -13,7 +16,7 @@
 - Fix installation bugs on WSL2.
 - Now the public APIs, `Set-DirSymbolicLinkWithSync` and `Set-FileSymbolicLinkWithSync`, can also be used on non-Windows platforms. 
 
-## Release v0.0.5-beta0
+## Release 0.0.5b0
 - Use rotation logs to prevent files from becoming too large.
     - Now, if the log file is larger than 10MB, a new log file will be generated with the identifier `.<index>.`.
     - Allows to keep up to 9 older log files in addition to the latest log file.
@@ -26,8 +29,8 @@
     - Now, in Windows, the `tmp` path used across this module is `$Env:TEMP` by default, instead of `C:\temp\` as before. 
 - Tweak the organization of public and private APIs for simplification.
 
-# Release v0.0.4
-## Release v0.0.4-stable
+# PSComputerManagementZp 0.0.4
+## Release 0.0.4
 
 - Modify the underlying implementation of `Add-PathToCurrentProcessEnvPath`, `Add-PathToCurrentUserEnvPath`, and `Add-PathToCurrentMachineEnvPath` and change their default behaviors:
     - Now, by default, they will add the target path to the beginning instead of the end of the `$Env:Path` as before.
@@ -35,26 +38,25 @@
     - Now, if the path already exists in the `$Env:Path`, it will be tweaked (before, it will just be skipped simply) to the beginning or the end of the `$Env:Path` according to `-IsAppend`.
 
 - It may be difficult to support configuring the DNS over HTTPS by PowerShell well. So, this feature has been removed from current plan.
-    
 
-## Release v0.0.4-beta0
+## Release 0.0.4b0
 - Fix the logic bug of function `Assert-IsLinuxOrWSL2`.
 - Add a component function `Format-VersionTo4Numbers`.
 - Modify the class `EnvPath` for more stability.
 - Start to support setting IPv6 DDNS with Aliyun.
 - Try to support DNS over HTTPS.
 
-# Release v0.0.3
-## Release v0.0.3-stable
+# PSComputerManagementZp 0.0.3
+## Release 0.0.3
 - Adjusted the organization of private components to further reduce coupling.
-## Release v0.0.3-beta1
+## Release 0.0.3b1
 - Move the public API function, `Register-FSLEnvForPwsh` to `Assister.ThirdParty.ps1` for better understanding and for further development.
 - In the future, the `Assister.ThirdParty*` like files will be used to store all customized assistant APIs for third-party tools. Because these APIs are less of a generalization but indispensable.
 - Give out more specific **comments** rules in `README.md`.
 - Normalize the **comments** of all APIs and components.
 - Use `config.ps1` as a global configuration file for the whole module.
 
-## Release v0.0.3-beta0
+## Release 0.0.3b0
 - Add support for `MacOS`.
 - Rename `Write-FileLogs` to `Write-FileLog` and `Write-Logs` to `Write-Log`.
     - There may be a PSScriptAnalyzer warning:
@@ -85,7 +87,7 @@
 - The `README.md` file for all public APIs can be automatically generated now.
 - The `README.md` file for all private components can be automatically generated now.
 
-# Release v0.0.2
+# PSComputerManagementZp 0.0.2
 
 - Change logging behavior to deal with log file funding problems. 
     - Now it will check the log file's parent directory first. If the parent directory does not exist, it will create the directory before making logs.
@@ -109,39 +111,36 @@
     - `Remove-MatchedPathsFromCurrentUserEnvPaths`
     - `Remove-MatchedPathsFromCurrentMachineEnvPaths`
 
-# Release v0.0.1
+# PSComputerManagementZp 0.0.1
 
 A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2 and Linux.
 
-## Features
-The main features that have been supported(opted) or remained to do(non-opted) are as:
+- Features: The main features that have been supported(opted) or remained to do(non-opted) are as:
+    - [x] Set system-level proxy.
+    - [x] Set shell (process) level proxy.
+    - [x] Set/unset environment variables.
+    - [x] Format path for both Windows and WSL2.
+    - [x] Deal with authorization problems on the Windows file system.
+    - [ ] Set DDNS.
+    - [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
 
-- [x] Set system-level proxy.
-- [x] Set shell (process) level proxy.
-- [x] Set/unset environment variables.
-- [x] Format path for both Windows and WSL2.
-- [x] Deal with authorization problems on the Windows file system.
-- [ ] Set DDNS.
-- [ ] Configure backup settings with backup tools, such as [FreeFileSync](https://freefilesync.org/download.php).
-
-## APIs
-Specifically, all supported public APIs are categorized as follows:
-- Authorization Management
-    - `Reset-Authorization`
-- Environment Variables Management
-    - `Merge-RedundantEnvPathFromLocalMachineToCurrentUser`
-    - `Add-EnvPathToCurrentProcess`
-    - `Remove-EnvPathByPattern`
-    - `Remove-EnvPathByTargetPath`
-- Link Management
-    - `Set-DirSymbolicLinkWithSync`
-    - `Set-FileSymbolicLinkWithSync`
-    - `Set-DirJunctionWithSync`
-    - `Set-FileHardLinkWithSync`
-- Proxy Management
-    - `Get-GatewayIPV4`
-    - `Get-LocalHostIPV4`
-    - `Set-SystemProxyIPV4ForCurrentUser`
-    - `Remove-SystemProxyIPV4ForCurrentUser`
-    - `Set-EnvProxyIPV4ForShellProcess`
-    - `Remove-EnvProxyIPV4ForShellProcess`
+- APIs: Specifically, all supported public APIs are categorized as follows:
+    - Authorization Management
+        - `Reset-Authorization`
+    - Environment Variables Management
+        - `Merge-RedundantEnvPathFromLocalMachineToCurrentUser`
+        - `Add-EnvPathToCurrentProcess`
+        - `Remove-EnvPathByPattern`
+        - `Remove-EnvPathByTargetPath`
+    - Link Management
+        - `Set-DirSymbolicLinkWithSync`
+        - `Set-FileSymbolicLinkWithSync`
+        - `Set-DirJunctionWithSync`
+        - `Set-FileHardLinkWithSync`
+    - Proxy Management
+        - `Get-GatewayIPV4`
+        - `Get-LocalHostIPV4`
+        - `Set-SystemProxyIPV4ForCurrentUser`
+        - `Remove-SystemProxyIPV4ForCurrentUser`
+        - `Set-EnvProxyIPV4ForShellProcess`
+        - `Remove-EnvProxyIPV4ForShellProcess`
