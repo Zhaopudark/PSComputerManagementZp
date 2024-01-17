@@ -61,20 +61,12 @@ Some features are also available on WSL2 and Linux.
 # Installation
 There are two ways to install and use this module. Make sure your PowerShell version is 7.0 or later.
 
-- **From source**, with the latest version (maybe pre-release version):
+- **From source (need python and pip)**, with the latest version (maybe pre-release version):
 
   ```powershell
   git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
   cd PSComputerManagementZp
-  ./install.ps1
-  ```
-
-- **From source**, with a specific version:
-
-  ```powershell
-  git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
-  cd PSComputerManagementZp
-  git checkout v0.0.3
+  pip install -r ./Scripts/requirements.txt
   ./install.ps1
   ```
   
