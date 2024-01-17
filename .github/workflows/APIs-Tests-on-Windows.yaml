@@ -22,7 +22,7 @@ jobs:
       run: | 
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
-        ./install.ps1
+        ./Scripts/install.ps1
         Import-Module PSComputerManagementZp
         $config = New-PesterConfiguration
         $config.Run.PassThru = $true

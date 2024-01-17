@@ -89,25 +89,6 @@ All `private Components` are recorded here. (Only for Contributors)
 
     None.
     
-### Assert-ReleaseVersionConsistency
-    
-- **Description**
-
-    Assert if the release version in the release note file is consistent with the given version.
-- **Parameter** `$Version`
-
-    The version.
-- **Parameter** `$ReleaseNotesPath`
-
-    The release note file path.
-- **Inputs**
-
-    String.
-    String.
-- **Outputs**
-
-    None.
-    
 ### Assert-ValidPath4Authorization
     
 - **Synopsis**
@@ -245,23 +226,6 @@ All `private Components` are recorded here. (Only for Contributors)
 - **Outputs**
 
     String.
-    
-### Format-VersionTo4SegmentFormat
-    
-- **Description**
-
-    Format a version string like `vX.X.X...` to a fixed format that consists of 4 segments.
-    If there are more than 4 segments, the extra segments will be truncated (the leftmost 4 segments will be retained while others will be droped).
-    If there are less than 4 segments, the missing segments will be appended with `0`.
-- **Parameter** `$RawVersion`
-
-    The raw version string.
-- **Inputs**
-
-    String.
-- **Outputs**
-
-    System.Version.
     
 ### Get-ClassDoc
     
@@ -450,21 +414,6 @@ All `private Components` are recorded here. (Only for Contributors)
 
     [`New-Item -ItemType`](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-item?view=powershell-7.2#-itemtype),
     [Authorization](https://little-train.com/posts/ebaccba2.html)
-    
-### Get-PreReleaseString
-    
-- **Description**
-
-    Get the pre-release string from a release note file.
-- **Parameter** `$ReleaseNotesPath`
-
-    The release note file path.
-- **Inputs**
-
-    String.
-- **Outputs**
-
-    String.
     
 ### Get-SortedNameWithDocFromScript
     

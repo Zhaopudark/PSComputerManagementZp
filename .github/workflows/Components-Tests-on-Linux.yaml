@@ -22,7 +22,7 @@ jobs:
       run: | 
         $PSVersionTable
         "ErrorActionPreference: $ErrorActionPreference"
-        ./install.ps1
+        ./Scripts/install.ps1
         . ./Tests/Helpers/Register.Components.ps1
         $config = New-PesterConfiguration
         $config.Run.PassThru = $true
