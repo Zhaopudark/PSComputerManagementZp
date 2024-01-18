@@ -31,6 +31,7 @@ $ModuleInfo = @{
 $ModuleSettings = @{
     RootModule = "$($ModuleInfo.ModuleName).psm1"
     ModuleVersion = '0.0.7'
+    Prerelease = 'b0'
     Author = 'Pu Zhao'
     Description = 'A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2, Linux, and MacOS. See [PSComputerManagementZp](https://github.com/Zhaopudark/PSComputerManagementZp) for more details.'
     PowerShellVersion = '7.0'
@@ -38,13 +39,13 @@ $ModuleSettings = @{
     CmdletsToExport = @()
     VariablesToExport = @()
     AliasesToExport = @()
+    Tags = @('Windows','Linux','MacOS','WSL2','Management','Env','Proxy','DDNS','Links','ScheduledTasks','Authorization')
     LicenseUri = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE'
     ProjectUri = 'https://github.com/Zhaopudark/PSComputerManagementZp'
     IconUri = 'https://raw.githubusercontent.com/PowerShell/PowerShell/master/assets/av_colors_128.svg'
     ReleaseNotes = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/RELEASE.md'
     HelpInfoURI = 'https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/README.md'
 }
-
 
 . "${PSScriptRoot}\Private\Bases\Logger.ps1" -LoggingPath $ModuleInfo.LoggingPath -ModuleVersion $ModuleSettings.ModuleVersion
 

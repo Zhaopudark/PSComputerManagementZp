@@ -21,13 +21,13 @@ $ConfigInfo= @{
 Import-Module "${root_path}\Module\PSComputerManagementZp.psm1" -Force -Scope Local
 
 # check release version
-$maybe_prerelease = python "${root_path}/Scripts/check_release_version.py" $ModuleSettings.ModuleVersion (Get-Item $ConfigInfo.MDDocs.Release).FullName
+$release_version = $ModuleSettings.ModuleVersion+$ModuleSettings.Prerelease
+python "${root_path}/Scripts/check_release_version.py" $release_version (Get-Item $ConfigInfo.MDDocs.Release).FullName
 if ($LastExitCode -ne 0){
+    # Write-Host $checking_info 
     throw "The release version in $($ConfigInfo.MDDocs.Release) is not consistent with the given version in ${root_path}\Module\PSComputerManagementZp.psm1."
 }
-if($maybe_prerelease){
-    $ModuleSettings.Prerelease = $maybe_prerelease
-}
+
 
 # generate APIs README.md
 $api_content = @("All ``public APIs`` are recorded here.")
@@ -85,4 +85,7 @@ Copy-Item -Path "${root_path}\Module\*" -Destination "$($ModuleInfo.BuildPath)\$
 
 $ModuleSettings.Path = "$($ModuleInfo.BuildPath)\$($ModuleSettings.ModuleVersion)\$($ModuleInfo.ModuleName).psd1"
 
+if (!$ModuleSettings.Prerelease){
+    $ModuleSettings.Remove('Prerelease') # since New-ModuleManifest validate arguments and reject empty string.
+}
 New-ModuleManifest  @ModuleSettings
