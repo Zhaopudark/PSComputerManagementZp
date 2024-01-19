@@ -66,7 +66,7 @@ There are two ways to install and use this module. Make sure your PowerShell ver
   ```powershell
   git clone git@github.com:Zhaopudark/PSComputerManagementZp.git
   cd PSComputerManagementZp
-  pip install -r ./Scripts/requirements.txt
+  pip install -r ./Scripts/etc/requirements.txt
   ./install.ps1
   ```
   
