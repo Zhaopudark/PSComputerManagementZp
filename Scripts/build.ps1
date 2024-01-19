@@ -21,13 +21,7 @@ $ConfigInfo= @{
 Import-Module "${root_path}\Module\PSComputerManagementZp.psm1" -Force -Scope Local
 
 # check release version
-$release_version = $ModuleSettings.ModuleVersion+$ModuleSettings.Prerelease
-python "${root_path}/Scripts/check_release_version.py" $release_version (Get-Item $ConfigInfo.MDDocs.Release).FullName
-if ($LastExitCode -ne 0){
-    # Write-Host $checking_info 
-    throw "The release version in $($ConfigInfo.MDDocs.Release) is not consistent with the given version in ${root_path}\Module\PSComputerManagementZp.psm1."
-}
-
+$release_version = . "${PSScriptRoot}\check_release_version.ps1"
 
 # generate APIs README.md
 $api_content = @("All ``public APIs`` are recorded here.")

@@ -1,4 +1,9 @@
 # PSComputerManagementZp 0.0.7
+
+## Release 0.0.7b1
+- Prepare for a formal release.
+- Prepare for sync to Zenodo.
+
 ## Release 0.0.7b0
 - Fix some building bugs of this module.
 
