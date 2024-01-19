@@ -7,14 +7,11 @@
 # PSComputerManagementZp
 
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
-[![GitHub release (with filter)](https://img.shields.io/github/v/release/Zhaopudark/PSComputermanagementZp?logo=github)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
-[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Zhaopudark/PSComputerManagementZp?logo=github)](https://github.com/Zhaopudark/PSComputerManagementZp/tags)
-[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/PSComputerManagementZp?logo=powershell&label=PowerShell%20Gallery%20downloads)](https://www.powershellgallery.com/packages/PSComputerManagementZp)
-[![GitHub Release Downloads](https://img.shields.io/github/downloads/Zhaopudark/PSComputerManagementZp/total?logo=github&label=Github%20Release%20downloads)
-](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSComputermanagementZp?include_prereleases&logo=powershell)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
+[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/PSComputerManagementZp?logo=powershell)](https://www.powershellgallery.com/packages/PSComputerManagementZp)
 [![GitHub](https://img.shields.io/github/license/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE)
-[![codecov](https://codecov.io/gh/Zhaopudark/PSComputerManagementZp/graph/badge.svg?token=6C2LZE0W5I)](https://codecov.io/gh/Zhaopudark/PSComputerManagementZp)
 
+[![codecov](https://codecov.io/gh/Zhaopudark/PSComputerManagementZp/graph/badge.svg?token=6C2LZE0W5I)](https://codecov.io/gh/Zhaopudark/PSComputerManagementZp)
 [![Home](https://img.shields.io/badge/Home-Home-blue)](README.md)
 [![Public-Examples](https://img.shields.io/badge/Public-Examples-royalblue)](Examples/README.md)
 [![Public-AIPs](https://img.shields.io/badge/Public-AIPs-orange)](Docs/APIs/README.md)

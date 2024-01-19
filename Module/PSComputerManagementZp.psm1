@@ -30,8 +30,9 @@ $ModuleInfo = @{
 # Module Settings For PSD1
 $ModuleSettings = @{
     RootModule = "$($ModuleInfo.ModuleName).psm1"
+    CompatiblePSEditions = @('Desktop', 'Core')
     ModuleVersion = '0.0.7'
-    Prerelease = 'b0'
+    Prerelease = 'b1'
     Author = 'Pu Zhao'
     Description = 'A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2, Linux, and MacOS. See [PSComputerManagementZp](https://github.com/Zhaopudark/PSComputerManagementZp) for more details.'
     PowerShellVersion = '7.0'
