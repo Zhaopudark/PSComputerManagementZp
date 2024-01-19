@@ -1,3 +1,7 @@
+# PSComputerManagementZp 0.1.1
+## Release 0.1.1
+- Fix some documentation problems.
+
 # PSComputerManagementZp 0.1.0
 ## Release 0.1.0
 From the version 0.0.7, this module will use semantic version control formally. And its time to release the first formal version, 0.1.0.
