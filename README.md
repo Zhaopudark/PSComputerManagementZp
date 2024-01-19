@@ -8,6 +8,7 @@
 
 [![PowerShell-7.X](https://img.shields.io/badge/PowerShell-7.X-blue?logo=powershell)](https://learn.microsoft.com/en-us/powershell/)
 [![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PSComputermanagementZp?include_prereleases&logo=powershell)](https://github.com/Zhaopudark/PSComputerManagementZp/releases)
+[![DOI](https://zenodo.org/badge/661547838.svg)](https://zenodo.org/doi/10.5281/zenodo.10532479)
 [![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/PSComputerManagementZp?logo=powershell)](https://www.powershellgallery.com/packages/PSComputerManagementZp)
 [![GitHub](https://img.shields.io/github/license/Zhaopudark/PSComputerManagementZp)](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/LICENSE)
 
