@@ -16,7 +16,7 @@ jobs:
         python-version: '3.12'
         cache: 'pip' # caching pip dependencies
     - name: Install dependencies
-      run: pip install -r ./Scripts/requirements.txt
+      run: pip install -r ./Scripts/etc/requirements.txt
     - name: Build and publish
       shell: pwsh
       run: |
