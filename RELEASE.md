@@ -1,5 +1,15 @@
-# PSComputerManagementZp 0.0.7
+# PSComputerManagementZp 0.1.0
+## Release 0.1.0
+From the version 0.0.7, this module will use semantic version control formally. And its time to release the first formal version, 0.1.0.
+So, we make the version fast forward to 0.1.0
 
+Use semantic version control formally. For this project:
+- We consider CI tests as alpha tests. So there is no alpha release.
+- Use `z.y.0bn` as the pre-release (beta release) version number.
+- Use `z.y.0` as the normal release version number.
+- Use `z.y.n`, where `n > 0`, as the patch release version number.
+
+# PSComputerManagementZp 0.0.7
 ## Release 0.0.7b1
 - Prepare for a formal release.
 - Prepare for sync to Zenodo.
