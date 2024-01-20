@@ -1,5 +1,5 @@
 # PSComputerManagementZp 0.1.1
-## Release 0.1.1
+## PreRelease 0.1.1
 - Fix some documentation problems.
 
 # PSComputerManagementZp 0.1.0
