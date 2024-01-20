@@ -9,7 +9,7 @@ if ($currentBranch -eq "main") {
     . "${PSScriptRoot}/build.ps1"
     git add .  # 添加需要提交的文件（假设你要提交所有文件）
     git commit -m $message
-    git push origin dev:dev
+    git push
 } else {
     Write-Host "Not on main branch. Current branch: $currentBranch"
 }
