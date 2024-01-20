@@ -3,7 +3,7 @@ name: Installation Tests On Linux
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   installation-tests-on-linux:

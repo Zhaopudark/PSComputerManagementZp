@@ -3,7 +3,7 @@ name: Components Tests on Windows
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   component-tests-on-windows:

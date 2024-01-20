@@ -3,7 +3,7 @@ name: APIs Tests on Linux
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   api-tests-on-linux:

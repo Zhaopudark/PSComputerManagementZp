@@ -3,7 +3,7 @@ name: Components Tests on Linux
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   component-tests-on-linux:

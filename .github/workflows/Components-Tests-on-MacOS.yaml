@@ -3,7 +3,7 @@ name: Components Tests on MacOS
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   component-tests-on-macos:
