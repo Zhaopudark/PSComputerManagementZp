@@ -13,7 +13,7 @@ if ($currentBranch -eq "main") {
     }
 
     # 检测远程标签是否存在
-    if (git ls-remote --tags origin | Where-Object { $_ -match "refs/tags/$tagName" }) {
+    if (git ls-remote --tags origin | Where-Object { $_ -match "^refs/tags/$tagName$" }) {
         Write-Error "Remote tag '$tagName' already exists."
     } else {
         # 远程标签不存在
