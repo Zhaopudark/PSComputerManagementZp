@@ -1,9 +1,8 @@
-# PSComputerManagementZp 0.1.1
-## PreRelease 0.1.1
+# PSComputerManagementZp 0.1.x
+## Release 0.1.1
 - Fix some documentation problems.
 - Update codecov/codecov-action to v4.
 
-# PSComputerManagementZp 0.1.0
 ## Release 0.1.0
 From the version 0.0.7, this module will use semantic version control formally. And its time to release the first formal version, 0.1.0.
 So, we make the version fast forward to 0.1.0
@@ -14,7 +13,7 @@ Use semantic version control formally. For this project:
 - Use `z.y.0` as the normal release version number.
 - Use `z.y.n`, where `n > 0`, as the patch release version number.
 
-# PSComputerManagementZp 0.0.7
+# PSComputerManagementZp 0.0.x
 ## Release 0.0.7b1
 - Prepare for a formal release.
 - Prepare for sync to Zenodo.
@@ -22,7 +21,6 @@ Use semantic version control formally. For this project:
 ## Release 0.0.7b0
 - Fix some building bugs of this module.
 
-# PSComputerManagementZp 0.0.6
 ## Release 0.0.6
 - Normalize version numbers and status in `RELEASE.md` by Pythonic [Semantic Versioning](https://semver.org/) style as [PEP440](https://peps.python.org/pep-0440/).
 
@@ -31,7 +29,6 @@ Use semantic version control formally. For this project:
 - Now, Universal Naming Convention (UNC) paths, such as `\\wsl.localhost\Ubuntu\home\xxx` can be recognized and formatted correctly by `Get-FormattedFileSystemPath` on Windows.
 - Risks: To support UNC paths, the class `FormattedFileSystemPath` has been modified. However, it may bring some potential risks because the tests cannot cover all scenarios. So, it is only recommended to use the `Get-FormattedFileSystemPath` function as the testing scenarios in [`Tests\APIs\Class.FormattedFileSystemPath.Tests.ps1`](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Tests/APIs/Class.FormattedFileSystemPath.Tests.ps1).
 
-# PSComputerManagementZp 0.0.5
 ## Release 0.0.5
 - Fix some documentation problems.
 - Now the 2 classes, `EnvPath` and `FormattedFileSystemPath`, are moved to be public APIs, along with their getting functions, `Get-EnvPath` and `Get-FormattedFileSystemPath`.
@@ -53,7 +50,6 @@ Use semantic version control formally. For this project:
     - Now, in Windows, the `tmp` path used across this module is `$Env:TEMP` by default, instead of `C:\temp\` as before. 
 - Tweak the organization of public and private APIs for simplification.
 
-# PSComputerManagementZp 0.0.4
 ## Release 0.0.4
 
 - Modify the underlying implementation of `Add-PathToCurrentProcessEnvPath`, `Add-PathToCurrentUserEnvPath`, and `Add-PathToCurrentMachineEnvPath` and change their default behaviors:
@@ -70,9 +66,9 @@ Use semantic version control formally. For this project:
 - Start to support setting IPv6 DDNS with Aliyun.
 - Try to support DNS over HTTPS.
 
-# PSComputerManagementZp 0.0.3
 ## Release 0.0.3
 - Adjusted the organization of private components to further reduce coupling.
+
 ## Release 0.0.3b1
 - Move the public API function, `Register-FSLEnvForPwsh` to `Assister.ThirdParty.ps1` for better understanding and for further development.
 - In the future, the `Assister.ThirdParty*` like files will be used to store all customized assistant APIs for third-party tools. Because these APIs are less of a generalization but indispensable.
@@ -111,8 +107,7 @@ Use semantic version control formally. For this project:
 - The `README.md` file for all public APIs can be automatically generated now.
 - The `README.md` file for all private components can be automatically generated now.
 
-# PSComputerManagementZp 0.0.2
-
+## Release 0.0.2
 - Change logging behavior to deal with log file funding problems. 
     - Now it will check the log file's parent directory first. If the parent directory does not exist, it will create the directory before making logs.
     - Change logging path from the module path to the user's home path.
@@ -135,8 +130,7 @@ Use semantic version control formally. For this project:
     - `Remove-MatchedPathsFromCurrentUserEnvPaths`
     - `Remove-MatchedPathsFromCurrentMachineEnvPaths`
 
-# PSComputerManagementZp 0.0.1
-
+## Release 0.0.1
 A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2 and Linux.
 
 - Features: The main features that have been supported(opted) or remained to do(non-opted) are as:
