@@ -2,6 +2,7 @@
 ## Release 0.1.1
 - Fix some documentation problems.
 - Update codecov/codecov-action to v4.
+- Apply more strict try-catch mechanism in `Reset-Authorization` function for better stability.
 
 ## Release 0.1.0
 From the version 0.0.7, this module will use semantic version control formally. And its time to release the first formal version, 0.1.0.

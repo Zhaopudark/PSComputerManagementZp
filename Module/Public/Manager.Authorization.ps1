@@ -41,7 +41,13 @@ function Reset-Authorization{
         Assert-IsWindowsAndAdmin
         Assert-ValidPath4Authorization $Path
         $path_type = Get-PathType $Path -SkipPlatformCheck -SkipPathCheck
+        if ($null -eq $path_type){
+            throw "The path `{$Path}` is not supported."
+        }
         $sddl = Get-DefaultSddl -PathType $path_type
+        if ($null -eq $sddl){
+            throw "The path `{$Path}` is not supported."
+        }
         $new_acl = Get-Acl -LiteralPath $Path
 
         if($PSCmdlet.ShouldProcess("$Path",'set the original ACL')){
