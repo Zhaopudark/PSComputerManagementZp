@@ -1,4 +1,5 @@
 # PSComputerManagementZp 0.1.x
+## Release 0.1.2
 ## Release 0.1.1
 - Fix some documentation problems.
 - Update codecov/codecov-action to v4.
