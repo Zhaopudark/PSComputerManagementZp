@@ -1,5 +1,6 @@
 # PSComputerManagementZp 0.1.x
 ## Release 0.1.2
+- Add `Register-AndBackupEnvItemForConda` and `Unregister-WithBackupEnvItemForConda` in `Assister.ThirdParty.ps1` to help users to register and unregister the environment variables for `Conda` with backup. See [Conda | Saving environment variables](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables) and [the source code](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Module/Public/Assister.ThirdParty.ps1) for more details.
 ## Release 0.1.1
 - Fix some documentation problems.
 - Update codecov/codecov-action to v4.

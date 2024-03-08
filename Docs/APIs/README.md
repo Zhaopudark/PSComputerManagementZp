@@ -242,6 +242,52 @@ All `public APIs` are recorded here.
 
     [ShouldProcess](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/deep-dives/everything-about-shouldprocess?view=powershell-7.3)
     
+### Register-AndBackupEnvItemForConda
+    
+- **Synopsis**
+
+    Register an item to the current process level environment variable.
+    Before registering, the function will backup it into a variable with the same name but 'CONDA_BACK' suffix.
+- **Description**
+
+    The environment variables that associated with a conda environment can be saved in scripts that located
+    in `$Env:CONDA_PREFIX/etc/conda/activate.d` and `$Env:CONDA_PREFIX/etc/conda/deactivate.d`.
+    
+    Scripts in `activate.d` are executed when the conda environment is activated, and scripts in `deactivate.d`
+    are executed when the conda environment is deactivated.
+    This mechanism is used to register and unregister temporary environment variables that are only for the current conda environment.
+    See https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables.
+    
+    A traditional way to use this `saving-environment-variables` mechanism is like:
+    Backup and register an environment variable in a script in `activate.d`:
+    ```pwsh
+    $Env:MY_ENV_VAR_CONDA_BACK = $Env:MY_ENV_VAR
+    $Env:MY_ENV_VAR = "my_value"
+    ```
+    And unregister it in a script in `deactivate.d`:
+    ```pwsh
+    $Env:MY_ENV_VAR = $Env:MY_ENV_VAR_CONDA_BACK
+    Remove-Item -Path Env:MY_ENV_VAR_CONDA_BACK
+    ```
+    
+    This function is used to simplify the backup and register process.
+- **Parameter** `$Name`
+
+    The name of the environment variable.
+- **Parameter** `$Value`
+
+    The value of the environment variable.
+- **Inputs**
+
+    String.
+    String.
+- **Outputs**
+
+    None.
+- **Link**
+
+    [Conda | Saving environment variables](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables)
+    
 ### Register-FSLEnvForPwsh
     
 - **Synopsis**
@@ -764,4 +810,41 @@ All `public APIs` are recorded here.
 - **Link**
 
     [Windows core proxy](https://www.mikesay.com/2020/02/03/windows-core-proxy/#%E7%B3%BB%E7%BB%9F%E7%BA%A7%E5%88%AB%E7%9A%84%E8%AE%BE%E7%BD%AE)
+    
+### Unregister-WithBackupEnvItemForConda
+    
+- **Synopsis**
+
+    The reverse operation of Register-AndBackupEnvItemForConda.
+    Retore an item from the current process level environment variable with the backup,
+    and remove the backup.
+- **Description**
+
+    See https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables.
+    
+    A traditional way to use this `saving-environment-variables` mechanism is like:
+    Backup and register an environment variable in a script in `activate.d`:
+    ```pwsh
+    $Env:MY_ENV_VAR_CONDA_BACK = $Env:MY_ENV_VAR
+    $Env:MY_ENV_VAR = "my_value"
+    ```
+    And unregister it in a script in `deactivate.d`:
+    ```pwsh
+    $Env:MY_ENV_VAR = $Env:MY_ENV_VAR_CONDA_BACK
+    Remove-Item -Path Env:MY_ENV_VAR_CONDA_BACK
+    ```
+    
+    This function is used to simplify the unregister process.
+- **Parameter** `$Name`
+
+    The name of the environment variable.
+- **Inputs**
+
+    String.
+- **Outputs**
+
+    None.
+- **Link**
+
+    [Conda | Saving environment variables](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables)
     
