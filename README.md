@@ -35,7 +35,7 @@ I'm a researcher on Machine Learning, especially Deep Learning. In addition, I a
 
 For some specific reasons, I cannot directly develop on a traditional Linux server and have to use a workstation-level PC with Windows (Win11) and WSL2 to realize my daily work. 
 
-Using a shell for PC management is necessary for almost all developers. However, from what I was able to retrieve on the internet, it seems to assume a `Linux and Bash`-based scenario for us, developers in many PC management tutorials or examples, which is far different from my working situation.
+Using a shell for PC management is necessary for almost all developers. However, from what I was able to retrieve on the internet, it seems to assume a `Linux and Bash`-based scenario for us, developers, in many PC management tutorials or examples, which is far different from my working situation.
 
 This makes me feel lonely helplessness and have to go through [Technical documentation | Microsoft Learn](https://learn.microsoft.com/en-us/docs/), trying to find a way to achieve my own goals.
 
