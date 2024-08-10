@@ -15,8 +15,8 @@ jobs:
     - name: Test components
       shell: pwsh
       run: | 
-        ./Scripts/test_components.ps1
-        ./Scripts/test_APIs.ps1
+        . ./Scripts/test_components.ps1
+        . ./Scripts/test_APIs.ps1
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
       env:
