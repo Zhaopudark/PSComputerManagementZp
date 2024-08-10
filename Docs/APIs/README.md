@@ -166,6 +166,19 @@ All `public APIs` are recorded here.
     [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952)
     [Select-String](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3)
     
+### Get-LatestGithubAPIRepoResponse
+    
+- **Description**
+
+    A function to apply the class LatestGithubAPIRepoResponse.
+    Return an instance of it.
+- **Inputs**
+
+    None.
+- **Outputs**
+
+    LatestGithubAPIRepoResponse.
+    
 ### Get-LocalHostIPV4
     
 - **Description**

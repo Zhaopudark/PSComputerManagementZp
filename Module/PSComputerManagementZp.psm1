@@ -28,14 +28,18 @@ $ModuleInfo = @{
 }
 
 # Module Settings For PSD1
+# https://learn.microsoft.com/zh-cn/powershell/scripting/developer/module/how-to-write-a-powershell-module-manifest?view=powershell-7.4
 $ModuleSettings = @{
     RootModule = "$($ModuleInfo.ModuleName).psm1"
     CompatiblePSEditions = @('Desktop', 'Core')
     ModuleVersion = '0.1.4'
-    Prerelease = ''
+    Prerelease = 'alpha'
     Author = 'Pu Zhao'
     Description = 'A PowerShell module that derives from personal scenarios, can help users configure the Windows PCs easily to realize many useful operations, involving authorization, env, links, proxy, etc. Some features are also available on WSL2, Linux, and MacOS. See [PSComputerManagementZp](https://github.com/Zhaopudark/PSComputerManagementZp) for more details.'
     PowerShellVersion = '7.0'
+    DotNetFrameworkVersion = '4.7.2'
+    CLRVersion = '5.0'
+    RequiredAssemblies = @('Libs/PSModuleHelperZp.dll')
     FunctionsToExport = $ModuleInfo.SortedFunctionsToExportWithDocs.Name
     CmdletsToExport = @()
     VariablesToExport = @()

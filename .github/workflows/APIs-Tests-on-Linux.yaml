@@ -12,21 +12,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
-        cache: 'pip' # caching pip dependencies
-    - name: Install dependencies
-      run: pip install -r ./Scripts/etc/requirements.txt
-    - name: Apply pester tests 
+    - name: Test APIs
       shell: pwsh
-      run: | 
-        $PSVersionTable
-        "ErrorActionPreference: $ErrorActionPreference"
-        ./Scripts/install.ps1
-        Import-Module PSComputerManagementZp
-        $config = New-PesterConfiguration
-        $config.Run.PassThru = $true
-        $config.Run.Path = './Tests/APIs/'
-        $config.Output.Verbosity = "Detailed"
-        Invoke-Pester -Configuration $config
+      run: ./Scripts/test_APIs.ps1
+      
