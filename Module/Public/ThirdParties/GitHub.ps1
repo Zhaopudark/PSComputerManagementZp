@@ -24,6 +24,8 @@ function Get-GitHubRepoInfoSnapshot{
         [Parameter(Mandatory)]
         [string]$GithubPAT
     )
-    service = [GitHubService]::new($GithubPAT)
-    return service.GetRepoInfoSnapshot($UserName,$RepoName)
+    $service = [PSModuleHelperZp.GitHubService]::new($GithubPAT)
+    $task = $service.GetRepositorySnapshotAsync($UserName,$RepoName)
+    $task.Wait()
+    return $task.Result
 }

@@ -5,6 +5,9 @@
 #   and make the corresponding subsequent uninstallation or non-uninstallation, it may still cause errors or troubles due to forced uninstallation.
 #   Therefore, it will not be uninstalled here.
 
+param (
+    [switch]$CodeCoverage
+)
 
 $PSVersionTable
 "ErrorActionPreference: $ErrorActionPreference"
