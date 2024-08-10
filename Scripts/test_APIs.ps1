@@ -5,6 +5,9 @@
 #   and make the corresponding subsequent uninstallation or non-uninstallation, it may still cause errors or troubles due to forced uninstallation.
 #   Therefore, it will not be uninstalled here.
 
+param (
+    [switch]$CodeCoverage
+)
 
 $PSVersionTable
 "ErrorActionPreference: $ErrorActionPreference"
@@ -15,9 +18,11 @@ Import-Module PSComputerManagementZp
 $config = New-PesterConfiguration
 $config.Run.PassThru = $true
 $config.Run.Path = "$PSScriptRoot/../Tests/APIs/"
-$config.CodeCoverage.Path = "$PSScriptRoot/../Module/Public"
-$config.CodeCoverage.OutputPath = "$PSScriptRoot/../coverage-public.xml"
-$config.CodeCoverage.Enabled = $true
+if ($CodeCoverage){
+    $config.CodeCoverage.Path = "$PSScriptRoot/../Module/Public"
+    $config.CodeCoverage.OutputPath = "$PSScriptRoot/../coverage-public.xml"
+    $config.CodeCoverage.Enabled = $true
+}
 $config.Output.Verbosity = "Detailed"
 Invoke-Pester -Configuration $config
 
