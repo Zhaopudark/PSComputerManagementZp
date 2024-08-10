@@ -19,5 +19,9 @@ jobs:
         . ./Scripts/test_APIs.ps1
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true # optional (default = false)
+        files: ./coverage-private.xml,./coverage-public.xml # optional
+        verbose: true # optional (default = false)
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
