@@ -166,6 +166,30 @@ All `public APIs` are recorded here.
     [Get Gateway IP Address](https://blog.csdn.net/YOLO3/article/details/81117952)
     [Select-String](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/select-string?view=powershell-7.3)
     
+### Get-GitHubRepoInfoSnapshot
+    
+- **Description**
+
+    Get some information's snapshot of a GitHub repository, and return a record of it.
+- **Parameter** `$UserName`
+
+    The user name of the repo.
+- **Parameter** `$RepoName`
+
+    The repo name.
+- **Parameter** `$GithubPAT`
+
+    The GitHub Personal Access Token(PAT).
+    The PAT is needed to access the GitHub API.
+- **Inputs**
+
+    String.
+    String.
+    String.
+- **Outputs**
+
+    [GitHubRepoInfoSnapshot].
+    
 ### Get-LocalHostIPV4
     
 - **Description**
@@ -816,8 +840,7 @@ All `public APIs` are recorded here.
 - **Synopsis**
 
     The reverse operation of Register-AndBackupEnvItemForConda.
-    Retore an item from the current process level environment variable with the backup,
-    and remove the backup.
+    Retore an item from the current process level environment variable with the backup, and remove the backup.
 - **Description**
 
     See https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables.

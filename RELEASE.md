@@ -1,6 +1,8 @@
 # PSComputerManagementZp 0.1.x
-## Release 0.1.4
-On working...
+## release 0.1.4-alpha
+- Remove the python dependencies. In previous versions, the python dependencies are needed to install this module. But now, we use .NET DLLs to replace the python dependencies for simplification. So, python is no longer needed.
+- From this version (0.1.4), this module's components will gradually turn to .NET DLLs. At an appropriate time later, the version number will be upgraded to 0.2.
+
 ## Release 0.1.3
 - Add `Register-AndBackupEnvItemForConda` and `Unregister-WithBackupEnvItemForConda` in `Assister.ThirdParty.ps1` to help users to register and unregister the environment variables for `Conda` with backup. See [Conda | Saving environment variables](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables) and [the source code](https://github.com/Zhaopudark/PSComputerManagementZp/blob/main/Module/Public/Assister.ThirdParty.ps1) for more details.
 ## Release 0.1.2
