@@ -18,9 +18,11 @@ Import-Module PSComputerManagementZp
 $config = New-PesterConfiguration
 $config.Run.PassThru = $true
 $config.Run.Path = "$PSScriptRoot/../Tests/APIs/"
-$config.CodeCoverage.Path = "$PSScriptRoot/../Module/Public"
-$config.CodeCoverage.OutputPath = "$PSScriptRoot/../coverage-public.xml"
-$config.CodeCoverage.Enabled = $true
+if ($CodeCoverage){
+    $config.CodeCoverage.Path = "$PSScriptRoot/../Module/Public"
+    $config.CodeCoverage.OutputPath = "$PSScriptRoot/../coverage-public.xml"
+    $config.CodeCoverage.Enabled = $true
+}
 $config.Output.Verbosity = "Detailed"
 Invoke-Pester -Configuration $config
 
