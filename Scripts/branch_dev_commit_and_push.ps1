@@ -11,5 +11,5 @@ if ($currentBranch -eq "dev") {
     git commit -m $message
     git push
 } else {
-    Write-Host "Not on main branch. Current branch: $currentBranch"
+    Write-Host "Not on dev branch. Current branch: $currentBranch"
 }
